@@ -1,62 +1,49 @@
-# Guia de Design — DobraLabs
+# Guia de Design
+
+> Você pode editar esse arquivo a qualquer momento.
+> As skills de carrossel, proposta e slide leem este arquivo antes de criar qualquer visual.
 
 ---
 
 ## Cores
 
-- **Fundo principal:** #000000
-  *(preto sólido)*
+- **Fundo principal:**
 
-- **Cor de destaque / CTA:** #FFD700
-  *(amarelo/dourado)*
+- **Cor de destaque / CTA:**
 
-- **Texto principal:** #FFFFFF
-  *(branco sobre fundo escuro)*
+- **Texto principal:**
 
-- **Fundo alternativo / cards:** #111111
-  *(cinza muito escuro pra cards e seções)*
+- **Fundo alternativo / cards:**
 
-- **Cor proibida:** degradês coloridos, cores pastel, tons de rosa
+- **Cor proibida:**
 
 ---
 
 ## Tipografia
 
-- **Títulos e destaques:** Monospace (ou fonte bold sem serifa)
+- **Títulos e destaques:**
 
-- **Corpo, subtítulos e botões:** Monospace / Inter / DM Sans
+- **Corpo, subtítulos e botões:**
 
-- **Peso do título:** Bold / Extrabold
+- **Peso do título:**
 
 ---
 
 ## Estilo geral
 
-Dark, minimalista e bold, com toques de amarelo/dourado como acento. Tech com personalidade, sem ser genérico.
-
 ---
 
 ## Elementos-chave
 
-- Bordas: solid ou sem borda
-- Border-radius dos cards: 8px
-- Botões: com borda, cantos levemente arredondados
-- Sombras: não (visual flat)
+- Bordas:
+- Border-radius dos cards:
+- Botões:
+- Sombras:
 
 ---
 
 ## O que NUNCA fazer
 
-- Degradês coloridos ou "arco-íris"
-- Visual de startup genérica (azul + branco + ilustrações flat)
-- Fontes serifadas clássicas (Times, Georgia)
-- Excesso de cores
-- Qualquer coisa "bagaceira"
-
 ---
 
 ## Observações adicionais
-
-- A Dobra (marca de produtos) tem estilo mais ousado e provocador
-- Pra projetos premium (tipo Pregio): elegância, sofisticação, sobriedade
-- O logo da DobraLabs é uma esfera/bolinha branca sobre fundo escuro
