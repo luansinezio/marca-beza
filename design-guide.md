@@ -877,3 +877,5 @@ Diferenças em relação ao guia da Beza:
 - Sensação alvo: mais sóbria e "stealth". A Beza é dark premium com lilás. A marca do Luan é dark premium quase monocromática, com o lilás só na assinatura.
 
 Ponto de partida. Refinar quando o Luan produzir o primeiro material pessoal.
+
+Estilo de tirinha doodle (line art preto à mão, personagem = Luan): guia completo e templates de prompt em `conteudo/luan/tirinhas/estilo.md`.
