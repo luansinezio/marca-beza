@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beza — Logo Líquido</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: #0A0A10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow: hidden;
+  }
+  #stage {
+    width: min(88vw, 1400px);
+    position: relative;
+  }
+  canvas { display: block; width: 100%; height: auto; }
+  #hint {
+    color: #8B8DA1;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    user-select: none;
+  }
+  #err {
+    color: #F34D4D;
+    font-size: 13px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="hint">mova o mouse sobre o logo</div>
+<div id="err"></div>
+
+<script>
+'use strict';
+
+/* ============================================================
+   Réplica local do shader "Logo Gradient" (Framer) com o logo
+   da Beza. Duas passadas WebGL2:
+   1. buffer "push" (ping-pong, meia resolução, rgba16f) que
+      acumula a velocidade do cursor como campo fluido
+   2. passada principal: heightmap do logo + turbulência +
+      paleta OKLab, deslocada pelo campo do push
+   ============================================================ */
+
+// Paleta Beza (design guide): mapeada na mesma rampa
+// escuro -> lilás de marca -> lilás profundo -> off-white
+const CONFIG = {
+  colors: [
+    [46/255,  46/255,  92/255 ],   // lilás escuro profundo
+    [154/255, 155/255, 229/255],   // #9A9BE5 lilás de marca
+    [123/255, 121/255, 201/255],   // #7B79C9 lilás profundo
+    [236/255, 237/255, 246/255],   // #ECEDF6 off-white lilás
+  ],
+  colorBack: [0, 0, 0, 0],
+  // valores da instância do hero do site de referência
+  angle: 229, bend: 0.24, contour: 0.8, motionMode: 0,
+  scale: 1.53, seed: 6, speed: 0.59,
+  turbAmp: 0.12, turbFreq: 0.9, turbIter: 4, waveFreq: 2.1,
+  mousePersist: 0.8, mousePush: 0.5, mouseRadius: 1.0, mouseStretch: 0.1,
+  pushResolutionScale: 0.5,
+  heightmapWidth: 2048,
+  heightmapPad: 0.10,     // respiro em volta do logo (fração da largura)
+  heightmapBlur: 16,      // px de blur pro campo de profundidade
+};
+
+const LOGO_SVG = `<svg width="1779" height="464" viewBox="0 0 1779 464" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0.0474456 242.925C0.0639817 221.478 3.47043 200.51 10.1345 180.154C25.6124 132.927 49.5071 90.4786 82.9929 53.5699C98.9172 36.025 116.545 20.6629 138.207 10.5097C152.362 3.8787 193.587 -11.6818 215.497 15.3052C243.261 49.5185 207.874 89.6518 190.709 101.128C177.332 110.057 163.292 118.011 149.419 126.197C130.005 137.656 110.261 148.603 91.079 160.427C78.2304 168.347 65.1007 175.59 57.7587 187.992C56.7996 189.613 53.2112 197.054 59.2965 199.154C62.8187 200.378 65.9275 198.675 68.2095 196.525C84.8284 180.783 101.811 165.487 120.712 152.473C136.901 141.327 153.916 131.786 173.165 127.073C202.268 119.93 228.098 131.422 242.567 157.582C243.509 159.302 244.584 160.989 245.874 162.461C249.578 166.71 253.894 167.752 259.02 165.354C261.898 164.015 264.577 162.13 267.156 160.245C285.677 146.668 305.685 136.052 327.943 130.066C340.693 126.643 353.607 125.899 366.522 129.074C394.303 135.903 395.907 162.394 387.44 178.765C380.098 192.92 367.713 201.469 354.351 208.993C349.82 211.54 345.273 214.037 340.825 216.732C337.435 218.783 336.459 221.065 337.484 223.611C338.477 226.075 343.686 230.623 355.029 222.156C364.422 215.145 373.186 207.257 381.818 199.32C397.114 185.247 411.633 170.282 428.715 158.26C452.146 141.79 477.943 131.108 506.468 127.536C516.935 126.23 555.15 121.633 560.607 157.136C563.187 173.92 553.761 192.044 541.921 201.932C533.67 208.811 524.227 214.235 515.331 220.337C513.016 221.925 510.453 223.264 508.584 225.265C504.533 229.697 508.667 233.268 512.024 233.235C514.719 233.219 517.58 232.392 520.044 231.218C528.775 227.018 535.869 220.618 542.764 213.938C556.638 200.477 570.115 186.537 584.717 173.887C606.826 154.722 631.878 140.236 659.907 131.306C679.039 125.436 730.566 118.904 744.588 162.957C753.816 191.878 727.341 223.71 705.745 239.006C702.107 241.586 698.453 244.166 694.881 246.861C691.821 249.16 690.697 251.905 691.755 253.972C692.731 255.89 696.137 256.948 699.379 255.675C702.339 254.501 722.182 241.503 730.896 239.899C743.183 236.063 756.461 243.984 758.462 263.645C760.463 283.323 740.851 338.091 684.463 338.223C660.535 338.273 637.947 329.029 632.572 305.68C625.925 276.841 657.476 241.57 664.14 232.425C669.398 225.1 667.348 222.669 666.323 221.561C664.768 219.891 662.222 220.205 660.7 221.858C651.391 230.242 632.176 268.523 621.741 286.482C616.383 295.709 610.827 304.953 604.13 313.254C576.879 347.12 541.657 339.48 526.526 320.91C520.044 312.956 511.726 317.471 508.303 326.417C491.205 362.416 469.228 394.992 440.654 422.938C423.109 440.103 403.298 453.695 379.552 460.955C365.53 465.238 317.773 470.695 309.72 427.734C302.345 388.394 337.088 367.608 349.176 360.217C367.531 349.005 386.25 338.405 404.82 327.541C417.023 320.397 429.227 313.287 441.381 306.061C443.779 304.638 451.402 299.926 452.791 295.957C454.61 290.748 450.195 288.185 442.721 293.51C437.016 297.561 430.682 300.521 423.638 301.612C415.056 302.935 408.458 299.86 403.53 292.683C393.79 275.006 411.484 259.032 417.536 253.476C422.811 248.63 429.988 243.752 434.982 238.626C436.139 237.436 437.165 235.567 437.198 233.996C437.231 232.144 432.534 224.223 418.495 238.791C412.823 244.133 357.774 299.909 323.842 319.438C304.329 330.683 284.8 337.694 262.526 337.43C241.922 337.198 227.072 327.855 217.961 309.384C216.258 305.945 214.522 302.505 212.719 299.115C208.337 290.88 201.954 290.963 195.819 294.882C189.684 298.785 177.497 307.152 148.641 321.373C119.786 335.594 39.4531 359.869 7.70369 290.269C0.0309094 273.087 -0.167525 257.593 0.0474456 242.925Z" fill="#FFFFFF"/>
+<path d="M1777.8 296.7C1776.79 292.906 1770.29 285.404 1768.01 280.689C1751.82 247.273 1736.53 219.515 1719.58 189.486C1713.89 179.369 1705.67 156.006 1696.18 150.454C1686.06 144.539 1641.6 144.281 1630.97 148.954C1622.89 152.491 1612.61 173.475 1607.95 181.92C1594.71 205.883 1584.71 232.333 1569.01 254.689C1567.98 253.339 1563.52 250.059 1563.52 249.416V160.078C1563.52 159.264 1553.35 149.897 1550.89 148.933C1539.62 144.517 1503.25 143.617 1497.98 156.456C1494.42 165.115 1496.75 171.524 1495.6 179.305C1495.14 182.413 1496.83 182.734 1492.24 182.499C1485.83 182.177 1464.9 160.85 1453.72 156.027C1426.4 144.217 1337.68 143.445 1305.9 146.168C1292.52 147.325 1283.01 150.497 1280.97 164.537C1278.38 182.434 1284.51 268.085 1278.79 275.137C1277.37 276.895 1275.28 277.774 1273.04 278.052L1142.66 277.088C1138.27 274.559 1135.67 261.934 1141.76 259.126L1245.74 255.825C1254.63 251.538 1256.52 214.736 1242.36 212.228L1144.77 211.22C1134.91 208.112 1138.42 200.568 1140.48 193.044H1253.38C1268.98 193.044 1272.32 147.068 1252.88 146.832C1201.88 148.697 1145.91 142.374 1095.48 146.189C1081.05 147.282 1083.77 150.004 1076.46 154.227C1066.29 160.1 1062.84 149.747 1060.16 148.761C1048.54 144.517 989.919 144.753 978.827 149.961C973.314 152.576 963.782 171.374 961.212 177.526C955.567 191.051 952.053 206.676 947.089 219.108C945.002 224.338 938.786 245.236 931.186 241.957C927.035 231.369 921.171 221.702 916.8 211.242C913.088 202.304 908.519 192.058 905.268 184.085C900.963 173.539 901.117 156.799 889.608 150.412C878.12 144.046 817.872 144.581 805.067 149.383C799.093 151.633 792.723 164.301 791.91 170.667C786.727 212.013 795.512 263.906 792.437 306.388C798.675 315.862 801.992 323.321 814.907 324.993C820.135 325.679 842.977 325.851 847.414 324.843C848.886 324.5 848.996 321.757 849.721 321.457C855.431 319.142 860.307 319.72 864.305 313.204V257.926C869.554 249.609 875.946 262.17 878.318 267.721C883.26 279.295 886.269 291.063 891.826 303.559C894.901 310.525 891.738 315.241 902.128 321.135C910.847 326.086 944.629 326.451 955.413 325.079C958.642 324.672 960.882 317.448 969.426 320.556C969.58 313.655 973.424 307.374 976.301 301.073C979.442 294.192 978.607 293.228 980.584 287.826C984.67 276.659 989.634 267.014 994.751 256.832L1001.34 258.933C1002.07 259.898 1002.2 261.034 1002.39 262.17C1004.92 275.823 999.122 300.815 1002.39 312.733C1003.54 316.827 1018.19 324.415 1023.13 324.993C1042.7 327.372 1057.22 324.629 1073.69 314.983L1088.87 325.015L1275.43 325.079C1285.19 313.547 1293.12 324.586 1297.07 325.079C1323.82 328.466 1409.55 326.858 1434.76 320.149C1459.43 313.569 1474.65 298.393 1492.31 282.425C1498.26 282.704 1491.65 310.739 1502.9 319.935C1510.04 325.765 1533.54 326.301 1542.83 325.015C1548.12 324.286 1551.42 320.428 1555.85 320.428C1560.29 320.428 1563.61 324.286 1568.9 325.015C1597.63 328.98 1611.53 322.764 1620.34 296.014L1624.23 293.421L1701.15 293.485C1705.98 297.815 1704.71 305.381 1706.66 309.432C1708.11 312.497 1720.45 320.513 1722.89 324.865C1745.3 325.679 1786.54 330.03 1777.8 296.7ZM1427.78 258.054C1425.06 263.691 1407.15 278.117 1402.43 278.117H1348.73V194.116L1352 190.922C1365.86 192.165 1382.42 189.207 1395.84 190.922C1401.07 191.587 1421.06 198.874 1424.68 202.304C1434.39 211.52 1433.51 246.137 1427.78 258.054ZM1673.14 246.222H1651.2C1651.88 241.228 1649.79 234.134 1651.82 229.718C1652.06 229.139 1654.69 228.989 1655.62 227.682C1659.11 222.752 1655.2 218.851 1666.53 220.694C1665.28 231.476 1677.43 232.119 1673.14 246.222Z" fill="#FFFFFF"/>
+</svg>`;
+
+// ---------- Shaders (portados do bundle do site, GLSL ES 3.00) ----------
+
+const VERT = `#version 300 es
+precision highp float;
+layout(location = 0) in vec2 a_pos;
+out vec2 v_uv;
+void main() {
+  v_uv = a_pos * 0.5 + 0.5;
+  gl_Position = vec4(a_pos, 0.0, 1.0);
+}`;
+
+// Passada 1: campo fluido do mouse (ping-pong)
+const PUSH_FRAG = `#version 300 es
+precision highp float;
+in vec2 v_uv;
+out vec4 fragColor;
+
+uniform sampler2D u_push_buffer;
+uniform vec2  u_resolution;
+uniform float u_deltaTime;
+uniform vec4  u_mousePosition;   // xy = pos uv, zw = velocidade uv/frame
+uniform float u_mouseHover;
+uniform float u_mousePersist;
+uniform float u_mousePush;
+uniform float u_mouseRadius;
+uniform float u_mouseStretch;
+
+void main() {
+    float aspect = u_resolution.x / u_resolution.y;
+    vec2 aspectFix = vec2(aspect, 1.0);
+
+    vec2 texel = 1.0 / u_resolution;
+
+    vec4 prev = texture(u_push_buffer, v_uv);
+    vec2 c  = prev.xy;
+    vec2 nl = texture(u_push_buffer, v_uv - vec2(texel.x, 0.0)).xy;
+    vec2 nr = texture(u_push_buffer, v_uv + vec2(texel.x, 0.0)).xy;
+    vec2 nd = texture(u_push_buffer, v_uv - vec2(0.0, texel.y)).xy;
+    vec2 nu = texture(u_push_buffer, v_uv + vec2(0.0, texel.y)).xy;
+
+    vec2 blurred = (nl + nr + nd + nu) * 0.25;
+    vec2 field = mix(c, blurred, 0.12);
+
+    float r = clamp(u_deltaTime * 60.0, 0.0, 3.0);
+    float decay = pow(mix(0.86, 0.985, clamp(u_mousePersist, 0.0, 1.0)), r);
+    field *= decay;
+
+    vec2 rawVel = u_mousePosition.zw * aspectFix * u_mouseHover;
+    float smoothK = 1.0 - pow(0.75, r);
+    vec2 mouseVel = mix(prev.zw, rawVel, smoothK);
+
+    float speed    = length(mouseVel);
+    float brush    = max(u_mouseRadius * 0.1, 0.001);
+
+    float speedPerSec = speed / max(u_deltaTime, 1e-4);
+    float moving      = 1.0 - exp(-speedPerSec * 0.5);
+
+    vec2 dir       = speed > 1e-5 ? mouseVel / speed : vec2(1.0, 0.0);
+    vec2 ortho     = vec2(-dir.y, dir.x);
+
+    vec2 toMouse   = (v_uv - u_mousePosition.xy) * aspectFix;
+
+    float along    = dot(toMouse, dir);
+    float across   = dot(toMouse, ortho);
+    float ra       = brush * (1.0 + u_mouseStretch * moving);
+    float rb       = brush;
+    float d2       = (along * along) / (ra * ra) + (across * across) / (rb * rb);
+    float falloff  = exp(-d2);
+
+    field += mouseVel * falloff * (u_mousePush * 0.1) * u_mouseHover;
+
+    field = clamp(field, -1.0, 1.0);
+
+    fragColor = vec4(field, mouseVel);
+}`;
+
+// Passada 2: o metal líquido em cima do heightmap do logo
+const MAIN_FRAG = `#version 300 es
+precision highp float;
+in vec2 v_uv;
+out vec4 fragColor;
+
+uniform sampler2D u_image_heightmap;
+uniform sampler2D u_push_buffer;
+uniform vec2  u_resolution;
+uniform float u_time;
+uniform float u_pixelRatio;
+
+uniform vec4  u_colors[8];
+uniform int   u_colors_length;
+uniform vec4  u_colorBack;
+uniform float u_angle;
+uniform float u_bend;
+uniform float u_contour;
+uniform float u_motionMode;
+uniform float u_scale;
+uniform float u_seed;
+uniform float u_speed;
+uniform float u_turbAmp;
+uniform float u_turbFreq;
+uniform float u_turbIter;
+uniform float u_waveFreq;
+
+const float GOLDEN_ANGLE = 2.3999632;
+const float TAU = 6.28318530;
+
+uvec3 hash3(uvec3 v) {
+    v = v * 1664525u + 1013904223u;
+    v.x += v.y * v.z;
+    v.y += v.z * v.x;
+    v.z += v.x * v.y;
+    v ^= v >> 16u;
+    v.x += v.y * v.z;
+    v.y += v.z * v.x;
+    v.z += v.x * v.y;
+    return v;
+}
+
+vec3 seedRandom(float seedVal) {
+    uvec3 s = uvec3(
+        floatBitsToUint(seedVal),
+        floatBitsToUint(seedVal * 1.5 + 7.31),
+        floatBitsToUint(seedVal * 2.7 + 13.37)
+    );
+    s = hash3(s);
+    return vec3(s) / float(0xFFFFFFFFu);
+}
+
+vec3 toLinear(vec3 c) { return pow(c, vec3(2.2)); }
+vec3 toSrgb(vec3 c) { return pow(clamp(c, 0.0, 1.0), vec3(0.4545)); }
+
+vec3 linearToOklab(vec3 c) {
+    float l = 0.4122214708 * c.r + 0.5363325363 * c.g + 0.0514459929 * c.b;
+    float m = 0.2119034982 * c.r + 0.6806995451 * c.g + 0.1073969566 * c.b;
+    float s = 0.0883024619 * c.r + 0.2817188376 * c.g + 0.6299787005 * c.b;
+    l = pow(max(l, 0.0), 1.0 / 3.0);
+    m = pow(max(m, 0.0), 1.0 / 3.0);
+    s = pow(max(s, 0.0), 1.0 / 3.0);
+    return vec3(
+        0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+        1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+        0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s
+    );
+}
+
+vec3 oklabToLinear(vec3 c) {
+    float l = c.x + 0.3963377774 * c.y + 0.2158037573 * c.z;
+    float m = c.x - 0.1055613458 * c.y - 0.0638541728 * c.z;
+    float s = c.x - 0.0894841775 * c.y - 1.2914855480 * c.z;
+    l = l * l * l;
+    m = m * m * m;
+    s = s * s * s;
+    return vec3(
+        +4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+        -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+        -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
+    );
+}
+
+vec3 oklabToLch(vec3 lab) { return vec3(lab.x, length(lab.yz), atan(lab.z, lab.y)); }
+vec3 lchToOklab(vec3 lch) { return vec3(lch.x, lch.y * cos(lch.z), lch.y * sin(lch.z)); }
+
+vec3 mixLch(vec3 lab0, vec3 lab1, float t) {
+    vec3 lch0 = oklabToLch(lab0);
+    vec3 lch1 = oklabToLch(lab1);
+    if (lch0.y < 0.05) lch0.z = lch1.z;
+    if (lch1.y < 0.05) lch1.z = lch0.z;
+    float dh = lch1.z - lch0.z;
+    if (dh > 3.14159265) dh -= 6.28318530;
+    if (dh < -3.14159265) dh += 6.28318530;
+    return lchToOklab(vec3(
+        mix(lch0.x, lch1.x, t),
+        mix(lch0.y, lch1.y, t),
+        lch0.z + dh * t
+    ));
+}
+
+vec3 getColor(int idx) {
+    if (u_colors_length < 1) return vec3(0.0);
+    int safeIdx = clamp(idx, 0, u_colors_length - 1);
+    return u_colors[safeIdx].rgb;
+}
+
+vec3 paletteN(float t, int count) {
+    if (count < 1) return vec3(0.0);
+    if (count < 2) return toLinear(getColor(0));
+    float segmentSize = 1.0 / float(count - 1);
+    t = clamp(t, 0.0, 1.0);
+    int idx = min(int(floor(t / segmentSize)), count - 2);
+    float localT = clamp((t - float(idx) * segmentSize) / segmentSize, 0.0, 1.0);
+    vec3 lab0 = linearToOklab(toLinear(getColor(idx)));
+    vec3 lab1 = linearToOklab(toLinear(getColor(idx + 1)));
+    return oklabToLinear(mixLch(lab0, lab1, localT));
+}
+
+vec3 softGamutMap(vec3 linearRgb) {
+    float maxC = max(linearRgb.r, max(linearRgb.g, linearRgb.b));
+    float minC = min(linearRgb.r, min(linearRgb.g, linearRgb.b));
+    if (minC >= 0.0 && maxC <= 1.0) return linearRgb;
+    vec3 lab = linearToOklab(max(linearRgb, 0.0));
+    float L = clamp(lab.x, 0.0, 1.0);
+    float C = length(lab.yz);
+    float h = atan(lab.z, lab.y);
+    float maxChroma = 0.4 * (1.0 - pow(abs(2.0 * L - 1.0), 2.0));
+    if (C > maxChroma * 0.7) {
+        float knee = maxChroma * 0.7;
+        C = knee + (maxChroma - knee) * tanh((C - knee) / (maxChroma - knee + 0.001));
+    }
+    return clamp(oklabToLinear(vec3(L, C * cos(h), C * sin(h))), 0.0, 1.0);
+}
+
+float blurDepth3x3(vec2 uv, vec2 dudx, vec2 dudy, vec2 texel, float radius) {
+    vec2 r = radius * texel;
+    float sum = 4.0 * textureGrad(u_image_heightmap, uv, dudx, dudy).r;
+    sum += 2.0 * textureGrad(u_image_heightmap, uv + vec2(0.0, -r.y), dudx, dudy).r;
+    sum += 2.0 * textureGrad(u_image_heightmap, uv + vec2(0.0,  r.y), dudx, dudy).r;
+    sum += 2.0 * textureGrad(u_image_heightmap, uv + vec2(-r.x, 0.0), dudx, dudy).r;
+    sum += 2.0 * textureGrad(u_image_heightmap, uv + vec2( r.x, 0.0), dudx, dudy).r;
+    sum += textureGrad(u_image_heightmap, uv + vec2(-r.x, -r.y), dudx, dudy).r;
+    sum += textureGrad(u_image_heightmap, uv + vec2( r.x, -r.y), dudx, dudy).r;
+    sum += textureGrad(u_image_heightmap, uv + vec2(-r.x,  r.y), dudx, dudy).r;
+    sum += textureGrad(u_image_heightmap, uv + vec2( r.x,  r.y), dudx, dudy).r;
+    return sum / 16.0;
+}
+
+vec2 heightGrad(vec2 uv, vec2 dudx, vec2 dudy, vec2 texel, float blurRadius) {
+    float eps = 4.0;
+    float dR = blurDepth3x3(uv + vec2(eps * texel.x, 0.0), dudx, dudy, texel, blurRadius);
+    float dL = blurDepth3x3(uv - vec2(eps * texel.x, 0.0), dudx, dudy, texel, blurRadius);
+    float dU = blurDepth3x3(uv + vec2(0.0, eps * texel.y), dudx, dudy, texel, blurRadius);
+    float dD = blurDepth3x3(uv - vec2(0.0, eps * texel.y), dudx, dudy, texel, blurRadius);
+    return vec2(dR - dL, dU - dD) / (2.0 * eps * texel);
+}
+
+void main() {
+    vec2 uv = vec2(v_uv.x, 1.0 - v_uv.y);
+    vec2 texSize = vec2(textureSize(u_image_heightmap, 0));
+    float imgAspect = texSize.x / texSize.y;
+    float canvasAspect = u_resolution.x / u_resolution.y;
+
+    if (canvasAspect > imgAspect) {
+        uv.x = (uv.x - 0.5) * (canvasAspect / imgAspect) + 0.5;
+    } else {
+        uv.y = (uv.y - 0.5) * (imgAspect / canvasAspect) + 0.5;
+    }
+
+    vec2 dudx = dFdx(uv);
+    vec2 dudy = dFdy(uv);
+
+    vec4 hm = textureGrad(u_image_heightmap, uv, dudx, dudy);
+    float fw_b = 0.5 * fwidth(hm.b);
+    float hardMask = smoothstep(0.5 - fw_b, 0.5 + fw_b, hm.b);
+    float opacity = hardMask * (1.0 - hm.g);
+
+    float edgeDist;
+    if (canvasAspect > imgAspect) {
+        edgeDist = min(uv.x, 1.0 - uv.x);
+    } else if (canvasAspect < imgAspect) {
+        edgeDist = min(uv.y, 1.0 - uv.y);
+    } else {
+        edgeDist = 1.0;
+    }
+    opacity *= smoothstep(0.0, 1.0 * fwidth(edgeDist), edgeDist);
+
+    if (opacity < 0.001) {
+        fragColor = vec4(u_colorBack.rgb * u_colorBack.a, u_colorBack.a);
+        return;
+    }
+
+    vec2 texel = 1.0 / texSize;
+    int colorCount = u_colors_length;
+
+    if (colorCount < 1) {
+        fragColor = vec4(u_colorBack.rgb * u_colorBack.a, u_colorBack.a);
+        return;
+    }
+
+    float rawDepth = blurDepth3x3(uv, dudx, dudy, texel, 6.0);
+    float depth = max(rawDepth, 0.001);
+
+    vec2 grad = heightGrad(uv, dudx, dudy, texel, 6.0);
+    float gradMag = min(length(grad), 5.0);
+    vec2 gradDir = gradMag > 0.001 ? normalize(grad) : vec2(0.0);
+    vec2 contourDir = vec2(-gradDir.y, gradDir.x);
+
+    float t = mod(u_time * u_speed, 3600.0);
+    float isMelt = step(0.5, u_motionMode);
+
+    vec3 seedOffset = seedRandom(u_seed);
+    vec3 seedOffset2 = seedRandom(u_seed + 100.0);
+    float seedAngle = u_seed * GOLDEN_ANGLE;
+    vec2 seedPhase = (seedOffset2.xy - 0.5) * TAU;
+
+    vec2 p = (uv - 0.5) * 2.0;
+    p.x *= imgAspect;
+
+    float cs = cos(seedAngle);
+    float sn = sin(seedAngle);
+    p = mat2(cs, -sn, sn, cs) * p;
+
+    float ang = u_angle * 3.14159 / 180.0;
+    float cosA = cos(ang);
+    float sinA = sin(ang);
+    p = vec2(p.x * cosA - p.y * sinA, p.x * sinA + p.y * cosA);
+
+    // === MOUSE PUSH (campo fluido do buffer) ===
+    vec2 pf = texture(u_push_buffer, v_uv).xy;
+    pf.y = -pf.y;
+    if (canvasAspect <= imgAspect) {
+        pf *= imgAspect / canvasAspect;
+    }
+    pf = mat2(cs, -sn, sn, cs) * pf;
+    pf = vec2(pf.x * cosA - pf.y * sinA, pf.x * sinA + pf.y * cosA);
+    p -= pf * 2.0;
+
+    float tTurb = t * mix(1.0, 0.4, isMelt);
+    vec2 meltOffset = vec2(1.0, 0.0) * t * 0.4 * isMelt;
+
+    // === DEFORMAÇÃO GUIADA PELA FORMA ===
+    float edgeProximity = 1.0 - smoothstep(0.0, 0.8, depth);
+
+    float coordScale = max(0.4, 0.1 + depth * 1.0);
+    p *= coordScale;
+
+    p += contourDir * edgeProximity * u_bend * 2.0;
+    p -= gradDir * edgeProximity * u_bend * 0.5;
+    p *= max(0.5, mix(1.0, 0.4 + 0.6 * smoothstep(0.0, 0.5, depth), u_contour));
+
+    // === TURBULÊNCIA ===
+    int turbIter = int(u_turbIter);
+    float freq = 1.0 / max(u_turbFreq, 0.01);
+
+    vec2 q = p * u_scale + meltOffset;
+
+    float a = seedPhase.x;
+    float d = seedPhase.y;
+
+    for (int j = 2; j < 10; j++) {
+        if (j >= turbIter) break;
+        float fj = float(j);
+        q += u_turbAmp * sin(length(q) / freq * fj + tTurb + vec2(a, d) + seedOffset.xy * fj) / fj;
+        a += cos(fj + d * 1.2 + q.x * 2.0 - tTurb + seedOffset2.z);
+        d += sin(fj * q.y + a + seedOffset.z + tTurb + seedOffset2.y);
+    }
+
+    float base = length(q.yx + vec2(a, d) * 0.2) * u_waveFreq + seedOffset.x;
+    float val = 0.5 + 0.125 * sin(base + 1.0) + 0.25 * sin(base + 4.0) + 0.125 * sin(base + 9.0);
+    val = clamp((val - 0.3) / 0.4, 0.0, 1.0);
+
+    float innerIntensity = smoothstep(0.0, 0.4, depth);
+    float contourHeat = (1.0 - innerIntensity) * u_contour;
+    val = mix(val, val * innerIntensity + contourHeat, 0.5 + 0.5 * u_contour);
+
+    vec3 col = paletteN(val, colorCount);
+    col = softGamutMap(col);
+    col = toSrgb(col);
+
+    col *= opacity;
+    vec3 bgColor = u_colorBack.rgb * u_colorBack.a;
+    col = col + bgColor * (1.0 - opacity);
+    float finalAlpha = opacity + u_colorBack.a * (1.0 - opacity);
+
+    fragColor = vec4(col, finalAlpha);
+}`;
+
+// ---------- Heightmap: rasteriza o SVG e monta os canais ----------
+// R = profundidade (alpha borrado remapeado), G = 0, B = máscara nítida
+
+function buildHeightmap(img) {
+  const pad = CONFIG.heightmapPad;
+  const W = CONFIG.heightmapWidth;
+  const logoW = W * (1 - pad * 2);
+  const logoH = logoW * (img.height / img.width);
+  const H = Math.round(logoH + W * pad * 1.2);
+
+  const sharp = document.createElement('canvas');
+  sharp.width = W; sharp.height = H;
+  const sctx = sharp.getContext('2d');
+  const x = (W - logoW) / 2, y = (H - logoH) / 2;
+  sctx.drawImage(img, x, y, logoW, logoH);
+
+  const blur = document.createElement('canvas');
+  blur.width = W; blur.height = H;
+  const bctx = blur.getContext('2d');
+  bctx.filter = `blur(${CONFIG.heightmapBlur}px)`;
+  bctx.drawImage(sharp, 0, 0);
+
+  const sd = sctx.getImageData(0, 0, W, H).data;
+  const bd = bctx.getImageData(0, 0, W, H).data;
+  const out = new Uint8ClampedArray(W * H * 4);
+
+  for (let i = 0; i < W * H; i++) {
+    const sa = sd[i * 4 + 3] / 255;
+    const ba = bd[i * 4 + 3] / 255;
+    // profundidade: 0 na borda da letra, 1 no miolo do traço
+    const depth = Math.min(1, Math.max(0, (ba - 0.42) / 0.5));
+    out[i * 4 + 0] = depth * 255;
+    out[i * 4 + 1] = 0;
+    out[i * 4 + 2] = sa * 255;
+    out[i * 4 + 3] = 255;
+  }
+  return { data: new ImageData(out, W, H), width: W, height: H };
+}
+
+// ---------- WebGL harness ----------
+
+function fail(msg) {
+  const el = document.getElementById('err');
+  el.textContent = msg;
+  el.style.display = 'block';
+  throw new Error(msg);
+}
+
+function compile(gl, type, src) {
+  const sh = gl.createShader(type);
+  gl.shaderSource(sh, src);
+  gl.compileShader(sh);
+  if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+    fail('Erro de shader: ' + gl.getShaderInfoLog(sh));
+  }
+  return sh;
+}
+
+function program(gl, fragSrc) {
+  const p = gl.createProgram();
+  gl.attachShader(p, compile(gl, gl.VERTEX_SHADER, VERT));
+  gl.attachShader(p, compile(gl, gl.FRAGMENT_SHADER, fragSrc));
+  gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
+    fail('Erro de link: ' + gl.getProgramInfoLog(p));
+  }
+  return p;
+}
+
+function start(heightmap) {
+  const canvas = document.getElementById('gl');
+  const gl = canvas.getContext('webgl2', { alpha: true, premultipliedAlpha: true, antialias: false });
+  if (!gl) fail('WebGL2 indisponível nesse navegador.');
+
+  const floatExt = gl.getExtension('EXT_color_buffer_float') || gl.getExtension('EXT_color_buffer_half_float');
+  const pushEnabled = !!floatExt;
+
+  // geometria: triângulo fullscreen
+  const vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);
+  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+
+  // textura do heightmap
+  const hmTex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, hmTex);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, heightmap.data);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+  const pushProg = program(gl, PUSH_FRAG);
+  const mainProg = program(gl, MAIN_FRAG);
+
+  const U = (prog, name) => gl.getUniformLocation(prog, name);
+
+  // ping-pong do buffer push
+  let pushA = null, pushB = null, fboA = null, fboB = null;
+  let pushW = 0, pushH = 0;
+
+  function makePushTex(w, h) {
+    const tex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, w, h, 0, gl.RGBA, gl.HALF_FLOAT, null);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    const fbo = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    return { tex, fbo };
+  }
+
+  function allocPush() {
+    if (!pushEnabled) return;
+    pushW = Math.max(2, Math.floor(canvas.width * CONFIG.pushResolutionScale));
+    pushH = Math.max(2, Math.floor(canvas.height * CONFIG.pushResolutionScale));
+    for (const t of [pushA, pushB]) {
+      if (t) { gl.deleteTexture(t.tex); gl.deleteFramebuffer(t.fbo); }
+    }
+    pushA = makePushTex(pushW, pushH);
+    pushB = makePushTex(pushW, pushH);
+  }
+
+  // tamanho do canvas segue o container, aspecto segue o heightmap
+  const stage = document.getElementById('stage');
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const cssW = stage.clientWidth;
+    const cssH = cssW * (heightmap.height / heightmap.width);
+    canvas.style.height = cssH + 'px';
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    allocPush();
+  }
+  new ResizeObserver(resize).observe(stage);
+  resize();
+
+  // mouse em uv (y pra cima), velocidade por frame
+  const mouse = { x: 0.5, y: 0.5, px: 0.5, py: 0.5, vx: 0, vy: 0, hover: 0, has: false };
+  window.addEventListener('pointermove', (e) => {
+    const r = canvas.getBoundingClientRect();
+    const nx = (e.clientX - r.left) / r.width;
+    const ny = 1 - (e.clientY - r.top) / r.height;
+    if (!mouse.has) { mouse.px = nx; mouse.py = ny; mouse.has = true; }
+    mouse.x = nx; mouse.y = ny;
+    mouse.hover = (nx >= -0.05 && nx <= 1.05 && ny >= -0.05 && ny <= 1.05) ? 1 : 0;
+  });
+  window.addEventListener('pointerleave', () => { mouse.hover = 0; });
+
+  let last = performance.now();
+  const t0 = last;
+
+  function frame(now) {
+    const dt = Math.min(Math.max((now - last) / 1000, 0.0001), 0.1);
+    last = now;
+    const time = (now - t0) / 1000;
+
+    mouse.vx = mouse.x - mouse.px;
+    mouse.vy = mouse.y - mouse.py;
+    mouse.px = mouse.x;
+    mouse.py = mouse.y;
+
+    // passada 1: push (ping-pong)
+    if (pushEnabled) {
+      gl.bindFramebuffer(gl.FRAMEBUFFER, pushB.fbo);
+      gl.viewport(0, 0, pushW, pushH);
+      gl.useProgram(pushProg);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, pushA.tex);
+      gl.uniform1i(U(pushProg, 'u_push_buffer'), 0);
+      gl.uniform2f(U(pushProg, 'u_resolution'), pushW, pushH);
+      gl.uniform1f(U(pushProg, 'u_deltaTime'), dt);
+      gl.uniform4f(U(pushProg, 'u_mousePosition'), mouse.x, mouse.y, mouse.vx, mouse.vy);
+      gl.uniform1f(U(pushProg, 'u_mouseHover'), mouse.hover);
+      gl.uniform1f(U(pushProg, 'u_mousePersist'), CONFIG.mousePersist);
+      gl.uniform1f(U(pushProg, 'u_mousePush'), CONFIG.mousePush);
+      gl.uniform1f(U(pushProg, 'u_mouseRadius'), CONFIG.mouseRadius);
+      gl.uniform1f(U(pushProg, 'u_mouseStretch'), CONFIG.mouseStretch);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      const tmp = pushA; pushA = pushB; pushB = tmp;
+    }
+
+    // passada 2: principal
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.useProgram(mainProg);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, hmTex);
+    gl.uniform1i(U(mainProg, 'u_image_heightmap'), 0);
+
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, pushEnabled ? pushA.tex : hmTex);
+    gl.uniform1i(U(mainProg, 'u_push_buffer'), 1);
+
+    gl.uniform2f(U(mainProg, 'u_resolution'), canvas.width, canvas.height);
+    gl.uniform1f(U(mainProg, 'u_time'), time);
+    gl.uniform1f(U(mainProg, 'u_pixelRatio'), Math.min(window.devicePixelRatio || 1, 2));
+
+    const flat = new Float32Array(8 * 4);
+    CONFIG.colors.forEach((c, i) => { flat.set([c[0], c[1], c[2], 1], i * 4); });
+    gl.uniform4fv(U(mainProg, 'u_colors'), flat);
+    gl.uniform1i(U(mainProg, 'u_colors_length'), CONFIG.colors.length);
+    gl.uniform4fv(U(mainProg, 'u_colorBack'), CONFIG.colorBack);
+
+    gl.uniform1f(U(mainProg, 'u_angle'), CONFIG.angle);
+    gl.uniform1f(U(mainProg, 'u_bend'), CONFIG.bend);
+    gl.uniform1f(U(mainProg, 'u_contour'), CONFIG.contour);
+    gl.uniform1f(U(mainProg, 'u_motionMode'), CONFIG.motionMode);
+    gl.uniform1f(U(mainProg, 'u_scale'), CONFIG.scale);
+    gl.uniform1f(U(mainProg, 'u_seed'), CONFIG.seed);
+    gl.uniform1f(U(mainProg, 'u_speed'), CONFIG.speed);
+    gl.uniform1f(U(mainProg, 'u_turbAmp'), CONFIG.turbAmp);
+    gl.uniform1f(U(mainProg, 'u_turbFreq'), CONFIG.turbFreq);
+    gl.uniform1f(U(mainProg, 'u_turbIter'), CONFIG.turbIter);
+    gl.uniform1f(U(mainProg, 'u_waveFreq'), CONFIG.waveFreq);
+
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    requestAnimationFrame(frame);
+  }
+
+  requestAnimationFrame(frame);
+}
+
+// bootstrap: SVG inline -> Image -> heightmap -> WebGL
+const svgBlob = new Blob([LOGO_SVG], { type: 'image/svg+xml' });
+const svgUrl = URL.createObjectURL(svgBlob);
+const img = new Image();
+img.onload = () => {
+  URL.revokeObjectURL(svgUrl);
+  start(buildHeightmap(img));
+};
+img.onerror = () => fail('Falha ao carregar o SVG do logo.');
+img.src = svgUrl;
+</script>
+</body>
+</html>
