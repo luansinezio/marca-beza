@@ -67,11 +67,19 @@ const CONFIG = {
   scale: 1.53, seed: 6, speed: 0.59,
   turbAmp: 0.12, turbFreq: 0.9, turbIter: 4, waveFreq: 2.1,
   mousePersist: 0.8, mousePush: 0.5, mouseRadius: 1.0, mouseStretch: 0.1,
+  mouseGain: 1.0,   // multiplica a velocidade do cursor antes do depósito
   pushResolutionScale: 0.5,
   heightmapWidth: 2048,
   heightmapPad: 0.10,     // respiro em volta do logo (fração da largura)
   heightmapBlur: 16,      // px de blur pro campo de profundidade
 };
+
+// overrides via query string pra afinar sem editar: ?mouseGain=4&speed=0
+for (const [k, v] of new URLSearchParams(location.search)) {
+  if (k in CONFIG && typeof CONFIG[k] === 'number' && !isNaN(parseFloat(v))) {
+    CONFIG[k] = parseFloat(v);
+  }
+}
 
 const LOGO_SVG = `<svg width="1779" height="464" viewBox="0 0 1779 464" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M0.0474456 242.925C0.0639817 221.478 3.47043 200.51 10.1345 180.154C25.6124 132.927 49.5071 90.4786 82.9929 53.5699C98.9172 36.025 116.545 20.6629 138.207 10.5097C152.362 3.8787 193.587 -11.6818 215.497 15.3052C243.261 49.5185 207.874 89.6518 190.709 101.128C177.332 110.057 163.292 118.011 149.419 126.197C130.005 137.656 110.261 148.603 91.079 160.427C78.2304 168.347 65.1007 175.59 57.7587 187.992C56.7996 189.613 53.2112 197.054 59.2965 199.154C62.8187 200.378 65.9275 198.675 68.2095 196.525C84.8284 180.783 101.811 165.487 120.712 152.473C136.901 141.327 153.916 131.786 173.165 127.073C202.268 119.93 228.098 131.422 242.567 157.582C243.509 159.302 244.584 160.989 245.874 162.461C249.578 166.71 253.894 167.752 259.02 165.354C261.898 164.015 264.577 162.13 267.156 160.245C285.677 146.668 305.685 136.052 327.943 130.066C340.693 126.643 353.607 125.899 366.522 129.074C394.303 135.903 395.907 162.394 387.44 178.765C380.098 192.92 367.713 201.469 354.351 208.993C349.82 211.54 345.273 214.037 340.825 216.732C337.435 218.783 336.459 221.065 337.484 223.611C338.477 226.075 343.686 230.623 355.029 222.156C364.422 215.145 373.186 207.257 381.818 199.32C397.114 185.247 411.633 170.282 428.715 158.26C452.146 141.79 477.943 131.108 506.468 127.536C516.935 126.23 555.15 121.633 560.607 157.136C563.187 173.92 553.761 192.044 541.921 201.932C533.67 208.811 524.227 214.235 515.331 220.337C513.016 221.925 510.453 223.264 508.584 225.265C504.533 229.697 508.667 233.268 512.024 233.235C514.719 233.219 517.58 232.392 520.044 231.218C528.775 227.018 535.869 220.618 542.764 213.938C556.638 200.477 570.115 186.537 584.717 173.887C606.826 154.722 631.878 140.236 659.907 131.306C679.039 125.436 730.566 118.904 744.588 162.957C753.816 191.878 727.341 223.71 705.745 239.006C702.107 241.586 698.453 244.166 694.881 246.861C691.821 249.16 690.697 251.905 691.755 253.972C692.731 255.89 696.137 256.948 699.379 255.675C702.339 254.501 722.182 241.503 730.896 239.899C743.183 236.063 756.461 243.984 758.462 263.645C760.463 283.323 740.851 338.091 684.463 338.223C660.535 338.273 637.947 329.029 632.572 305.68C625.925 276.841 657.476 241.57 664.14 232.425C669.398 225.1 667.348 222.669 666.323 221.561C664.768 219.891 662.222 220.205 660.7 221.858C651.391 230.242 632.176 268.523 621.741 286.482C616.383 295.709 610.827 304.953 604.13 313.254C576.879 347.12 541.657 339.48 526.526 320.91C520.044 312.956 511.726 317.471 508.303 326.417C491.205 362.416 469.228 394.992 440.654 422.938C423.109 440.103 403.298 453.695 379.552 460.955C365.53 465.238 317.773 470.695 309.72 427.734C302.345 388.394 337.088 367.608 349.176 360.217C367.531 349.005 386.25 338.405 404.82 327.541C417.023 320.397 429.227 313.287 441.381 306.061C443.779 304.638 451.402 299.926 452.791 295.957C454.61 290.748 450.195 288.185 442.721 293.51C437.016 297.561 430.682 300.521 423.638 301.612C415.056 302.935 408.458 299.86 403.53 292.683C393.79 275.006 411.484 259.032 417.536 253.476C422.811 248.63 429.988 243.752 434.982 238.626C436.139 237.436 437.165 235.567 437.198 233.996C437.231 232.144 432.534 224.223 418.495 238.791C412.823 244.133 357.774 299.909 323.842 319.438C304.329 330.683 284.8 337.694 262.526 337.43C241.922 337.198 227.072 327.855 217.961 309.384C216.258 305.945 214.522 302.505 212.719 299.115C208.337 290.88 201.954 290.963 195.819 294.882C189.684 298.785 177.497 307.152 148.641 321.373C119.786 335.594 39.4531 359.869 7.70369 290.269C0.0309094 273.087 -0.167525 257.593 0.0474456 242.925Z" fill="#FFFFFF"/>
@@ -539,6 +547,11 @@ function start(heightmap) {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
+  // textura zero pro caso do push estar indisponível
+  const zeroTex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, zeroTex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0, 0]));
+
   const pushProg = program(gl, PUSH_FRAG);
   const mainProg = program(gl, MAIN_FRAG);
 
@@ -572,7 +585,31 @@ function start(heightmap) {
     }
     pushA = makePushTex(pushW, pushH);
     pushB = makePushTex(pushW, pushH);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, pushA.fbo);
+    const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    if (status !== gl.FRAMEBUFFER_COMPLETE) {
+      console.warn('push FBO incompleto, interacao de mouse desativada:', status);
+      pushA = pushB = null;
+    }
   }
+
+  // sonda de depuracao: varre o buffer push inteiro e acha o pico do campo
+  window.__dbg = () => {
+    if (!pushA) return { pushEnabled, max: null };
+    gl.bindFramebuffer(gl.FRAMEBUFFER, pushA.fbo);
+    const px = new Float32Array(pushW * pushH * 4);
+    gl.readPixels(0, 0, pushW, pushH, gl.RGBA, gl.FLOAT, px);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    let maxF = 0, maxV = 0, fx = 0, fy = 0;
+    for (let i = 0; i < pushW * pushH; i++) {
+      const f = Math.hypot(px[i * 4], px[i * 4 + 1]);
+      const v = Math.hypot(px[i * 4 + 2], px[i * 4 + 3]);
+      if (f > maxF) { maxF = f; fx = (i % pushW) / pushW; fy = Math.floor(i / pushW) / pushH; }
+      if (v > maxV) maxV = v;
+    }
+    return { pushEnabled, maxField: maxF, at: [fx, fy], maxVel: maxV, mouse: { ...mouse } };
+  };
 
   // tamanho do canvas segue o container, aspecto segue o heightmap
   const stage = document.getElementById('stage');
@@ -608,13 +645,14 @@ function start(heightmap) {
     last = now;
     const time = (now - t0) / 1000;
 
-    mouse.vx = mouse.x - mouse.px;
-    mouse.vy = mouse.y - mouse.py;
+    // velocidade em uv por segundo (unidade que o runtime do Framer usa)
+    mouse.vx = (mouse.x - mouse.px) / dt;
+    mouse.vy = (mouse.y - mouse.py) / dt;
     mouse.px = mouse.x;
     mouse.py = mouse.y;
 
     // passada 1: push (ping-pong)
-    if (pushEnabled) {
+    if (pushA) {
       gl.bindFramebuffer(gl.FRAMEBUFFER, pushB.fbo);
       gl.viewport(0, 0, pushW, pushH);
       gl.useProgram(pushProg);
@@ -623,7 +661,8 @@ function start(heightmap) {
       gl.uniform1i(U(pushProg, 'u_push_buffer'), 0);
       gl.uniform2f(U(pushProg, 'u_resolution'), pushW, pushH);
       gl.uniform1f(U(pushProg, 'u_deltaTime'), dt);
-      gl.uniform4f(U(pushProg, 'u_mousePosition'), mouse.x, mouse.y, mouse.vx, mouse.vy);
+      gl.uniform4f(U(pushProg, 'u_mousePosition'), mouse.x, mouse.y,
+        mouse.vx * CONFIG.mouseGain, mouse.vy * CONFIG.mouseGain);
       gl.uniform1f(U(pushProg, 'u_mouseHover'), mouse.hover);
       gl.uniform1f(U(pushProg, 'u_mousePersist'), CONFIG.mousePersist);
       gl.uniform1f(U(pushProg, 'u_mousePush'), CONFIG.mousePush);
@@ -643,7 +682,7 @@ function start(heightmap) {
     gl.uniform1i(U(mainProg, 'u_image_heightmap'), 0);
 
     gl.activeTexture(gl.TEXTURE1);
-    gl.bindTexture(gl.TEXTURE_2D, pushEnabled ? pushA.tex : hmTex);
+    gl.bindTexture(gl.TEXTURE_2D, pushA ? pushA.tex : zeroTex);
     gl.uniform1i(U(mainProg, 'u_push_buffer'), 1);
 
     gl.uniform2f(U(mainProg, 'u_resolution'), canvas.width, canvas.height);
