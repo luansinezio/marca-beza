@@ -52,8 +52,8 @@
     position: absolute; left: 50%;
     top: calc(0.838 * var(--band-top, 15.2%) + 8.1%);
     transform: translate(-50%, -50%);
-    display: inline-flex; align-items: stretch;
-    border-radius: 11px; overflow: hidden;
+    display: inline-flex; align-items: center;
+    border-radius: 11px;
     border: 1px solid rgba(154,155,229,0.55);
     font-family: 'IBM Plex Sans', system-ui, sans-serif;
     font-size: 21px; font-weight: 600;
@@ -61,8 +61,15 @@
     line-height: 1;
     white-space: nowrap; z-index: 3;
   }
-  #tag .fill { background: var(--roxo); color: #0A0A10; padding: 12px 21px 10px; }
-  #tag .line { color: var(--roxo); padding: 12px 21px 10px; border-left: 1px solid rgba(154,155,229,0.55); }
+  /* segmento cheio: pill propria, mais alta, sobrepondo a moldura */
+  #tag .fill {
+    background: var(--roxo); color: #0A0A10;
+    padding: 15px 22px 13px;
+    margin: -4px 0 -4px -1px;
+    border-radius: 13px;
+    position: relative; z-index: 1;
+  }
+  #tag .line { color: var(--roxo); padding: 12px 21px 10px; }
 
   #cliente {
     position: absolute; left: 50%;
@@ -88,7 +95,8 @@
       top: calc(var(--band-top, 15.2%) - 12px);
       transform: translate(-50%, -100%);
     }
-    #tag .fill, #tag .line { padding: 9px 13px 7px; }
+    #tag .fill { padding: 11px 14px 9px; margin: -3px 0 -3px -1px; border-radius: 10px; }
+    #tag .line { padding: 9px 13px 7px; }
     #cliente {
       font-size: 13px; padding: 9px 18px; border-width: 1px;
       top: calc(100% - var(--band-top, 15.2%) + 12px);
