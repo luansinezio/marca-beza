@@ -663,6 +663,7 @@ Em páginas longas (case, proposta, ebook web), barra horizontal fina no topo mo
 - `marca/logo-beza-iso.svg` — apenas o iso (favicon, ícone)
 - `marca/Logo Beza Claro.png` — PNG branco/lilás (raster, Figma)
 - `marca/Logo Beza Escuro.png` — PNG preto (raster, contextos light)
+- Logo atualizado em 31/jul/2026: wordmark novo (script beza + MEDIA, viewBox 763x198). Todos os arquivos acima regravados na nova versão; PNGs re-renderizados do vetor (claro #ECEDF6, escuro #0D0D0D).
 
 ### Em HTML (regra)
 
