@@ -664,7 +664,7 @@ Em páginas longas (case, proposta, ebook web), barra horizontal fina no topo mo
 - `marca/logo-beza-vertical.svg` — lockup vertical/compacto (MEDIA aninhado sobre o script; usar no mobile)
 - `marca/Logo Beza Claro.png` — PNG branco/lilás (raster, Figma)
 - `marca/Logo Beza Escuro.png` — PNG preto (raster, contextos light)
-- Logo atualizado em 31/jul/2026 (versão final "Ativo 1"): wordmark script beza + MEDIA, viewBox 760x198. Todos os arquivos acima regravados; PNGs re-renderizados do vetor (claro #ECEDF6, escuro #0D0D0D). Versão líquida interativa em `marca/logo-liquid-beza.html` e capa de proposta em `marca/capa-proposta-liquid.html`.
+- Logo atualizado em 31/jul/2026 (versão final "Ativo 1"): wordmark script beza + MEDIA, viewBox 760x198. Todos os arquivos acima regravados; PNGs re-renderizados do vetor (claro #ECEDF6, escuro #0D0D0D). Versão líquida interativa em `marca/logo-liquid-beza.html` e capa de proposta em `marca/capa-proposta-liquid.html` (no mobile o shader usa o logo vertical). Pill da capa em Archivo 600 (exceção à Plex: o I maiúsculo serifado da Plex foge da referência aprovada).
 
 ### Em HTML (regra)
 
