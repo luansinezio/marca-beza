@@ -722,6 +722,18 @@ Tamanho default: 44px altura, padding 12-14px, radius 10px. Para checkbox/radio 
 
 Slides seguem o **mesmo sistema dark-first do web**. O sistema antigo de três fundos alternantes (escuro/lilás/claro) foi descontinuado. Agora:
 
+### Regras de deck HTML (fechadas em 12/ago/2026, na aula da AI Class)
+
+Valem pra toda apresentação da casa. O template pronto com essas regras já aplicadas fica em `apresentacoes/_template-deck-beza/`.
+
+- **Overline fixo.** Os breadcrumbs de topo e rodapé ficam parados quando o slide troca. Só o conteúdo anima. Se eles entram e saem junto com o slide, a moldura "pisca" e a passagem fica suja.
+- **Clique não navega.** A troca de slide é só por teclado (setas, espaço, PageDown, que é o que o controle remoto manda). Clique do mouse serve pra selecionar texto. Clique navegando faz o apresentador pular slide sem querer.
+- **A medida sai do nome.** Em slide de pessoa (foto de fundo, texto à esquerda), a largura do nome define o bloco: o texto de apoio pode passar no máximo 20% dela. Nome comprido quebra em duas linhas e a medida segue valendo.
+- **Zero viúva.** Nenhum título ou apoio termina com duas palavras soltas na última linha. Em HTML isso é `text-wrap: balance` nos títulos e nos apoios. Título longo prefere três linhas equilibradas a duas desiguais.
+- **Slide de arte ocupa a tela inteira**, sem título nem overline por cima, quando a própria arte já traz a marca.
+- **Foto de pessoa entra como plano de fundo à direita**, com degradê do fundo escuro cobrindo a esquerda até o meio. Nunca texto direto sobre o rosto.
+- **Imagem comprimida antes de entrar:** JPG em 1920px de largura. PNG de câmera ou export de 4 MB engasga na hora de virar o slide ao vivo.
+
 ### Fundo padrão
 
 - **Fundo escuro** (`#0A0A10` ou gradient `#0A0A10 → #14141C`) — usar em **todos os slides**
