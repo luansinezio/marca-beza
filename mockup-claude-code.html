@@ -13,8 +13,8 @@
    Componente de marca da Beza. Serve em landing, deck e carrossel como
    prova visual de "a empresa virou pasta".
    Anatomia copiada da pagina modelo, cor e tipografia 100% Beza.
-   Variante creme disponivel em .cc-window--cream (o visual literal da
-   referencia), pra quando o fundo do material for claro.
+   Variante clara em .cc-window--cream, pra quando o fundo do material for
+   claro. Accent no lilas profundo #6E6CBE, nunca no terracota da referencia.
    ========================================================================== */
 
 :root {
@@ -212,19 +212,23 @@ body::after {
 
 .cc-window--cream {
   --bg-card:       #FFFFFF;
-  --bg-soft:       #FAF6F1;
-  --text:          #2A2320;
-  --text-muted:    #6B615B;
-  --text-dim:      #A2968E;
-  --border:        rgba(42,35,32,0.10);
-  --border-strong: rgba(42,35,32,0.16);
-  --roxo:          #C2603D;
-  --roxo-soft:     rgba(194,96,61,0.10);
+  --bg-soft:       #F7F6FB;
+  --text:          #23222E;
+  --text-muted:    #61607A;
+  --text-dim:      #9A99B0;
+  --border:        rgba(35,34,46,0.10);
+  --border-strong: rgba(35,34,46,0.16);
+  --roxo:          #6E6CBE;               /* lilás profundo: o #9A9BE5 some em fundo claro */
+  --roxo-soft:     rgba(110,108,190,0.10);
   background: #FFFFFF;
-  box-shadow: 0 24px 60px rgba(60,40,30,0.10);
+  box-shadow: 0 24px 60px rgba(35,34,60,0.10);
 }
 .cc-window--cream .cc-plus,
-.cc-window--cream .cc-send { background: #C2603D; color: #FFF; }
+.cc-window--cream .cc-send {
+  background: linear-gradient(180deg, #8C8AD8, #6E6CBE);
+  color: #FFFFFF;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.30);
+}
 
 /* ============================ RESPONSIVO ============================ */
 
@@ -401,7 +405,7 @@ body::after {
   </div>
 </div>
 
-<div class="cc-label">Variante creme, o visual literal da referência</div>
+<div class="cc-label">Variante clara, pra material de fundo claro</div>
 
 <div class="cc-window cc-window--cream">
   <div class="cc-chrome">
