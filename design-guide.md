@@ -654,6 +654,12 @@ Em páginas longas (case, proposta, ebook web), barra horizontal fina no topo mo
 
 ---
 
+## Mockup de janela do Claude Code
+
+Componente pronto em `marca/mockup-claude-code.html`. Janela com barra de título, árvore de pastas na lateral e conversa à direita, usado como prova visual de "a empresa virou pasta" em landing, deck e carrossel. Duas variantes no mesmo arquivo: a padrão dark com lilás, e `.cc-window--cream` pra material de fundo claro. Pra reaproveitar, copiar o bloco de CSS e a marcação da janela, e trocar só os nomes de arquivo da árvore e as falas da conversa. Criado em 12/ago/2026.
+
+---
+
 ## Logo
 
 ### Arquivos
