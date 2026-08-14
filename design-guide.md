@@ -141,6 +141,13 @@ Eyebrows e labels mono têm letter-spacing **positivo** alto:
 - Year/category: `0.22em`
 - Footer copyright: `0.15em`
 
+### Caixa (adicionado 14/ago/2026)
+
+- **Heading em sentence case, sempre.** Só a primeira palavra e nomes próprios em maiúscula. Nunca Title Case. Vale pra h1 até h4, título de card, título de seção e texto de botão.
+- **Item de lista, bullet e checklist começam em maiúscula**, como frase. Começar em minúscula é hábito de outro sistema, não da Beza.
+- **Eyebrow, label, categoria e ano em mono vão em CAIXA ALTA**, com o letter-spacing positivo da seção acima. É o único uso de caixa alta do sistema.
+- **Conteúdo simulado dentro de mockup** (resposta de terminal, nome de arquivo, mensagem de chat) segue a caixa real da ferramenta. Aí minúscula vale, porque é interface, não copy.
+
 ### Escala (web — clamp responsivo)
 
 | Nível | Tamanho | Peso | Line-height | Uso |
