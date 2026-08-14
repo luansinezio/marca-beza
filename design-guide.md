@@ -731,6 +731,35 @@ Tamanho default: 44px altura, padding 12-14px, radius 10px. Para checkbox/radio 
 
 ---
 
+## Checkout (exceção ao dark-first)
+
+Definido em 14/ago/2026. Vale pra toda tela de checkout da Beza, em qualquer
+produto.
+
+**O checkout é claro.** Fundo `#F4F3F9`, card branco `#FFFFFF`, texto
+`#15151A`. É a única superfície da marca que não é dark-first: quem está ali
+quase nunca tem conta e está prestes a digitar cartão e CPF, e tela clara é o
+que o mercado ensinou a reconhecer como pagamento seguro. O accent lilás
+entra escurecido pra manter contraste AA em fundo claro.
+
+**Nada de overline no checkout.** Label de campo em mono, caixa alta e
+`letter-spacing 0.18em` é linguagem de área logada, onde funciona como
+etiqueta de interface. Em checkout o label é leitura, na hora exata em que a
+pessoa digita: vai em **texto padrão da marca, sentence case, 13px, peso 500**.
+Isso vale pros nossos campos e pros labels dentro do iframe do Stripe (que
+recebem o mesmo tratamento via `appearance.rules['.Label']`).
+
+Mono continua permitido no checkout só onde o conteúdo é código de verdade
+(o copia-e-cola do Pix), e mesmo ali **sem** caixa alta e sem tracking: o
+payload do Pix é sensível a maiúscula e minúscula, e caixa alta engana quem
+lê ou digita.
+
+Implementação de referência: `membros/app/comprar/` (o `layout.tsx` força o
+bloco claro com `data-theme="light"`) e `components/ui/Field.tsx`
+(`labelStyle="plain"`).
+
+---
+
 ## Slides e apresentações (Figma 1920×1080)
 
 Slides seguem o **mesmo sistema dark-first do web**. O sistema antigo de três fundos alternantes (escuro/lilás/claro) foi descontinuado. Agora:
