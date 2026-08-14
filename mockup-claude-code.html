@@ -236,8 +236,8 @@ body::after {
   body { padding: 40px 16px; }
   .cc-body { grid-template-columns: 1fr; min-height: 0; }
   .cc-sidebar { border-right: 0; border-bottom: 1px solid var(--border); }
-  .cc-tree { flex-direction: row; flex-wrap: wrap; }
-  .cc-tree .cc-nest-1, .cc-tree .cc-nest-2 { padding-left: 8px; }
+  /* Mobile: a árvore some, a janela fica só com a conversa. */
+  .cc-tree { display: none; }
 }
 
 .cc-label {
