@@ -241,11 +241,14 @@ body::after {
      em vez de uma árvore quebrada em várias linhas. As abas e o nome do
      projeto saem, porque em tela estreita só atrapalham. */
   .cc-tabs, .cc-project { display: none; }
-  .cc-sidebar { padding: 12px 12px 6px; gap: 0; }
+  /* A faixa sangra até a borda direita: o recuo fica só na esquerda, e o
+     respiro do fim da rolagem vai como padding DENTRO do scroll. Assim o
+     último chip é cortado na beirada em vez de parar antes dela. */
+  .cc-sidebar { padding: 12px 0 6px 12px; gap: 0; }
   .cc-tree {
     display: flex; flex-direction: row; gap: 8px;
     overflow-x: auto; overscroll-behavior-x: contain;
-    padding-bottom: 10px;
+    padding: 0 12px 10px 0;
     scrollbar-width: thin;
   }
   .cc-tree li {
