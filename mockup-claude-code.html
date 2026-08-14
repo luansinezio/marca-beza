@@ -236,8 +236,27 @@ body::after {
   body { padding: 40px 16px; }
   .cc-body { grid-template-columns: 1fr; min-height: 0; }
   .cc-sidebar { border-right: 0; border-bottom: 1px solid var(--border); }
-  /* Mobile: a árvore some, a janela fica só com a conversa. */
-  .cc-tree { display: none; }
+  /* No mobile a lateral vira uma faixa horizontal de chips que rola pro lado,
+     em vez de uma árvore quebrada em várias linhas. As abas e o nome do
+     projeto saem, porque em tela estreita só atrapalham. */
+  .cc-tabs, .cc-project { display: none; }
+  .cc-sidebar { padding: 12px 12px 6px; gap: 0; }
+  .cc-tree {
+    display: flex; flex-direction: row; gap: 8px;
+    overflow-x: auto; overscroll-behavior-x: contain;
+    padding-bottom: 10px;
+    scrollbar-width: thin;
+  }
+  .cc-tree li {
+    flex: none;
+    padding: 9px 13px !important;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+  }
+  .cc-tree .cc-active { border-color: var(--roxo); }
+  .cc-tree::-webkit-scrollbar { height: 4px; }
+  .cc-tree::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 999px; }
+  .cc-tree::-webkit-scrollbar-track { background: transparent; }
 }
 
 .cc-label {
