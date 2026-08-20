@@ -396,6 +396,17 @@ code.inline{
     linear-gradient(90deg,var(--linha) 1px,transparent 1px);
   background-size:cover,80px 80px,80px 80px;
 }
+/* amostra de tema (04.1) */
+.amo{border-radius:16px;padding:30px;border:1px solid var(--border);min-height:230px;display:flex;flex-direction:column;gap:14px}
+.amo.dark{background:#0A0A10;color:#ECEDF6;border-color:rgba(199,201,214,.10)}
+.amo.light{background:#FAF9FC;color:#23222E;border-color:rgba(35,34,46,.12)}
+.amo-cab{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;opacity:.55}
+.amo-titulo{font-size:26px;font-weight:500;letter-spacing:-.02em;line-height:1.2}
+.amo.dark .amo-titulo b{font-weight:500;color:#9A9BE5}
+.amo.light .amo-titulo b{font-weight:500;color:#6E6CBE}
+.amo p{font-size:14px;opacity:.72;margin:0}
+.amo-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.amo-chips span{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:7px 10px;border-radius:8px;border:1px solid rgba(128,128,150,.25);color:#ECEDF6}
 .demo-box{
   height:190px;border-radius:14px;border:1px solid var(--border);
   position:relative;overflow:hidden;background:var(--bg-soft);
@@ -742,6 +753,8 @@ code.inline{
       <a href="#logo"><span class="n">02</span> Logo</a>
       <a href="#cor"><span class="n">03</span> Cor</a>
 
+      <a href="#tema"><span class="n">04</span> Tema claro e escuro</a>
+
       <span class="side-group">Superfície</span>
       <a href="#fundos"><span class="n">05</span> Fundos e superfícies</a>
       <a href="#textura"><span class="n">06</span> Textura</a>
@@ -952,7 +965,78 @@ code.inline{
     <p class="note">Em fundo escuro, estado é <b>texto colorido</b>. O contraste já basta. Box preenchido só em erro destrutivo ou alerta crítico.</p>
   </section>
 
-  <!-- ================= 04 FUNDOS ================= -->
+  <!-- ================= 04 TEMA ================= -->
+  <section class="sec" id="tema">
+    <div class="sec-head"><span class="sec-num">04</span>
+      <span class="eyebrow"><span class="dot"></span>Tema</span>
+      <h2>Dark-first, mas com um <span class="em">claro de verdade</span>.</h2>
+      <p class="intro">Dark-first só faz sentido se existir um segundo tema documentado. Sem isso a marca não é dark-first, é só escura. O claro não é uma versão enfraquecida: é a mesma identidade com a luz invertida, e tem regra própria, porque o lilás de marca não sobrevive em fundo claro.</p>
+    </div>
+
+    <div class="rule"><b>Experimenta:</b> o botão <b>Escuro / Claro</b> no alto da barra lateral troca a página inteira. Tudo daqui pra baixo responde aos dois temas, e é assim que o sistema deve se comportar em qualquer material.</div>
+
+    <h3><span class="id">04.1</span> Os dois lados</h3>
+    <div class="grid g2">
+      <div class="amo dark">
+        <span class="amo-cab">Escuro · padrão</span>
+        <div class="amo-titulo">Marcas que crescem <b>com a operação Beza.</b></div>
+        <p>Site, landing, proposta, deck, post e área logada. É onde a marca mora.</p>
+        <div class="amo-chips"><span style="background:#0A0A10">#0A0A10</span><span style="background:#14141C">#14141C</span><span style="background:#9A9BE5;color:#0A0A10">#9A9BE5</span><span style="background:#ECEDF6;color:#0A0A10">#ECEDF6</span></div>
+      </div>
+      <div class="amo light">
+        <span class="amo-cab">Claro · segundo</span>
+        <div class="amo-titulo">Marcas que crescem <b>com a operação Beza.</b></div>
+        <p>Checkout, documento longo, material impresso, e-mail e tela sob luz forte.</p>
+        <div class="amo-chips"><span style="background:#FAF9FC;color:#23222E">#FAF9FC</span><span style="background:#FFFFFF;color:#23222E">#FFFFFF</span><span style="background:#6E6CBE">#6E6CBE</span><span style="background:#23222E">#23222E</span></div>
+      </div>
+    </div>
+
+    <h3><span class="id">04.2</span> O que troca entre os dois</h3>
+    <table class="spec">
+      <tr><th>Token</th><th>Escuro</th><th>Claro</th></tr>
+      <tr><td>Fundo de página</td><td class="mono">#0A0A10</td><td class="mono">#FAF9FC</td></tr>
+      <tr><td>Fundo de seção</td><td class="mono">#111119</td><td class="mono">#F1F0F7</td></tr>
+      <tr><td>Fundo de card</td><td class="mono">#14141C</td><td class="mono">#FFFFFF</td></tr>
+      <tr><td>Texto</td><td class="mono">#ECEDF6</td><td class="mono">#23222E</td></tr>
+      <tr><td>Texto de apoio</td><td class="mono">#8B8DA1</td><td class="mono">#61607A</td></tr>
+      <tr><td>Metadata</td><td class="mono">#606282</td><td class="mono">#9A99B0</td></tr>
+      <tr><td>Borda</td><td class="mono">rgba(199,201,214,.08)</td><td class="mono">rgba(35,34,46,.10)</td></tr>
+      <tr><td>Lilás de marca</td><td class="mono">#9A9BE5</td><td class="mono">#6E6CBE</td></tr>
+      <tr><td>Lilás profundo</td><td class="mono">#7B79C9</td><td class="mono">#55539E</td></tr>
+      <tr><td>Erro</td><td class="mono">#F34D4D</td><td class="mono">#C9342F</td></tr>
+    </table>
+
+    <h3><span class="id">04.3</span> As cinco regras da tradução</h3>
+    <div class="rule">
+      <b>1. O lilás desce.</b> <code class="inline">#9A9BE5</code> em fundo claro fica lavado e não passa em contraste. No claro o accent é <code class="inline">#6E6CBE</code>, o mesmo tom da variante cream do mockup e da página de vendas clara.<br>
+      <b>2. O grão inverte.</b> No escuro é <code class="inline">overlay</code> a 4%. No claro, <code class="inline">multiply</code> a 3%, senão ele clareia e some.<br>
+      <b>3. Glow vira sombra.</b> O halo lilás de 60px do botão vira sombra colorida projetada. Luz que brilha no escuro, no claro só empurra o objeto pra frente.<br>
+      <b>4. O CTA branco inverte.</b> Botão branco em fundo claro não existe: vira escuro <code class="inline">#23222E</code> com texto claro.<br>
+      <b>5. A sombra esfria.</b> Preto a 45% vira <code class="inline">rgba(35,34,60,.10)</code>. Sombra preta em fundo claro suja a página.
+    </div>
+
+    <h3><span class="id">04.4</span> Regras de contraste</h3>
+    <table class="spec">
+      <tr><th>Fundo</th><th>Texto mínimo</th><th>Nunca usar</th></tr>
+      <tr><td>Escuro <span class="mono">#0A0A10 a #14141C</span></td><td>#ECEDF6 no corpo · #8B8DA1 no apoio</td><td>gray-600 pra baixo em body · branco puro</td></tr>
+      <tr><td>Claro <span class="mono">#FAF9FC a #FFFFFF</span></td><td>#23222E no corpo · #61607A no apoio</td><td>gray-50 a gray-300 em texto · #9A9BE5 em texto pequeno</td></tr>
+      <tr><td>Lilás chapado <span class="mono">#9A9BE5</span></td><td>#0D0D0D no corpo</td><td>branco puro · texto lilás · cinza claro</td></tr>
+      <tr><td>Lilás profundo <span class="mono">#7B79C9 a #5D5BA8</span></td><td>#FFFFFF no corpo</td><td>gray-300 pra baixo · lilás claro</td></tr>
+    </table>
+    <p class="note">Meta do sistema: <b>WCAG AA</b>, 4.5:1 em body e 3:1 em heading grande. Quando a dupla não bate, quem cede é a cor do texto, nunca o fundo.</p>
+
+    <h3><span class="id">04.5</span> Quando usar cada um</h3>
+    <div class="grid g2">
+      <div class="stage"><span class="tag">escuro</span>
+        <p class="note" style="margin-top:12px">Site, landing, proposta, deck, carrossel, post, área logada, painel e app. É o padrão: se ninguém decidiu nada, o material sai escuro.</p>
+      </div>
+      <div class="stage"><span class="tag">claro</span>
+        <p class="note" style="margin-top:12px">Checkout (obrigatório), documento longo de leitura, material impresso, corpo de e-mail, relatório e planilha, e qualquer tela que vá ser vista sob sol forte ou projetada em sala clara.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 05 FUNDOS ================= -->
   <section class="sec" id="fundos">
     <div class="sec-head"><span class="sec-num">05</span>
       <span class="eyebrow"><span class="dot"></span>Superfície</span>
@@ -991,7 +1075,7 @@ code.inline{
       <b>Regra:</b> a ilha lilás inverte tudo dentro dela. Texto vira branco, o dot do eyebrow vira branco com glow branco, e o gradient de destaque troca pra branco e lilás claro. Lilás chapado com texto lilás não existe.
     </div>
   </section>
-  <!-- ================= 05 TEXTURA ================= -->
+  <!-- ================= 06 TEXTURA ================= -->
   <section class="sec soft" id="textura">
     <div class="sec-head"><span class="sec-num">06</span>
       <span class="eyebrow"><span class="dot"></span>Textura</span>
@@ -1028,7 +1112,7 @@ code.inline{
     </table>
   </section>
 
-  <!-- ================= 06 LUZ ================= -->
+  <!-- ================= 07 LUZ ================= -->
   <section class="sec" id="luz">
     <div class="sec-head"><span class="sec-num">07</span>
       <span class="eyebrow"><span class="dot"></span>Iluminação</span>
@@ -1065,7 +1149,7 @@ code.inline{
     <div class="rule"><b>Onde usar:</b> landing principal e capa de proposta. <b>Onde não usar:</b> dashboard, CRM, área logada e qualquer tela densa. Ali ele vira distração.</div>
   </section>
 
-  <!-- ================= 07 BORDAS ================= -->
+  <!-- ================= 08 BORDAS ================= -->
   <section class="sec soft" id="bordas">
     <div class="sec-head"><span class="sec-num">08</span>
       <span class="eyebrow"><span class="dot"></span>Bordas e raios</span>
@@ -1095,7 +1179,7 @@ code.inline{
     <p class="note">Botão é <b>sempre</b> pill. Raio 8px ou 12px em botão foi descontinuado e denuncia material do sistema antigo.</p>
   </section>
 
-  <!-- ================= 08 SOMBRAS ================= -->
+  <!-- ================= 09 SOMBRAS ================= -->
   <section class="sec" id="sombras">
     <div class="sec-head"><span class="sec-num">09</span>
       <span class="eyebrow"><span class="dot"></span>Elevação</span>
@@ -1110,7 +1194,7 @@ code.inline{
     </div>
     <p class="note">Elemento parado no fluxo da página não leva sombra: leva borda sutil. Sombra é reservada pra card que levanta no hover, painel flutuante e card de preço.</p>
   </section>
-  <!-- ================= 09 TIPOGRAFIA ================= -->
+  <!-- ================= 11 TIPOGRAFIA ================= -->
   <section class="sec soft" id="tipografia">
     <div class="sec-head"><span class="sec-num">11</span>
       <span class="eyebrow"><span class="dot"></span>Tipografia</span>
@@ -1172,7 +1256,7 @@ code.inline{
     </div>
   </section>
 
-  <!-- ================= 10 EYEBROW ================= -->
+  <!-- ================= 12 EYEBROW ================= -->
   <section class="sec" id="eyebrow">
     <div class="sec-head"><span class="sec-num">12</span>
       <span class="eyebrow"><span class="dot"></span>Eyebrow</span>
@@ -1202,7 +1286,7 @@ code.inline{
     </table>
   </section>
 
-  <!-- ================= 11 BOTÕES ================= -->
+  <!-- ================= 13 BOTÕES ================= -->
   <section class="sec soft" id="botoes">
     <div class="sec-head"><span class="sec-num">13</span>
       <span class="eyebrow"><span class="dot"></span>Botões</span>
@@ -1237,7 +1321,7 @@ code.inline{
       <p class="note" style="margin-top:0">Seta é <b>SVG de linha fina</b> que anda 4px no hover. O caractere <code class="inline">→</code> está proibido: ele muda de desenho conforme a fonte do sistema e quebra o alinhamento vertical.</p>
     </div>
   </section>
-  <!-- ================= 12 CARDS ================= -->
+  <!-- ================= 14 CARDS ================= -->
   <section class="sec" id="cards">
     <div class="sec-head"><span class="sec-num">14</span>
       <span class="eyebrow"><span class="dot"></span>Cards</span>
@@ -1295,7 +1379,7 @@ code.inline{
     <p class="note">O halo lilás vazando por cima do card (07.1) é o que separa o card de preço de um card comum. Borda lilás em 30%, raio 24px, sombra profunda.</p>
   </section>
 
-  <!-- ================= 13 NAV ================= -->
+  <!-- ================= 15 NAV ================= -->
   <section class="sec soft" id="nav">
     <div class="sec-head"><span class="sec-num">15</span>
       <span class="eyebrow"><span class="dot"></span>Navegação</span>
@@ -1328,7 +1412,7 @@ code.inline{
     <div class="rule"><b>Auto-hide:</b> em página de case a nav some fora do hero e da seção final de CTA, e volta quando um dos dois entra na tela. Quem controla é IntersectionObserver, não scroll direction.</div>
   </section>
 
-  <!-- ================= 14 RODAPÉ ================= -->
+  <!-- ================= 16 RODAPÉ ================= -->
   <section class="sec" id="rodape">
     <div class="sec-head"><span class="sec-num">16</span>
       <span class="eyebrow"><span class="dot"></span>Rodapé</span>
@@ -1350,7 +1434,7 @@ code.inline{
     <div class="footer-bot"><span>© 2026 Beza Media · Todos os direitos reservados</span><span>Instagram · LinkedIn</span></div>
     <p class="note">Social entra como <b>texto em mono</b>, nunca como ícone.</p>
   </section>
-  <!-- ================= 15 FORMULÁRIOS ================= -->
+  <!-- ================= 17 FORMULÁRIOS ================= -->
   <section class="sec soft" id="formularios">
     <div class="sec-head"><span class="sec-num">17</span>
       <span class="eyebrow"><span class="dot"></span>Formulários</span>
@@ -1389,7 +1473,7 @@ code.inline{
     <p class="note">Vale pra todo formulário público: captação, pré-qualificação, pesquisa e inscrição. Formulário de área logada continua em página única, com os campos empilhados. Referência no ar: <code class="inline">/vamos-conversar</code>.</p>
   </section>
 
-  <!-- ================= 16 MOVIMENTO ================= -->
+  <!-- ================= 18 MOVIMENTO ================= -->
   <section class="sec" id="movimento">
     <div class="sec-head"><span class="sec-num">18</span>
       <span class="eyebrow"><span class="dot"></span>Movimento</span>
@@ -1414,7 +1498,7 @@ code.inline{
     <div class="rule"><b>Sempre incluir</b> o bloco de <code class="inline">prefers-reduced-motion</code>. Não é detalhe de acessibilidade: sem ele, quem tem essa preferência ligada vê a página tremer.</div>
   </section>
 
-  <!-- ================= 17 PÁGINA ================= -->
+  <!-- ================= 19 PÁGINA ================= -->
   <section class="sec soft" id="pagina">
     <div class="sec-head"><span class="sec-num">19</span>
       <span class="eyebrow"><span class="dot"></span>Elementos de página</span>
@@ -1444,7 +1528,7 @@ code.inline{
     </div>
     <div class="rule"><b>Duas regras da capa líquida, as duas já quebraram na prática:</b> nada encosta no logo (a pill se ancora na caixa real do desenho, medida em tempo de render, nunca em percentual chutado) e as pills encolhem em tela estreita (padding em <code class="inline">em</code> e fonte com teto de vw). Validar em 312px e 1440px antes de publicar.</div>
   </section>
-  <!-- ================= 18 SLIDES ================= -->
+  <!-- ================= 20 SLIDES ================= -->
   <section class="sec" id="slides">
     <div class="sec-head"><span class="sec-num">20</span>
       <span class="eyebrow"><span class="dot"></span>Slides e deck</span>
@@ -1493,7 +1577,7 @@ code.inline{
     </div>
   </section>
 
-  <!-- ================= 19 CHECKOUT ================= -->
+  <!-- ================= 21 CHECKOUT ================= -->
   <section class="sec soft" id="checkout">
     <div class="sec-head"><span class="sec-num">21</span>
       <span class="eyebrow"><span class="dot"></span>Checkout</span>
@@ -1529,7 +1613,7 @@ code.inline{
     </div>
   </section>
 
-  <!-- ================= 20 LUAN ================= -->
+  <!-- ================= 22 LUAN ================= -->
   <section class="sec" id="luan">
     <div class="sec-head"><span class="sec-num">22</span>
       <span class="eyebrow"><span class="dot"></span>Marca pessoal</span>
@@ -1564,7 +1648,7 @@ code.inline{
     </table>
   </section>
 
-  <!-- ================= 21 NUNCA ================= -->
+  <!-- ================= 23 NUNCA ================= -->
   <section class="sec soft" id="nunca">
     <div class="sec-head"><span class="sec-num">23</span>
       <span class="eyebrow"><span class="dot"></span>Regras</span>
