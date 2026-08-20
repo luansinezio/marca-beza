@@ -180,7 +180,7 @@ section.sec.soft{background:var(--bg-soft)}
   font-weight:500;font-size:clamp(28px,3.2vw,40px);line-height:1.12;
   letter-spacing:-.02em;margin-bottom:16px;
 }
-.sec h2 .em{background:linear-gradient(180deg,#A2A3EA,#7B79C9);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
 .sec .intro{font-size:17px;color:var(--text-muted);max-width:760px}
 .sec h3{
   font-weight:500;font-size:21px;letter-spacing:-.01em;
@@ -201,12 +201,20 @@ section.sec.soft{background:var(--bg-soft)}
 .note b,.note strong{color:var(--text);font-weight:500}
 
 /* caixa de regra "não se quebra" */
+/* Nota de regra: sem barra colorida e sem fundo tingido. Quem marca é o
+   rótulo mono em cima e um fio fino do lado. */
 .rule{
-  border-left:2px solid var(--beza-roxo);background:var(--roxo-soft);
-  padding:16px 20px;border-radius:0 12px 12px 0;margin-top:20px;
-  font-size:14.5px;color:var(--texto-2);max-width:820px;
+  margin-top:22px;padding:2px 0 2px 20px;max-width:820px;
+  border-left:1px solid var(--border-strong);
+  font-size:14.5px;color:var(--texto-2);
+}
+.rule::before{
+  content:'Regra';display:block;margin-bottom:8px;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);
 }
 .rule b{color:var(--text);font-weight:500}
+.rule code.inline{background:none;border:none;padding:0;color:var(--beza-roxo)}
 
 /* código */
 pre{
@@ -301,7 +309,13 @@ code.inline{
 .peso .v{font-size:30px;letter-spacing:-.02em}
 .peso .q{font-size:12.5px;color:var(--text-muted);margin-top:10px;line-height:1.45}
 .fade-txt{background:linear-gradient(180deg,#ECEDF6 0%,#8B8DA1 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.em-txt{background:linear-gradient(180deg,#A2A3EA,#7B79C9);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.em-txt,.sec h2 .em{
+  background-image:linear-gradient(135deg,#BCBDF3 0%,#9A9BE5 50%,#BCBDF3 100%);
+  background-size:200% auto;background-position:0% 50%;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:aurora 4s ease-in-out infinite alternate;
+}
+.em-fixo{background:linear-gradient(180deg,#A2A3EA,#7B79C9);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .aurora{
   background-image:linear-gradient(135deg,#BCBDF3 0%,#9A9BE5 50%,#BCBDF3 100%);
   background-size:200% auto;background-position:0% 50%;
@@ -426,6 +440,28 @@ code.inline{
 .nivel span{font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:.68}
 /* rótulo dentro de amostra: mono, mas sem virar overline gigante */
 .rot{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;opacity:.5}
+/* efeitos vivos (06.4 e 06.5) — código-fonte em comercial/bezaos-site/index.html */
+.efeito{position:relative;overflow:hidden;border-radius:14px;border:1px solid var(--border);min-height:230px;display:flex;align-items:center;justify-content:center;padding:26px;text-align:center}
+.efeito > .conteudo{position:relative;z-index:1}
+.efeito .tit{font-size:21px;font-weight:500;letter-spacing:-.01em}
+.efeito .sub{font-size:13.5px;margin-top:6px;opacity:.72}
+.efeito.roxo{background:linear-gradient(180deg,#7B79C9 0%,#5D5BA8 100%);color:#fff;border-color:transparent}
+.efeito.claro{background:var(--bg-soft)}
+.rain,.quadrados{position:absolute;inset:0;z-index:0;pointer-events:none}
+.rain{opacity:.2}
+.quadrados{opacity:.14;color:var(--beza-roxo)}
+.rain canvas,.quadrados canvas{width:100%;height:100%;display:block}
+@media (prefers-reduced-motion:reduce){.rain,.quadrados{display:none}}
+.marquee{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:17px 0;overflow:hidden}
+.marquee-track{display:flex;width:max-content;animation:desliza 46s linear infinite}
+.marquee-track span{
+  display:inline-flex;align-items:center;gap:34px;padding-right:34px;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.22em;
+  color:var(--text-muted);white-space:nowrap;
+}
+.marquee-track span::after{content:'';width:4px;height:4px;border-radius:999px;background:var(--beza-roxo);flex:none}
+@keyframes desliza{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.marquee-track{animation:none}}
 .demo-box{
   height:190px;border-radius:14px;border:1px solid var(--border);
   position:relative;overflow:hidden;background:var(--bg-soft);
@@ -621,11 +657,11 @@ code.inline{
 .logo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .logo-box{border-radius:14px;border:1px solid var(--border);padding:38px 26px;display:flex;align-items:center;justify-content:center;min-height:150px}
 .logo-box img{max-width:190px;width:100%;height:auto}
-.logo-box.dark{background:var(--bg-card)}
+.logo-box.dark{background:#14141C;border-color:rgba(199,201,214,.10)}
 .logo-box.dark img{filter:brightness(0) invert(1)}
-.logo-box.claro{background:#F4F3F9}
+.logo-box.claro{background:#F4F3F9;border-color:rgba(35,34,46,.12)}
 .logo-box.claro img{filter:brightness(0)}
-.logo-box.lilas{background:#9A9BE5}
+.logo-box.lilas{background:#9A9BE5;border-color:rgba(35,34,46,.12)}
 .logo-box.lilas img{filter:brightness(0)}
 .logo-cap{font-size:13px;color:var(--text-muted);margin-top:10px;display:block;text-align:center}
 
@@ -700,8 +736,9 @@ code.inline{
 :root[data-tema="claro"] .fade-txt{background-image:linear-gradient(180deg,#23222E 0%,#4C4B60 100%)}
 :root[data-tema="claro"] .em-txt,
 :root[data-tema="claro"] .sec h2 .em,
-:root[data-tema="claro"] .stat .num{background-image:linear-gradient(180deg,#7E7CCB,#55539E)}
 :root[data-tema="claro"] .aurora{background-image:linear-gradient(135deg,#A5A3E4 0%,#7674C6 50%,#A5A3E4 100%)}
+:root[data-tema="claro"] .em-fixo,
+:root[data-tema="claro"] .stat .num{background-image:linear-gradient(180deg,#8C8AD8,#6E6CBE)}
 
 /* eyebrow e glows */
 :root[data-tema="claro"] .eyebrow{border-color:rgba(110,108,190,.30);background:rgba(110,108,190,.06)}
@@ -1178,14 +1215,63 @@ code.inline{
     </div>
     <div class="rule"><b>Regra:</b> o fade das bordas da grade sai como camada de gradiente na cor do fundo, não como <code class="inline">mask-image</code>. Mesmo resultado e sem depender de suporte a máscara.</div>
 
-    <h3><span class="id">06.3</span> Onde entra cada uma</h3>
+    <h3><span class="id">06.3</span> Chuva de glifos</h3>
+    <div class="grid g2">
+      <div class="efeito roxo">
+        <div class="rain" aria-hidden="true"><canvas></canvas></div>
+        <div class="conteudo">
+          <div class="tit">Em bloco lilás</div>
+          <div class="sub">Cabeça branca, cauda em #CFCDF0, opacidade 20%</div>
+        </div>
+      </div>
+      <div class="efeito claro">
+        <div class="rain rain--lilas" aria-hidden="true"><canvas></canvas></div>
+        <div class="conteudo">
+          <div class="tit">Em fundo da página</div>
+          <div class="sub">Mesma chuva com glifo lilás, pra fundo claro ou escuro</div>
+        </div>
+      </div>
+    </div>
+    <p class="note">É o efeito de "tem máquina rodando por trás". Usar quando o assunto é <b>tecnologia, automação ou sistema</b>: seção de IA, bloco de produto, capa de aula. Nunca em seção sobre pessoa, case ou preço.</p>
+    <div class="rule">Cada coluna solta streams em intervalo aleatório, a cabeça é clara e a cauda esmaece atrás. Cerca de 35% dos streams atravessam a tela inteira e o resto morre no caminho, que é o que evita o padrão de cortina. O loop <b>pausa quando a seção sai da tela</b> (IntersectionObserver) e não roda com <code class="inline">prefers-reduced-motion</code>.</div>
+    <pre><span class="c">// comercial/bezaos-site/index.html · bloco "Chuva de glifos"</span>
+const CABECA   = '#FFFFFF';   <span class="c">// cabeça do stream</span>
+const CAUDA    = '#CFCDF0';   <span class="c">// no fundo claro: #6E6CBE</span>
+const TAMANHO  = 10;          <span class="c">// px por glifo</span>
+const VELOC    = 6;           <span class="c">// glifos por segundo</span>
+const DENSIDADE= 50;          <span class="c">// 50 empacota, 1 espalha</span>
+const CAUDA_N  = 18;          <span class="c">// glifos por stream</span>
+const GLIFOS   = 'ｱｲｳｴｵｶｷｸ0123456789ABCDEFｸｿﾝ';
+<span class="c">/* .rain { position:absolute; inset:0; opacity:.2; pointer-events:none; z-index:0 } */</span></pre>
+
+    <h3><span class="id">06.4</span> Quadradinhos piscando</h3>
+    <div class="efeito claro" style="min-height:250px">
+      <div class="quadrados" aria-hidden="true"><canvas></canvas></div>
+      <div class="conteudo">
+        <div class="tit">O seu próprio sistema operacional</div>
+        <div class="sub">Grade densa numa quina, esvaziando na diagonal pra liberar o texto</div>
+      </div>
+    </div>
+    <p class="note">Textura mais calma que a chuva. Serve de fundo pra seção com <b>lista, card ou explicação</b>, onde a chuva competiria com a leitura. A cor sai do <code class="inline">color</code> do contêiner, então cada tema entrega o lilás dele.</p>
+    <pre><span class="c">// comercial/bezaos-site/index.html · bloco "quadradinhos"</span>
+const GRADE    = 95;                <span class="c">// células no lado maior</span>
+const PREENCH  = 0.7;               <span class="c">// fração do quadrado dentro da célula</span>
+const VELOC    = 30;                <span class="c">// 1 a 100</span>
+const FADE_DIR = 'diag-sup-dir';    <span class="c">// cheio na quina de cima à direita</span>
+const FADE_INT = 25;                <span class="c">// dureza da queda</span>
+<span class="c">/* .quadrados { position:absolute; inset:0; opacity:.12; color:var(--roxo) } */</span></pre>
+
+    <h3><span class="id">06.5</span> Onde entra cada uma</h3>
     <table class="spec">
       <tr><th>Textura</th><th>Onde</th><th>Intensidade</th></tr>
       <tr><td>Grain</td><td>Todo material HTML da Beza, sem exceção</td><td class="mono">4%</td></tr>
       <tr><td>Grade</td><td>Hero, capa de proposta, seção de destaque</td><td class="mono">4% · 80px</td></tr>
       <tr><td>Grade animada</td><td>Só hero de landing</td><td class="mono">9s linear</td></tr>
       <tr><td>Pontos</td><td>Card grande, bloco de citação</td><td class="mono">22px</td></tr>
+      <tr><td>Chuva de glifos</td><td>Seção de tecnologia, IA, automação e produto</td><td class="mono">20%</td></tr>
+      <tr><td>Quadradinhos</td><td>Seção de lista e explicação, atrás de card</td><td class="mono">12–14%</td></tr>
     </table>
+    <div class="rule">Uma textura viva por seção, e no máximo <b>duas por página</b>. As duas rodam em canvas e pausam fora da tela, mas três seções animadas ao mesmo tempo derrubam o scroll no celular.</div>
   </section>
 
   <!-- ================= 07 LUZ ================= -->
@@ -1368,8 +1454,21 @@ code.inline{
       <div style="font-size:clamp(24px,3.4vw,40px);font-weight:500;letter-spacing:-.02em;line-height:1.15;max-width:760px">
         <span class="fade-txt">Marcas que crescem</span><br><span class="em-txt">com a operação Beza.</span>
       </div>
-      <p class="note">Em heading de 6+ palavras, a parte-chave sai em gradient lilás e o resto em gradient branco esmaecendo. <b>Nunca negrito inline</b>: o destaque vem da cor.</p>
+      <p class="note">Em heading de 6+ palavras, a parte-chave sai no lilás que roda e o resto em gradient branco esmaecendo. <b>Nunca negrito inline</b>: o destaque vem da cor.</p>
     </div>
+
+    <h4>Tamanho mínimo do gradient</h4>
+    <div class="grid g2">
+      <div class="sn ok"><div class="cab">A partir de 40px</div>
+        <div style="font-size:40px;font-weight:500;letter-spacing:-.02em;line-height:1.1"><span class="fade-txt">A operação trava</span></div>
+        <p class="note">A queda pro cinza acontece ao longo de muita altura de letra. O olho lê como luz, não como texto apagado.</p>
+      </div>
+      <div class="sn no"><div class="cab">Abaixo de 40px</div>
+        <div style="font-size:22px;font-weight:500;letter-spacing:-.01em"><span class="fade-txt">A operação trava</span></div>
+        <p class="note">A mesma queda em pouca altura come metade da palavra. Em texto pequeno o certo é <b>cor sólida</b>, e o destaque fica só no lilás.</p>
+      </div>
+    </div>
+    <div class="rule">O gradient branco esmaecendo (<code class="inline">#ECEDF6</code> a <code class="inline">#8B8DA1</code>) vale de <b>40px pra cima</b>. Abaixo disso, texto sólido em <code class="inline">#ECEDF6</code>. Isso também vale em slide: o título de capa é grande e aceita, o texto de apoio não.</div>
 
     <h3><span class="id">11.4</span> Caixa</h3>
     <div class="sim-nao">
@@ -1722,7 +1821,7 @@ code.inline{
         <div class="slide-bread"><span>Beza Media</span><span>Proposta comercial</span><span>2026</span></div>
         <div>
           <span class="eyebrow"><span class="dot"></span>Diagnóstico</span>
-          <div class="slide-title"><span class="fade-txt">A operação trava</span><br><span class="em-txt">antes do conteúdo sair.</span></div>
+          <div class="slide-title"><span style="color:var(--text)">A operação trava</span><br><span class="em-txt">antes do conteúdo sair.</span></div>
         </div>
         <div class="slide-bread"><span>01</span><span></span><span>beza.media</span></div>
       </div>

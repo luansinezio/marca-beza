@@ -803,22 +803,32 @@ tipografia do resto do sistema.
 
 ### Anatomia
 
-1. **Abertura.** Logo, eyebrow com o tempo estimado ("Leva 1 minuto"), pergunta
+1. **Abertura.** Logo, eyebrow com o tempo estimado ("Leva 2 minutos"), pergunta
    como título, uma linha de apoio e um botão só ("Começar"). Sem contador de
    etapas aqui: ninguém precisa saber o tamanho antes de entrar.
-2. **Etapas.** Seta de voltar, contador em mono ("3 DE 6") e fio de progresso de
-   3px na mesma linha. A pergunta é o enunciado grande (`clamp(1.5rem, 5.5vw,
-   2rem)`, Medium 500, tracking -0.02em), o texto de apoio vem em `--text-muted`
-   logo abaixo, e então o campo e a ação.
-3. **Tela final.** Confirmação usando o primeiro nome, uma frase de contexto e o
-   CTA que conclui. A submissão acontece só aqui, nunca no meio do caminho.
+2. **Etapas.** A pergunta é o enunciado grande (`clamp(1.5rem, 5.5vw, 2rem)`,
+   Medium 500, tracking -0.02em), com o número da etapa num quadradinho na
+   frente. O texto de apoio vem em `--text-muted` logo abaixo, e então o campo e
+   a ação.
+3. **Moldura fixa.** Fio de progresso de 2px no topo da janela, quase invisível,
+   e no canto inferior direito as setas de subir e descer com a assinatura da
+   Beza ao lado (o lugar onde o Typeform põe o "Powered by"). Nada de contador
+   escrito na tela.
+4. **Tela final.** Agradecimento com o primeiro nome, aviso de que a equipe
+   entra em contato e, como saída de urgência, o botão do WhatsApp. A submissão
+   acontece ao responder a última pergunta, nunca no meio do caminho.
 
 ### Regras que não se quebram
 
 - A pergunta é o label do campo (`label` ou `legend`). Nunca um heading solto
   repetindo o mesmo texto, que faria o leitor de tela anunciar duas vezes.
-- Campo obrigatório vazio não avança. O erro aparece embaixo do campo, com
-  ícone e texto, nunca só por cor.
+- Escolha em lista vertical de blocos, com a letra do atalho à esquerda e check
+  à direita quando marcada. Vale pra escolha única e pra múltipla.
+- Sem pergunta opcional e sem ação de pular: se está no formulário, é porque a
+  resposta importa.
+- Campo obrigatório vazio não avança, nem pelo botão, nem pelo Enter, nem pela
+  seta do rodapé. O erro aparece embaixo do campo, com ícone e texto, nunca só
+  por cor, e com respiro entre as opções e a linha de erro.
 - Voltar preserva tudo. Um único estado de formulário para todas as etapas, sem
   rota por pergunta.
 - Escolha única avança sozinha depois de uns 380ms, e só quando a seleção veio
@@ -831,8 +841,11 @@ tipografia do resto do sistema.
   é botão de área logada e não entra em superfície pública.
 - Progresso discreto: contador mono e fio fino. Nada de stepper grande, sidebar
   de etapas ou lista lateral.
-- Transição curta: saída de 130ms, entrada de 260ms, deslocamento vertical de
-  14px, invertido quando volta. Sempre com guarda de `prefers-reduced-motion`.
+- Transição macia: saída de 200ms, entrada de 260ms, deslocamento vertical de
+  18px, invertido quando volta. Sempre com guarda de `prefers-reduced-motion`.
+- Telefone com seletor de país: bandeira, nome e código no select, e o campo
+  pedindo só o número. Fora do Brasil ninguém fala em DDD, então o texto de
+  apoio muda junto.
 - Altura em `svh` (nunca `vh` nem `dvh`), pra viewport não reflow quando o
   teclado do celular sobe.
 - Campo com 48px de altura e fonte de 16px. Abaixo de 16px o Safari do iPhone
@@ -844,9 +857,10 @@ tipografia do resto do sistema.
   não avança), escutar `visualViewport.resize` e trazer o botão pra vista.
 
 **Implementação de referência:** `tenda/src/components/conversa/` (`steps.ts`
-define as perguntas, `step-view.tsx` desenha cada tipo, `conversa-form.tsx`
-cuida da navegação e do envio) e `tenda/src/lib/conversa/`, onde o contrato de
-dados fica isolado do envio. No ar em `/vamos-conversar`.
+define as perguntas, `step-view.tsx` desenha cada tipo, `form-chrome.tsx` é a
+moldura fixa, `conversa-form.tsx` cuida da navegação e do envio) e
+`tenda/src/lib/conversa/`, onde o contrato de dados e a lista de países ficam
+isolados do envio. No ar em `/vamos-conversar`.
 
 ---
 
