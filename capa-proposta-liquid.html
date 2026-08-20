@@ -50,8 +50,13 @@
 
   #tag {
     position: absolute; left: 50%;
-    top: calc(0.838 * var(--band-top, 15.2%) + 8.1%);
-    transform: translate(-50%, -50%);
+    /* REGRA DA CAPA: a pill nunca encosta no logo.
+       --band-top é a fração da altura do canvas que sobra ACIMA da caixa
+       do logo, escrita pelo heightmap em tempo de render. Ancorar nela e
+       empurrar a pill inteira pra cima (-100%) mantém ela fora do desenho
+       em qualquer largura, em vez de depender de % chutada. */
+    top: calc(var(--band-top, 15.2%) - var(--capa-gap, 22px));
+    transform: translate(-50%, -100%);
     display: inline-flex; align-items: center;
     border-radius: 11px;
     border: 1px solid rgba(154,155,229,0.55);
@@ -73,8 +78,9 @@
 
   #cliente {
     position: absolute; left: 50%;
-    top: calc(91.9% - 0.838 * var(--band-top, 15.2%));
-    transform: translate(-50%, -50%);
+    /* mesma regra, espelhada: o rodapé da caixa do logo é 100% - band-top */
+    top: calc(100% - var(--band-top, 15.2%) + var(--capa-gap, 22px));
+    transform: translate(-50%, 0);
     display: inline-flex; align-items: center; gap: 8px;
     border: 1.5px solid rgba(154,155,229,0.55);
     border-radius: 999px; padding: 13px 34px;
@@ -87,20 +93,20 @@
   #err { position: fixed; bottom: 8px; left: 8px; color: #F34D4D; font-size: 12px; display: none; }
 
   @media (max-width: 700px) {
-    #stage { width: 90vw; }
+    #stage { width: 90vw; --capa-gap: 12px; }
     .hudrow { padding: 0 20px; letter-spacing: 0.14em; font-size: 9px; }
     .hudrow .mid { display: none; }
+    /* as pills são nowrap: em tela estreita precisam encolher junto, senão
+       vazam pelas duas bordas. Padding em em pra escalar com a fonte. */
     #tag {
-      font-size: 12px; letter-spacing: 0.1em;
-      top: calc(var(--band-top, 15.2%) - 12px);
-      transform: translate(-50%, -100%);
+      font-size: min(12px, 3.3vw); letter-spacing: 0.1em;
+      max-width: calc(100% - 16px);
     }
-    #tag .fill { padding: 11px 14px 9px; margin: -3px 0 -3px -1px; border-radius: 10px; }
-    #tag .line { padding: 9px 13px 7px; }
+    #tag .fill { padding: 0.92em 1.17em 0.75em; margin: -0.25em 0 -0.25em -1px; border-radius: 10px; }
+    #tag .line { padding: 0.75em 1.08em 0.58em; }
     #cliente {
-      font-size: 13px; padding: 9px 18px; border-width: 1px;
-      top: calc(100% - var(--band-top, 15.2%) + 12px);
-      transform: translate(-50%, 0);
+      font-size: min(13px, 3.5vw); padding: 0.7em 1.4em; border-width: 1px;
+      max-width: calc(100% - 16px);
     }
   }
 </style>
