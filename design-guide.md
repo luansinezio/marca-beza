@@ -731,6 +731,64 @@ Tamanho default: 44px altura, padding 12-14px, radius 10px. Para checkbox/radio 
 
 ---
 
+## Formulário público: uma pergunta por vez
+
+Definido em 19/ago/2026. Vale pra todo formulário público da Beza: captação,
+pré-qualificação, pesquisa com lead, inscrição em evento. Formulário de área
+logada continua em página única, com os campos empilhados.
+
+**A regra.** Uma pergunta visível por vez, com navegação sequencial e bastante
+espaço negativo em volta. A sensação alvo é conversa guiada, e a pessoa nunca
+deve sentir que está preenchendo um formulário comercial. A lógica de interação
+vem do Typeform, a aparência é 100% Beza: os mesmos tokens, pills, botões e
+tipografia do resto do sistema.
+
+### Anatomia
+
+1. **Abertura.** Logo, eyebrow com o tempo estimado ("Leva 1 minuto"), pergunta
+   como título, uma linha de apoio e um botão só ("Começar"). Sem contador de
+   etapas aqui: ninguém precisa saber o tamanho antes de entrar.
+2. **Etapas.** Seta de voltar, contador em mono ("3 DE 6") e fio de progresso de
+   3px na mesma linha. A pergunta é o enunciado grande (`clamp(1.5rem, 5.5vw,
+   2rem)`, Medium 500, tracking -0.02em), o texto de apoio vem em `--text-muted`
+   logo abaixo, e então o campo e a ação.
+3. **Tela final.** Confirmação usando o primeiro nome, uma frase de contexto e o
+   CTA que conclui. A submissão acontece só aqui, nunca no meio do caminho.
+
+### Regras que não se quebram
+
+- A pergunta é o label do campo (`label` ou `legend`). Nunca um heading solto
+  repetindo o mesmo texto, que faria o leitor de tela anunciar duas vezes.
+- Campo obrigatório vazio não avança. O erro aparece embaixo do campo, com
+  ícone e texto, nunca só por cor.
+- Voltar preserva tudo. Um único estado de formulário para todas as etapas, sem
+  rota por pergunta.
+- Escolha única avança sozinha depois de uns 380ms, e só quando a seleção veio
+  de toque ou clique (`event.detail > 0`). Com teclado, seta escolhe e Enter
+  avança, porque avançar no `change` prenderia quem navega por setas.
+- Enter avança em campo de texto e quebra linha no textarea. Cada etapa é um
+  `form` próprio, então esse comportamento sai nativo do browser.
+- Progresso discreto: contador mono e fio fino. Nada de stepper grande, sidebar
+  de etapas ou lista lateral.
+- Transição curta: saída de 130ms, entrada de 260ms, deslocamento vertical de
+  14px, invertido quando volta. Sempre com guarda de `prefers-reduced-motion`.
+- Altura em `svh` (nunca `vh` nem `dvh`), pra viewport não reflow quando o
+  teclado do celular sobe.
+- Campo com 48px de altura e fonte de 16px. Abaixo de 16px o Safari do iPhone
+  dá zoom ao focar e quebra o layout.
+- Foco entra no campo com `preventScroll`. Em etapa de escolha, o foco vai pra
+  opção só quando a pessoa chegou pelo teclado; no toque vai pro grupo, pra não
+  acender anel de foco numa pill que ninguém tocou.
+- Se a ação principal puder ficar atrás do teclado (caso do textarea, onde Enter
+  não avança), escutar `visualViewport.resize` e trazer o botão pra vista.
+
+**Implementação de referência:** `tenda/src/components/conversa/` (`steps.ts`
+define as perguntas, `step-view.tsx` desenha cada tipo, `conversa-form.tsx`
+cuida da navegação e do envio) e `tenda/src/lib/conversa/`, onde o contrato de
+dados fica isolado do envio. No ar em `/vamos-conversar`.
+
+---
+
 ## Checkout (exceção ao dark-first)
 
 Definido em 14/ago/2026. Vale pra toda tela de checkout da Beza, em qualquer
