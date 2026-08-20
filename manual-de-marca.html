@@ -786,7 +786,7 @@ code.inline{
 
       <span class="side-group">Texto</span>
       <a href="#tipografia"><span class="n">11</span> Tipografia</a>
-      <a href="#eyebrow"><span class="n">12</span> Eyebrow</a>
+      <a href="#eyebrow"><span class="n">12</span> Overline e eyebrow</a>
 
       <span class="side-group">Componentes</span>
       <a href="#botoes"><span class="n">13</span> Botões</a>
@@ -831,7 +831,7 @@ code.inline{
       </p>
       <div style="margin-top:56px;display:flex;gap:52px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:28px">
         <div><div class="t-mono" style="margin-bottom:8px">Versão</div><div style="font-size:15px;color:var(--texto-2)">v2 · ago/2026</div></div>
-        <div><div class="t-mono" style="margin-bottom:8px">Base</div><div style="font-size:15px;color:var(--texto-2)">Dark-first</div></div>
+        <div><div class="t-mono" style="margin-bottom:8px">Base</div><div style="font-size:15px;color:var(--texto-2)">Dark-first + tema claro</div></div>
         <div><div class="t-mono" style="margin-bottom:8px">Tipografia</div><div style="font-size:15px;color:var(--texto-2)">IBM Plex Sans + Mono</div></div>
         <div><div class="t-mono" style="margin-bottom:8px">Cor de marca</div><div style="font-size:15px;color:var(--texto-2)">#9A9BE5</div></div>
       </div>
@@ -1098,7 +1098,7 @@ code.inline{
     <div class="sec-head"><span class="sec-num">05</span>
       <span class="eyebrow"><span class="dot"></span>Superfície</span>
       <h2>Três níveis de fundo e <span class="em">uma ilha de cor</span>.</h2>
-      <p class="intro">A página inteira vive entre #0A0A10 e #14141C. O contraste entre blocos é sempre sutil: quem separa seção é a luz e o espaço, não a mudança de cor.</p>
+      <p class="intro">Cada tema tem três níveis de fundo, e só três. O contraste entre blocos é sempre sutil: quem separa seção é a luz e o espaço, não a mudança de cor.</p>
     </div>
 
     <h3><span class="id">05.1</span> Os três níveis, nos dois temas</h3>
@@ -1191,7 +1191,7 @@ code.inline{
     <div class="sec-head"><span class="sec-num">07</span>
       <span class="eyebrow"><span class="dot"></span>Iluminação</span>
       <h2>A luz é lilás e vem <span class="em">de fora do quadro</span>.</h2>
-      <p class="intro">O que dá profundidade no dark-first não é sombra, é luz. Um foco radial lilás atrás do conteúdo, um halo em cima do que importa, e escuro nas bordas pra fechar o olho no centro.</p>
+      <p class="intro">O que dá profundidade não é sombra, é luz. Um foco radial lilás atrás do conteúdo, um halo em cima do que importa, e as bordas fechando o olho no centro. No tema claro a mesma luz continua lilás, só que mais fechada.</p>
     </div>
 
     <h3><span class="id">07.1</span> Os quatro tipos</h3>
@@ -1759,8 +1759,8 @@ code.inline{
   <section class="sec soft" id="checkout">
     <div class="sec-head"><span class="sec-num">21</span>
       <span class="eyebrow"><span class="dot"></span>Checkout</span>
-      <h2>A única tela da marca que <span class="em">não é escura</span>.</h2>
-      <p class="intro">Quem chega no checkout quase nunca tem conta e está prestes a digitar cartão e CPF. Tela clara é o que o mercado ensinou a reconhecer como pagamento seguro, e a gente não briga com isso.</p>
+      <h2>A tela onde o claro <span class="em">não é opcional</span>.</h2>
+      <p class="intro">Em todo o resto o tema é escolha. Aqui não: quem chega no checkout quase nunca tem conta e está prestes a digitar cartão e CPF, e tela clara é o que o mercado ensinou a reconhecer como pagamento seguro. O checkout é a aplicação obrigatória do tema claro do <a href="#tema" style="color:var(--beza-roxo)">04</a>, com duas regras próprias.</p>
     </div>
 
     <div class="grid g2">
@@ -1777,7 +1777,7 @@ code.inline{
         </div>
       </div>
       <div>
-        <h4>O que muda</h4>
+        <div class="t-mono" style="margin-bottom:14px">O que muda</div>
         <table class="spec">
           <tr><th>Token</th><th>Valor</th></tr>
           <tr><td>Fundo</td><td class="mono">#F4F3F9</td></tr>
@@ -1841,9 +1841,11 @@ code.inline{
       <div class="item"><span class="x">✕</span><span>Botão com raio 8px ou 12px. Botão é pill.</span></div>
       <div class="item"><span class="x">✕</span><span>Heading em Regular 400. Sempre Medium 500.</span></div>
       <div class="item"><span class="x">✕</span><span>O caractere <code class="inline">→</code> como seta. Sempre SVG de linha fina.</span></div>
-      <div class="item"><span class="x">✕</span><span>Fundo claro como bloco principal de seção (o checkout é a exceção).</span></div>
+      <div class="item"><span class="x">✕</span><span>Misturar os dois temas no mesmo material. Escolhe um e vai até o fim.</span></div>
       <div class="item"><span class="x">✕</span><span>Mais de três cores no mesmo material.</span></div>
       <div class="item"><span class="x">✕</span><span>Material sem grain, sem eyebrow ou sem hierarquia de gradient.</span></div>
+      <div class="item"><span class="x">✕</span><span>Mono em caixa alta embaixo de alguma coisa. Overline encima (a regra do 12.3).</span></div>
+      <div class="item"><span class="x">✕</span><span>O lilás #9A9BE5 em texto sobre fundo claro. No claro o accent é #6E6CBE.</span></div>
       <div class="item"><span class="x">✕</span><span>Title Case em heading. Sentence case, sempre.</span></div>
     </div>
   </section>
