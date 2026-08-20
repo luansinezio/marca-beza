@@ -82,14 +82,13 @@ Nunca usar branco puro `#FFFFFF` em texto. Nunca usar cinza neutro (tipo gray do
 /* Texto hero — corpo (branco esmaecendo) */
 background: linear-gradient(180deg, #ECEDF6 0%, #8B8DA1 100%);
 
-/* Texto hero — destaque: o lilás que roda (padrão desde 20/ago/2026) */
-background-image: linear-gradient(135deg, #BCBDF3 0%, #9A9BE5 50%, #BCBDF3 100%);
+/* Texto hero — destaque no TEMA ESCURO: parado. É o mesmo das propostas. */
+background: linear-gradient(180deg, #A2A3EA, #7B79C9);
+
+/* Texto hero — destaque no TEMA CLARO: o lilás que roda */
+background-image: linear-gradient(135deg, #A5A3E4 0%, #7674C6 50%, #A5A3E4 100%);
 background-size: 200% auto;
 animation: aurora 4s ease-in-out infinite alternate;   /* @keyframes aurora { to { background-position: 100% 50% } } */
-/* No tema claro: #A5A3E4 → #7674C6 → #A5A3E4 */
-
-/* Versão estática (material sem CSS animado: slide exportado, imagem, PDF) */
-background: linear-gradient(180deg, #A2A3EA, #7B79C9);
 
 /* Botão primary */
 background: linear-gradient(180deg, #A2A3EA, #7B79C9);
@@ -105,6 +104,15 @@ background-size: 80px 80px;
 ```
 
 Pra usar gradient em texto, sempre: `-webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;` — e sempre `background-image`, nunca a shorthand `background`, que reseta o clip e transforma o texto em bloco sólido.
+
+**Movimento só no tema claro.** No escuro o gradient de destaque é **parado**: gradient animado sobre fundo escuro vira brilho e passa a chamar atenção pra si mesmo em vez de destacar a palavra. No claro ele roda, porque em fundo alto o movimento lê como variação de cor, não como luz.
+
+**Seleção de texto.** Texto com gradient usa `-webkit-text-fill-color: transparent` e cai pro preto do navegador ao ser selecionado. Por isso a seleção declara a cor de preenchimento:
+
+```css
+/* escuro */ ::selection{ background:rgba(154,155,229,.32); color:#ECEDF6; -webkit-text-fill-color:#ECEDF6; }
+/* claro  */ ::selection{ background:rgba(110,108,190,.20); color:#413F86; -webkit-text-fill-color:#413F86; }
+```
 
 **Tamanho mínimo do gradient.** O gradient branco esmaecendo (`#ECEDF6` → `#8B8DA1`) só vale de **40px pra cima**. Abaixo disso a queda pro cinza come metade da palavra e o texto parece apagado: usar cor sólida `#ECEDF6` e deixar o destaque só no lilás. Vale também em slide (título de capa aceita, texto de apoio não).
 
@@ -791,17 +799,29 @@ Componente pronto em `marca/mockup-claude-code.html`. Janela com barra de títul
 
 ### Em HTML (regra)
 
-Em interfaces dark-first (que é o padrão), o logo aparece branco. Como o SVG fonte tem fill cinza, **forçar branco com filter**:
+O logo entra **inline como SVG com `fill="currentColor"`**, herdando a cor do contexto:
 
-```css
-.nav-logo img {
-  height: 22px;
-  width: auto;
-  filter: brightness(0) invert(1);
-}
+```html
+<!-- uma vez na página -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo-beza" viewBox="0 0 760.35 198.15"><g fill="currentColor"><path d="…"/></g></symbol>
+</svg>
+
+<!-- onde o logo aparece -->
+<a class="logo" href="/" aria-label="Beza Media">
+  <svg viewBox="0 0 760.35 198.15" role="img"><use href="#logo-beza"/></svg>
+</a>
 ```
 
-Esse filter funciona em qualquer SVG monocromático e mantém o vetor leve. Para logos coloridos (marcas de clientes), inline o SVG e use `fill="currentColor"` + `color: inherit` no wrapper.
+| Contexto | Cor |
+|----------|-----|
+| Tema escuro | `#ECEDF6` |
+| Tema claro | `#23222E` |
+| Sobre lilás chapado | `#1A1830` |
+
+**Nunca preto absoluto.** `filter: brightness(0)` pinta o logo de `#000000`, e preto absoluto não existe no sistema: nem no fundo (`#0A0A10`), nem no texto (`#23222E`), nem no logo. Por isso o caminho é `currentColor`, não filtro. Para PNG em ferramenta que não aceita SVG, usar `Logo Beza Escuro.png`, que já sai em `#0D0D0D`.
+
+Para logos de cliente (coloridos), mesma técnica: inline o SVG e `fill="currentColor"` só onde o desenho for monocromático.
 
 ### Tamanhos sugeridos
 
@@ -1083,6 +1103,8 @@ Validar sempre em 312px e em 1440px antes de publicar.
 ## O que NUNCA fazer
 
 - Branco puro `#FFFFFF` em texto (sempre `#ECEDF6`)
+- Preto absoluto `#000000` em qualquer lugar, inclusive via `filter: brightness(0)` no logo
+- Gradient de texto animado no tema escuro (lá ele é parado)
 - Roxo antigo `#C82AEF` em qualquer lugar
 - Cinza neutro (tipo gray-500 do Tailwind) — sempre cinza com temperatura lilás
 - Border-radius `8px` ou `12px` em botões — botões são sempre pill (`999px`)
