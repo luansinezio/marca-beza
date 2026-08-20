@@ -970,7 +970,7 @@ Validar sempre em 312px e em 1440px antes de publicar.
 - `projetos/site-beza/wp-theme/beza-theme/footer.php` — footer estático
 - `projetos/site-beza/wp-theme/beza-theme/template-cases-index.php` — cards de case
 - `marca/Logo SVG.svg` — logo vetorial
-- `marca/manual-de-marca.html` — manual visual interno
+- `marca/manual-de-marca.html` — manual visual interno (v2, ago/2026: espelho renderizado deste guia, com textura, luz e borda; blocos numerados pra revisão). A v1 de jul/2026 ficou em `marca/manual-de-marca-v1-jul2026.html`
 - `marca/design-guide-test.html` — preview dos tokens em HTML
 - `marca/design-guide-test-tipografia.html` — escala tipográfica
 - `marca/design-guide-test-botoes.html` — sistema de botões
