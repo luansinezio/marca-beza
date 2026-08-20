@@ -894,6 +894,9 @@ tipografia do resto do sistema.
 
 - A pergunta é o label do campo (`label` ou `legend`). Nunca um heading solto
   repetindo o mesmo texto, que faria o leitor de tela anunciar duas vezes.
+- **Enunciado em uma linha só.** Se quebrou, o corpo desce de 1 em 1 até caber
+  (piso de 17px). Pergunta longa se resolve encurtando o texto, não deixando
+  virar parágrafo de duas linhas.
 - Escolha em lista vertical de blocos, com a letra do atalho à esquerda e check
   à direita quando marcada. Vale pra escolha única e pra múltipla.
 - Sem pergunta opcional e sem ação de pular: se está no formulário, é porque a
@@ -915,9 +918,19 @@ tipografia do resto do sistema.
   de etapas ou lista lateral.
 - Transição macia: saída de 200ms, entrada de 260ms, deslocamento vertical de
   18px, invertido quando volta. Sempre com guarda de `prefers-reduced-motion`.
-- Telefone com seletor de país: bandeira, nome e código no select, e o campo
-  pedindo só o número. Fora do Brasil ninguém fala em DDD, então o texto de
-  apoio muda junto.
+- Telefone é um campo só: a bandeira e o código à esquerda são o gatilho do
+  seletor de país (um `select` nativo transparente por cima do prefixo). Nada
+  de checkbox nem de segundo campo. Fora do Brasil ninguém fala em DDD, então o
+  texto de apoio muda junto.
+- Contato tem trava de verdade, senão o lead entra e não dá pra falar com ele.
+  No Brasil: DDD que existe e celular de 9 dígitos. E-mail: formato, domínio com
+  nome de gente e os erros de digitação clássicos (gmial, hotmial). Confirmar
+  que a caixa existe exige consultar o MX do domínio, o que é trabalho de
+  servidor e entra quando houver endpoint.
+- Opção "Outro" abre um campo de texto embaixo dela e dispensa a regra de
+  mínimo de escolhas: quem marca "outro" está dizendo que o caso é específico.
+- Dica de teclado ("ou aperte Enter") em texto normal pequeno. Mono em caixa
+  alta é etiqueta de interface, não recado pra quem está respondendo.
 - Altura em `svh` (nunca `vh` nem `dvh`), pra viewport não reflow quando o
   teclado do celular sobe.
 - Campo com 48px de altura e fonte de 16px. Abaixo de 16px o Safari do iPhone
