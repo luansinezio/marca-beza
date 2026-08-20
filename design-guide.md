@@ -768,6 +768,9 @@ tipografia do resto do sistema.
   avança, porque avançar no `change` prenderia quem navega por setas.
 - Enter avança em campo de texto e quebra linha no textarea. Cada etapa é um
   `form` próprio, então esse comportamento sai nativo do browser.
+- CTA no botão primary da marca (gradient `#A2A3EA` para `#7B79C9`, brilho
+  interno em cima, glow lilás no hover), o mesmo das propostas. O lilás chapado
+  é botão de área logada e não entra em superfície pública.
 - Progresso discreto: contador mono e fio fino. Nada de stepper grande, sidebar
   de etapas ou lista lateral.
 - Transição curta: saída de 130ms, entrada de 260ms, deslocamento vertical de
