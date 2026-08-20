@@ -8,7 +8,7 @@
 
 ## Princípios
 
-A identidade Beza é **dark-first**. O fundo padrão é preto azulado profundo (`#0A0A10`), e tudo cresce dali: textos em branco lilás, lilás (`#9A9BE5`) como cor de marca aparecendo em accents, gradients e estados de hover, e cinzas com temperatura lilás (nunca cinza neutro).
+A identidade Beza é **dark-first**, com um tema claro oficial (ver "Tema claro" abaixo). Dark-first quer dizer que o escuro é o padrão e o ponto de partida do sistema, não que material claro seja proibido. O fundo padrão é preto azulado profundo (`#0A0A10`), e tudo cresce dali: textos em branco lilás, lilás (`#9A9BE5`) como cor de marca aparecendo em accents, gradients e estados de hover, e cinzas com temperatura lilás (nunca cinza neutro).
 
 O sistema tem cinco marcas visuais que aparecem em todos os materiais:
 
@@ -110,6 +110,62 @@ Pra usar gradient em texto, sempre: `-webkit-background-clip: text; background-c
 | Info | `#77B8F1` | Texto colorido |
 
 Em fundo escuro, cores de estado aparecem **como texto colorido** — o contraste com o fundo já basta, sem precisar de box. Boxes preenchidos só pra erro destrutivo ou alerta crítico.
+
+---
+
+## Tema claro (adicionado 20/ago/2026)
+
+Dark-first só faz sentido com um segundo tema documentado. O claro não é versão enfraquecida: é a mesma identidade com a luz invertida. Tokens iguais aos de `comercial/bezaos-pagina-vendas-clara.html` e da variante cream do mockup.
+
+```css
+:root[data-tema="claro"]{
+  --bg:            #FAF9FC;
+  --bg-soft:       #F1F0F7;
+  --bg-card:       #FFFFFF;
+  --text:          #23222E;
+  --text-muted:    #61607A;
+  --text-dim:      #9A99B0;
+  --border:        rgba(35,34,46,0.10);
+  --border-strong: rgba(35,34,46,0.18);
+  --beza-roxo:      #6E6CBE;   /* o #9A9BE5 some em fundo claro */
+  --beza-roxo-deep: #55539E;
+  --error:         #C9342F;
+}
+```
+
+**As cinco regras da tradução:**
+
+1. **O lilás desce.** `#9A9BE5` em fundo claro fica lavado e não passa em contraste. No claro o accent é `#6E6CBE`.
+2. **O grão inverte.** Escuro: `overlay` a 4%. Claro: `multiply` a 3%.
+3. **Glow vira sombra.** O halo de 60px do botão vira sombra colorida projetada.
+4. **O CTA branco inverte.** Vira escuro `#23222E` com texto claro.
+5. **A sombra esfria.** Preto a 45% vira `rgba(35,34,60,0.10)`.
+
+**Regras de contraste** (meta WCAG AA: 4.5:1 em body, 3:1 em heading grande):
+
+| Fundo | Texto mínimo | Nunca usar |
+|-------|--------------|------------|
+| Escuro `#0A0A10`–`#14141C` | `#ECEDF6` corpo · `#8B8DA1` apoio | gray-600 pra baixo em body · branco puro |
+| Claro `#FAF9FC`–`#FFFFFF` | `#23222E` corpo · `#61607A` apoio | gray-50 a gray-300 em texto · `#9A9BE5` em texto pequeno |
+| Lilás chapado `#9A9BE5` | `#0D0D0D` corpo | branco puro · texto lilás |
+| Lilás profundo `#7B79C9`–`#5D5BA8` | `#FFFFFF` corpo | gray-300 pra baixo |
+
+**Quando usar cada um.** Escuro é o padrão: site, landing, proposta, deck, carrossel, post, área logada, painel. Claro em: checkout (obrigatório), documento longo de leitura, material impresso, corpo de e-mail, relatório, e tela que vá ser vista sob sol forte ou projetada em sala clara. Nunca misturar os dois no mesmo material.
+
+---
+
+## Espaçamento e grid
+
+Base 8, com 4 como meio-passo: `4 · 8 · 16 · 24 · 32 · 48 · 64 · 96 · 128 · 160`.
+
+| Faixa | Largura | Colunas | O que muda |
+|-------|---------|---------|------------|
+| Mobile | até 700px | 1 | Coluna única, padding 20px, drawer |
+| Tablet | 701–900px | 2 | Ainda com drawer |
+| Laptop | 901–1180px | 2–3 | Menu horizontal volta |
+| Desktop | 1181px+ | 3–4 | Container em 1320px |
+
+O drawer entra em **900px**, não em 768px.
 
 ---
 
@@ -236,6 +292,16 @@ Pill que aparece **acima de todo heading principal** (hero de página, início d
 - Capa de slide / carrossel
 
 **Quando não usar:** dentro de cards pequenos, em headings de listas, em body text.
+
+### Critério de overline (fechado em 20/ago/2026)
+
+Overline é rótulo que **encima** alguma coisa. Se não está por cima, não é overline, e não vira mono caixa alta só pra parecer da marca.
+
+- **É overline:** kicker acima do título, label acima do campo, cabeçalho acima da coluna, categoria acima do card.
+- **Não é overline:** assinatura embaixo do nome, legenda sob imagem, texto de ajuda sob campo, caption de rodapé. Tudo isso vai em **texto normal, sentence case**.
+- **Teste:** se dá pra apagar o texto e o bloco continua se explicando, é caption. Overline apagado deixa o bloco órfão.
+- **Exceções declaradas:** breadcrumb de rodapé do slide, copyright do rodapé do site, ano e categoria no card de case (metadata pareada na mesma linha).
+- **Dose:** um eyebrow por bloco e, fora dele, no máximo três rótulos mono visíveis ao mesmo tempo na tela.
 
 ---
 
@@ -603,32 +669,24 @@ body::before {
 
 Sempre incluir em landings, propostas e qualquer material HTML da Beza.
 
-### Cursor glow
+### Ponteiro lilás (substituiu o cursor glow em 20/ago/2026)
 
-Glow lilás radial 480×480px que segue o mouse, com `mix-blend-mode: screen`. Sutil mas inconfundível:
+O ponteiro do mouse é lilás em todo material da Beza. É cursor nativo (SVG de 24px em `cursor:`), não elemento que persegue o mouse:
 
 ```css
-.cursor-glow {
-  position: fixed; top: 0; left: 0;
-  width: 480px; height: 480px;
-  border-radius: 50%;
-  pointer-events: none; z-index: 2;
-  background: radial-gradient(circle, rgba(154,155,229,0.18), transparent 60%);
-  transform: translate(-50%, -50%);
-  transition: opacity 0.3s ease;
-  mix-blend-mode: screen;
+:root{
+  --cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path d='M5.5 2.6 L5.5 20.6 L10.1 16.2 L12.8 22.3 L15.7 21 L13 15.1 L19 14.9 Z' fill='%239A9BE5' stroke='%230A0A10' stroke-width='1.3' stroke-linejoin='round'/></svg>") 5 3, auto;
 }
+body{ cursor: var(--cursor); }
+a, button, label, summary { cursor: var(--cursor-link); }   /* mesma seta, lilás mais claro (#C9CAF5) */
+input, textarea { cursor: text; }
 ```
 
-```js
-document.addEventListener('mousemove', (e) => {
-  const el = document.querySelector('.cursor-glow');
-  el.style.left = e.clientX + 'px';
-  el.style.top = e.clientY + 'px';
-});
-```
+- **Fill** = lilás do tema (`#9A9BE5` no escuro, `#6E6CBE` no claro).
+- **Contorno** = cor do fundo do tema (`#0A0A10` no escuro, `#FFFFFF` no claro). É o que mantém a seta legível passando por card branco, slide escuro ou foto.
+- Vale em **qualquer** tela, inclusive dashboard e área logada.
 
-Usar em landings principais e capas de proposta. Não usar em interfaces densas/dashboards (distrai).
+O glow lilás de 480px que seguia o mouse foi **descontinuado**: borrava o texto por baixo, arrastava em página longa e não servia em tela densa.
 
 ### Grid bg utility
 
@@ -792,13 +850,13 @@ dados fica isolado do envio. No ar em `/vamos-conversar`.
 
 ---
 
-## Checkout (exceção ao dark-first)
+## Checkout (tema claro obrigatório)
 
 Definido em 14/ago/2026. Vale pra toda tela de checkout da Beza, em qualquer
 produto.
 
 **O checkout é claro.** Fundo `#F4F3F9`, card branco `#FFFFFF`, texto
-`#15151A`. É a única superfície da marca que não é dark-first: quem está ali
+`#15151A`. Em todo o resto o tema é escolha; aqui não: quem está ali
 quase nunca tem conta e está prestes a digitar cartão e CPF, e tela clara é o
 que o mercado ensinou a reconhecer como pagamento seguro. O accent lilás
 entra escurecido pra manter contraste AA em fundo claro.
@@ -841,7 +899,7 @@ Valem pra toda apresentação da casa. O template pronto com essas regras já ap
 
 - **Fundo escuro** (`#0A0A10` ou gradient `#0A0A10 → #14141C`) — usar em **todos os slides**
 - **Lilás chapado** (`#9A9BE5`) — só em slide de pergunta/clímax pontual (1-2 por apresentação, no máximo)
-- **Fundo claro** — descontinuado. Não usar mais
+- **Fundo claro** — só quando a apresentação inteira roda no tema claro (sala clara, projeção fraca). Nunca alternando com slide escuro no mesmo deck
 
 ### Texto em slide
 
@@ -957,9 +1015,11 @@ Validar sempre em 312px e em 1440px antes de publicar.
 - Border-radius `8px` ou `12px` em botões — botões são sempre pill (`999px`)
 - Headings em Regular 400 — sempre Medium 500
 - Caractere `→` como seta — sempre SVG linha fina
-- Fundo claro como bloco principal de seção
+- Misturar os dois temas no mesmo material (escolher um e ir até o fim)
 - Misturar mais de 3 cores no mesmo material
 - Material da Beza sem grain noise, sem eyebrow, sem hierarquia de gradient
+- Mono em caixa alta embaixo de alguma coisa (ver "Critério de overline")
+- O lilás `#9A9BE5` em texto sobre fundo claro (no claro o accent é `#6E6CBE`)
 
 ---
 
