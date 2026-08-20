@@ -407,6 +407,25 @@ code.inline{
 .amo p{font-size:14px;opacity:.72;margin:0}
 .amo-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
 .amo-chips span{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:7px 10px;border-radius:8px;border:1px solid rgba(128,128,150,.25);color:#ECEDF6}
+/* escala de espaçamento (10.1) */
+.escala{display:flex;flex-direction:column;gap:2px}
+.esc{display:flex;align-items:center;gap:16px;padding:9px 0;border-bottom:1px solid var(--linha)}
+.esc:last-child{border-bottom:none}
+.esc i{display:block;height:14px;border-radius:3px;background:linear-gradient(90deg,var(--beza-roxo),var(--beza-roxo-deep));flex:none}
+.esc b{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:var(--beza-roxo);min-width:48px}
+.esc span{font-size:13.5px;color:var(--text-muted)}
+/* comparativo de rampas (03.4) */
+.comparo{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.comparo-cab{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:10px}
+/* níveis de fundo (05.1) */
+.niveis{display:flex;flex-direction:column;gap:14px}
+.nivel-linha{display:grid;grid-template-columns:90px repeat(3,1fr);gap:14px;align-items:stretch}
+.nivel-tema{font-size:13px;color:var(--text-muted);align-self:center}
+.nivel{border-radius:12px;border:1px solid rgba(128,128,150,.22);padding:22px;min-height:104px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px}
+.nivel b{font-size:15px;font-weight:500}
+.nivel span{font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:.68}
+/* rótulo dentro de amostra: mono, mas sem virar overline gigante */
+.rot{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;opacity:.5}
 .demo-box{
   height:190px;border-radius:14px;border:1px solid var(--border);
   position:relative;overflow:hidden;background:var(--bg-soft);
@@ -641,7 +660,7 @@ code.inline{
   section.sec{padding:72px 28px}
   .sec-num{position:static;display:block;margin-bottom:10px}
   .g4,.g3,.state-grid,.peso-grid,.raio-grid,.sombra-grid,.logo-grid,.footer-cols{grid-template-columns:repeat(2,1fr)}
-  .g2,.nunca,.sim-nao,.footer-demo{grid-template-columns:1fr}
+  .g2,.nunca,.sim-nao,.footer-demo,.comparo{grid-template-columns:1fr}
   .type-row{grid-template-columns:1fr;gap:12px}
   .fim{padding:80px 28px}
 }
@@ -649,6 +668,7 @@ code.inline{
   section.sec{padding:64px 20px}
   .grid,.grid.g2,.grid.g3,.grid.g4,.grid.g-auto,.nunca,.sim-nao,.sombra-grid,.logo-grid,.footer-cols,.footer-demo{grid-template-columns:1fr}
   .state-grid,.peso-grid,.raio-grid{grid-template-columns:repeat(2,1fr)}
+  .nivel-linha{grid-template-columns:1fr 1fr}
   .ramp{grid-template-columns:repeat(5,1fr)}
   .ramp div{height:56px}
   .stage{padding:24px}
@@ -761,6 +781,8 @@ code.inline{
       <a href="#luz"><span class="n">07</span> Iluminação</a>
       <a href="#bordas"><span class="n">08</span> Bordas e raios</a>
       <a href="#sombras"><span class="n">09</span> Sombra e elevação</a>
+
+      <a href="#espaco"><span class="n">10</span> Espaçamento e grid</a>
 
       <span class="side-group">Texto</span>
       <a href="#tipografia"><span class="n">11</span> Tipografia</a>
@@ -934,7 +956,42 @@ code.inline{
     </div>
     <p class="note">Todos puxam pro violeta. Cinza neutro entra em conflito com o lilás e denuncia material feito fora do sistema.</p>
 
-    <h3><span class="id">03.4</span> Gradients oficiais</h3>
+    <h3><span class="id">03.4</span> O que mudou desde julho</h3>
+    <p class="note" style="margin-top:0">A escala de cinza foi reescrita entre o manual de julho e o guia de hoje. Do 200 pra baixo, cada tom ficou <b>mais frio e mais escuro</b>: o violeta saiu do lado quente (magenta) e foi pro lado azul. Na prática, o cinza novo combina melhor com o fundo <code class="inline">#0A0A10</code> e pior com papel. As duas rampas estão aqui pra você decidir qual vale.</p>
+    <div class="comparo">
+      <div>
+        <span class="comparo-cab">Julho · v1</span>
+        <div class="ramp">
+          <div style="background:#F4F3F9;color:#15151A">50</div><div style="background:#E8E7F0;color:#15151A">100</div>
+          <div style="background:#D6D4E3;color:#15151A">200</div><div style="background:#C4C2D6;color:#15151A">300</div>
+          <div style="background:#A8A6BE;color:#15151A">400</div><div style="background:#8B89A3;color:#0A0A10">500</div>
+          <div style="background:#6D6B82;color:#ECEDF6">600</div><div style="background:#4F4E5F;color:#ECEDF6">700</div>
+          <div style="background:#32313D;color:#ECEDF6">800</div><div style="background:#1A1A1A;color:#ECEDF6">900</div>
+        </div>
+      </div>
+      <div>
+        <span class="comparo-cab">Hoje · v2 (em uso)</span>
+        <div class="ramp">
+          <div style="background:#F4F3F9;color:#15151A">50</div><div style="background:#E8E7F0;color:#15151A">100</div>
+          <div style="background:#D5D6E1;color:#15151A">200</div><div style="background:#C4C2D6;color:#15151A">300</div>
+          <div style="background:#A8A9BE;color:#15151A">400</div><div style="background:#8B8DA1;color:#0A0A10">500</div>
+          <div style="background:#606282;color:#ECEDF6">600</div><div style="background:#4A4C5F;color:#ECEDF6">700</div>
+          <div style="background:#25253D;color:#ECEDF6">800</div><div style="background:#15151A;color:#ECEDF6">900</div>
+        </div>
+      </div>
+    </div>
+    <table class="spec">
+      <tr><th>Tom</th><th>Julho</th><th>Hoje</th><th>Diferença</th></tr>
+      <tr><td>200</td><td class="mono">#D6D4E3</td><td class="mono">#D5D6E1</td><td>Praticamente igual</td></tr>
+      <tr><td>400</td><td class="mono">#A8A6BE</td><td class="mono">#A8A9BE</td><td>Esfriou de leve</td></tr>
+      <tr><td>500</td><td class="mono">#8B89A3</td><td class="mono">#8B8DA1</td><td>Esfriou de leve</td></tr>
+      <tr><td>600</td><td class="mono">#6D6B82</td><td class="mono">#606282</td><td>Mais escuro e mais azul</td></tr>
+      <tr><td>700</td><td class="mono">#4F4E5F</td><td class="mono">#4A4C5F</td><td>Mais escuro</td></tr>
+      <tr><td>800</td><td class="mono">#32313D</td><td class="mono">#25253D</td><td>Bem mais escuro e mais azul</td></tr>
+      <tr><td>900</td><td class="mono">#1A1A1A</td><td class="mono">#15151A</td><td>Saiu do cinza neutro e ganhou violeta</td></tr>
+    </table>
+
+    <h3><span class="id">03.5</span> Gradients oficiais</h3>
     <div class="grid g2">
       <div class="stage soft"><span class="tag">texto · corpo</span>
         <div style="font-size:34px;font-weight:500;letter-spacing:-.02em" class="fade-txt">Marcas que crescem</div>
@@ -955,7 +1012,7 @@ code.inline{
       </div>
     </div>
 
-    <h3><span class="id">03.5</span> Cores de estado</h3>
+    <h3><span class="id">03.6</span> Cores de estado</h3>
     <div class="state-grid">
       <div class="state"><div class="top"><span class="bola" style="background:#6FC878"></span><span class="nome">Success</span></div><div class="hex">#6FC878</div><div class="amostra" style="color:#6FC878">Proposta enviada</div></div>
       <div class="state"><div class="top"><span class="bola" style="background:#F34D4D"></span><span class="nome">Error</span></div><div class="hex">#F34D4D</div><div class="amostra" style="color:#F34D4D">Campo obrigatório</div></div>
@@ -1044,18 +1101,35 @@ code.inline{
       <p class="intro">A página inteira vive entre #0A0A10 e #14141C. O contraste entre blocos é sempre sutil: quem separa seção é a luz e o espaço, não a mudança de cor.</p>
     </div>
 
-    <h3><span class="id">05.1</span> Os três níveis</h3>
-    <div class="grid g3">
-      <div class="demo-box" style="background:#0A0A10"><span class="lbl">bg · #0A0A10 · página</span></div>
-      <div class="demo-box" style="background:#111119"><span class="lbl">bg-soft · #111119 · seção</span></div>
-      <div class="demo-box" style="background:#14141C"><span class="lbl">bg-card · #14141C · card</span></div>
+    <h3><span class="id">05.1</span> Os três níveis, nos dois temas</h3>
+    <div class="niveis">
+      <div class="nivel-linha">
+        <span class="nivel-tema">Escuro</span>
+        <div class="nivel" style="background:#0A0A10;color:#ECEDF6"><b>bg</b><span>#0A0A10 · página</span></div>
+        <div class="nivel" style="background:#111119;color:#ECEDF6"><b>bg-soft</b><span>#111119 · seção</span></div>
+        <div class="nivel" style="background:#14141C;color:#ECEDF6"><b>bg-card</b><span>#14141C · card</span></div>
+      </div>
+      <div class="nivel-linha">
+        <span class="nivel-tema">Claro</span>
+        <div class="nivel" style="background:#FAF9FC;color:#23222E"><b>bg</b><span>#FAF9FC · página</span></div>
+        <div class="nivel" style="background:#F1F0F7;color:#23222E"><b>bg-soft</b><span>#F1F0F7 · seção</span></div>
+        <div class="nivel" style="background:#FFFFFF;color:#23222E"><b>bg-card</b><span>#FFFFFF · card</span></div>
+      </div>
     </div>
+    <p class="note">A lógica é a mesma nos dois: página, seção alternada e card. No escuro o card <b>sobe</b> em relação ao fundo; no claro ele sobe indo pro branco puro.</p>
 
     <h3><span class="id">05.2</span> Alternância de seção</h3>
-    <div class="stage soft" style="padding:0">
-      <div style="background:#0A0A10;padding:34px"><div class="t-mono">Seção A</div><div style="font-size:22px;font-weight:500;margin-top:8px">Fundo base</div></div>
-      <div style="background:#111119;padding:34px"><div class="t-mono">Seção B</div><div style="font-size:22px;font-weight:500;margin-top:8px">Um degrau acima</div></div>
-      <div style="background:#0A0A10;padding:34px"><div class="t-mono">Seção C</div><div style="font-size:22px;font-weight:500;margin-top:8px">Volta pro base</div></div>
+    <div class="grid g2">
+      <div class="stage" style="padding:0;overflow:hidden">
+        <div style="background:#0A0A10;color:#ECEDF6;padding:28px"><div class="rot">Seção A</div><div style="font-size:20px;font-weight:500;margin-top:6px">Fundo base</div></div>
+        <div style="background:#111119;color:#ECEDF6;padding:28px"><div class="rot">Seção B</div><div style="font-size:20px;font-weight:500;margin-top:6px">Um degrau acima</div></div>
+        <div style="background:#0A0A10;color:#ECEDF6;padding:28px"><div class="rot">Seção C</div><div style="font-size:20px;font-weight:500;margin-top:6px">Volta pro base</div></div>
+      </div>
+      <div class="stage" style="padding:0;overflow:hidden">
+        <div style="background:#FAF9FC;color:#23222E;padding:28px"><div class="rot">Seção A</div><div style="font-size:20px;font-weight:500;margin-top:6px">Fundo base</div></div>
+        <div style="background:#F1F0F7;color:#23222E;padding:28px"><div class="rot">Seção B</div><div style="font-size:20px;font-weight:500;margin-top:6px">Um degrau acima</div></div>
+        <div style="background:#FAF9FC;color:#23222E;padding:28px"><div class="rot">Seção C</div><div style="font-size:20px;font-weight:500;margin-top:6px">Volta pro base</div></div>
+      </div>
     </div>
     <p class="note">A troca é quase imperceptível de propósito. Se a diferença ficar óbvia, saiu do sistema.</p>
 
@@ -1142,11 +1216,32 @@ code.inline{
     </div>
     <p class="note">Três intensidades de glow, sempre na mesma cor: <code class="inline">0 0 10px</code> no dot, <code class="inline">0 0 0 3px rgba(154,155,229,.18)</code> no foco de campo, <code class="inline">0 0 60px rgba(154,155,229,.5)</code> no botão primary em hover.</p>
 
-    <h3><span class="id">07.3</span> Cursor glow</h3>
-    <div class="stage" style="min-height:130px;display:flex;align-items:center"><span class="tag">07.3</span>
-      <p style="color:var(--text-muted);max-width:640px">Está ligado nessa página: mexe o mouse e repara no clarão lilás que segue o ponteiro. 480×480px, <code class="inline">mix-blend-mode: screen</code>, opacidade baixa.</p>
+    <h3><span class="id">07.3</span> Ponteiro lilás</h3>
+    <div class="grid g2">
+      <div class="stage" style="display:flex;align-items:center;gap:26px"><span class="tag">padrão</span>
+        <svg width="78" height="78" viewBox="0 0 24 24" style="flex:none">
+          <path d="M5.5 2.6 L5.5 20.6 L10.1 16.2 L12.8 22.3 L15.7 21 L13 15.1 L19 14.9 Z" fill="#9A9BE5" stroke="#0A0A10" stroke-width="1.3" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <div style="font-size:17px;font-weight:500">Ponteiro do sistema</div>
+          <p class="note" style="margin-top:6px">Seta preenchida no lilás de marca, com contorno na cor do fundo do tema. Está ativo nessa página inteira.</p>
+        </div>
+      </div>
+      <div class="stage" style="display:flex;align-items:center;gap:26px"><span class="tag">clicável</span>
+        <svg width="78" height="78" viewBox="0 0 24 24" style="flex:none">
+          <path d="M5.5 2.6 L5.5 20.6 L10.1 16.2 L12.8 22.3 L15.7 21 L13 15.1 L19 14.9 Z" fill="#C9CAF5" stroke="#0A0A10" stroke-width="1.3" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <div style="font-size:17px;font-weight:500">Sobre link e botão</div>
+          <p class="note" style="margin-top:6px">Mesma seta, lilás bem mais claro. Sinaliza que dá pra clicar sem trocar de desenho, que é o que a mãozinha do sistema faria.</p>
+        </div>
+      </div>
     </div>
-    <div class="rule"><b>Onde usar:</b> landing principal e capa de proposta. <b>Onde não usar:</b> dashboard, CRM, área logada e qualquer tela densa. Ali ele vira distração.</div>
+    <div class="rule">
+      <b>O contorno segue o fundo do tema:</b> <code class="inline">#0A0A10</code> no escuro, branco no claro. É o que mantém a seta legível passando por cima de card branco, slide escuro ou foto.<br>
+      <b>É cursor nativo</b> (SVG de 24px em <code class="inline">cursor:</code>, hotspot 5 3), não um elemento que persegue o mouse. Sem atraso, sem pintar nada por cima do conteúdo, e vale em qualquer tela, inclusive dashboard e área logada.
+    </div>
+    <p class="note"><b>O que saiu:</b> o glow lilás de 480px que seguia o ponteiro foi aposentado em 20/ago/2026. Borrava o texto por baixo, arrastava em página longa e não servia em tela densa.</p>
   </section>
 
   <!-- ================= 08 BORDAS ================= -->
@@ -1194,6 +1289,51 @@ code.inline{
     </div>
     <p class="note">Elemento parado no fluxo da página não leva sombra: leva borda sutil. Sombra é reservada pra card que levanta no hover, painel flutuante e card de preço.</p>
   </section>
+  <!-- ================= 10 ESPAÇAMENTO ================= -->
+  <section class="sec" id="espaco">
+    <div class="sec-head"><span class="sec-num">10</span>
+      <span class="eyebrow"><span class="dot"></span>Espaçamento e grid</span>
+      <h2>Tudo que respira sai da <span class="em">base 8</span>.</h2>
+      <p class="intro">Nenhuma medida do sistema é escolhida no olho. Todo espaço é múltiplo de 8, com 4 como meio-passo pra ajuste fino dentro de componente.</p>
+    </div>
+
+    <h3><span class="id">10.1</span> Escala</h3>
+    <div class="escala">
+      <div class="esc"><i style="width:4px"></i><b>4</b><span>meio-passo, gap dentro de pill</span></div>
+      <div class="esc"><i style="width:8px"></i><b>8</b><span>gap entre tag e ícone</span></div>
+      <div class="esc"><i style="width:16px"></i><b>16</b><span>gap de grid, gap entre cards</span></div>
+      <div class="esc"><i style="width:24px"></i><b>24</b><span>padding interno pequeno</span></div>
+      <div class="esc"><i style="width:32px"></i><b>32</b><span>padding de card, padding lateral desktop</span></div>
+      <div class="esc"><i style="width:48px"></i><b>48</b><span>distância entre bloco e subtítulo</span></div>
+      <div class="esc"><i style="width:64px"></i><b>64</b><span>padding vertical de seção no mobile</span></div>
+      <div class="esc"><i style="width:96px"></i><b>96</b><span>padding vertical de seção no desktop</span></div>
+      <div class="esc"><i style="width:128px"></i><b>128</b><span>divisão narrativa forte</span></div>
+      <div class="esc"><i style="width:160px"></i><b>160</b><span>ar dramático: hero e fechamento</span></div>
+    </div>
+
+    <h3><span class="id">10.2</span> Container e padding</h3>
+    <table class="spec">
+      <tr><th>Item</th><th>Valor</th><th>Observação</th></tr>
+      <tr><td>Largura máxima</td><td class="mono">1320px</td><td>Centralizado. Vale pra nav, conteúdo e rodapé</td></tr>
+      <tr><td>Padding lateral desktop</td><td class="mono">32px</td><td>A partir de 1320px de janela</td></tr>
+      <tr><td>Padding lateral tablet</td><td class="mono">24–28px</td><td></td></tr>
+      <tr><td>Padding lateral mobile</td><td class="mono">20px</td><td>Até 700px</td></tr>
+      <tr><td>Seção padrão</td><td class="mono">80–120px</td><td>64–80px no mobile</td></tr>
+      <tr><td>Hero</td><td class="mono">140px 0 120px</td><td>120px 0 80px no mobile</td></tr>
+      <tr><td>Corpo de card</td><td class="mono">28px 32px 32px</td><td></td></tr>
+    </table>
+
+    <h3><span class="id">10.3</span> Breakpoints</h3>
+    <table class="spec">
+      <tr><th>Faixa</th><th>Largura</th><th>Colunas</th><th>O que muda</th></tr>
+      <tr><td>Mobile</td><td class="mono">até 700px</td><td>1</td><td>Grid vira coluna única, padding 20px, drawer no lugar do menu</td></tr>
+      <tr><td>Tablet</td><td class="mono">701–900px</td><td>2</td><td>Ainda com drawer. Grid de 3 vira 2</td></tr>
+      <tr><td>Laptop</td><td class="mono">901–1180px</td><td>2–3</td><td>Menu horizontal volta</td></tr>
+      <tr><td>Desktop</td><td class="mono">1181px+</td><td>3–4</td><td>Layout cheio, container em 1320px</td></tr>
+    </table>
+    <p class="note">O drawer entra em <b>900px</b>, não em 768px. Tablet em pé com menu horizontal aperta os itens e quebra o CTA.</p>
+  </section>
+
   <!-- ================= 11 TIPOGRAFIA ================= -->
   <section class="sec soft" id="tipografia">
     <div class="sec-head"><span class="sec-num">11</span>
