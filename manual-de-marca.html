@@ -209,7 +209,7 @@ section.sec.soft{background:var(--bg-soft)}
   font-size:14.5px;color:var(--texto-2);
 }
 .rule::before{
-  content:'Regra';display:block;margin-bottom:8px;
+  content:attr(data-rot);display:block;margin-bottom:8px;
   font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;
   letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);
 }
@@ -460,7 +460,7 @@ code.inline{
   font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.22em;
   color:var(--text-muted);white-space:nowrap;
 }
-.marquee-track span::after{content:'';width:4px;height:4px;border-radius:999px;background:var(--beza-roxo);flex:none}
+.marquee-track span i{width:4px;height:4px;border-radius:999px;background:var(--beza-roxo);flex:none;display:block}
 @keyframes desliza{to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.marquee-track{animation:none}}
 .demo-box{
@@ -535,8 +535,10 @@ code.inline{
 .raio .v{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--beza-roxo)}
 .raio .q{font-size:12px;color:var(--text-muted);margin-top:6px}
 .sombra-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.sombra{min-height:120px}
 .sombra{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:26px;font-size:13px;color:var(--text-muted)}
 .sombra b{display:block;color:var(--text);font-size:14px;font-weight:500;margin-bottom:8px}
+.s0{box-shadow:none}
 .s1{box-shadow:var(--sombra-card)}
 .s2{box-shadow:var(--sombra-card),0 0 0 1px var(--beza-roxo)}
 .s3{box-shadow:var(--sombra-glass)}
@@ -919,8 +921,7 @@ code.inline{
       </div>
     </div>
 
-    <div class="rule">
-      <b>Nunca:</b> branco puro em texto, cinza neutro do Tailwind, o roxo antigo <code class="inline">#C82AEF</code>, ou material sem grain.
+    <div class="rule" data-rot="Nunca">Branco puro em texto, cinza neutro do Tailwind, o roxo antigo <code class="inline">#C82AEF</code>, ou material sem grain.
     </div>
   </section>
 
@@ -935,10 +936,10 @@ code.inline{
     <h3><span class="id">02.1</span> Aplicação por fundo</h3>
     <div class="logo-grid">
       <div><div class="logo-box dark"><img src="logo-beza-completo.svg" alt="Logo em fundo escuro"></div><span class="logo-cap">Fundo escuro · padrão</span></div>
-      <div><div class="logo-box claro"><img src="logo-beza-completo.svg" alt="Logo em fundo claro"></div><span class="logo-cap">Fundo claro · exceção</span></div>
+      <div><div class="logo-box claro"><img src="logo-beza-completo.svg" alt="Logo em fundo claro"></div><span class="logo-cap">Fundo claro · tema claro</span></div>
       <div><div class="logo-box lilas"><img src="logo-beza-completo.svg" alt="Logo em fundo lilás"></div><span class="logo-cap">Fundo lilás · slide de clímax</span></div>
     </div>
-    <p class="note">Em interface dark-first o logo aparece branco. Como o SVG fonte tem fill cinza, forçar com <code class="inline">filter: brightness(0) invert(1)</code>. Para logo de cliente (colorido), inline o SVG e usar <code class="inline">fill="currentColor"</code>.</p>
+    <p class="note">No tema escuro o logo aparece branco; no claro, preto. Como o SVG fonte tem fill cinza, forçar com <code class="inline">filter: brightness(0) invert(1)</code>. Para logo de cliente (colorido), inline o SVG e usar <code class="inline">fill="currentColor"</code>.</p>
 
     <h3><span class="id">02.2</span> Variações e arquivos</h3>
     <div class="logo-grid">
@@ -1070,7 +1071,7 @@ code.inline{
       <p class="intro">Dark-first só faz sentido se existir um segundo tema documentado. Sem isso a marca não é dark-first, é só escura. O claro não é uma versão enfraquecida: é a mesma identidade com a luz invertida, e tem regra própria, porque o lilás de marca não sobrevive em fundo claro.</p>
     </div>
 
-    <div class="rule"><b>Experimenta:</b> o botão <b>Escuro / Claro</b> no alto da barra lateral troca a página inteira. Tudo daqui pra baixo responde aos dois temas, e é assim que o sistema deve se comportar em qualquer material.</div>
+    <div class="rule" data-rot="Experimenta">O botão <b>Escuro / Claro</b> no alto da barra lateral troca a página inteira. Tudo daqui pra baixo responde aos dois temas, e é assim que o sistema deve se comportar em qualquer material.</div>
 
     <h3><span class="id">04.1</span> Os dois lados</h3>
     <div class="grid g2">
@@ -1104,7 +1105,7 @@ code.inline{
     </table>
 
     <h3><span class="id">04.3</span> As cinco regras da tradução</h3>
-    <div class="rule">
+    <div class="rule" data-rot="Regra">
       <b>1. O lilás desce.</b> <code class="inline">#9A9BE5</code> em fundo claro fica lavado e não passa em contraste. No claro o accent é <code class="inline">#6E6CBE</code>, o mesmo tom da variante cream do mockup e da página de vendas clara.<br>
       <b>2. O grão inverte.</b> No escuro é <code class="inline">overlay</code> a 4%. No claro, <code class="inline">multiply</code> a 3%, senão ele clareia e some.<br>
       <b>3. Glow vira sombra.</b> O halo lilás de 60px do botão vira sombra colorida projetada. Luz que brilha no escuro, no claro só empurra o objeto pra frente.<br>
@@ -1185,8 +1186,7 @@ code.inline{
       <div style="font-size:clamp(24px,3vw,38px);font-weight:500;letter-spacing:-.02em;line-height:1.15;color:#fff;max-width:640px">Um bloco de cor no meio da página, pra virar o jogo de contraste em um momento só.</div>
       <p style="margin-top:16px;color:rgba(255,255,255,.82);max-width:560px">Usar no máximo uma vez por página, e sempre num momento de clímax: a visão, a pergunta, o preço.</p>
     </div>
-    <div class="rule">
-      <b>Regra:</b> a ilha lilás inverte tudo dentro dela. Texto vira branco, o dot do eyebrow vira branco com glow branco, e o gradient de destaque troca pra branco e lilás claro. Lilás chapado com texto lilás não existe.
+    <div class="rule" data-rot="Regra">A ilha lilás inverte tudo dentro dela. Texto vira branco, o dot do eyebrow vira branco com glow branco, e o gradient de destaque troca pra branco e lilás claro. Lilás chapado com texto lilás não existe.
     </div>
   </section>
   <!-- ================= 06 TEXTURA ================= -->
@@ -1214,7 +1214,7 @@ code.inline{
       <div><div class="demo-box tex-grid-fade"><span class="lbl">Grade com fade + deslize</span></div><p class="note">Fade radial pela cor do fundo. Desliza 1 quadrado em 9s, então o loop é invisível.</p></div>
       <div><div class="demo-box tex-dots"><span class="lbl">Pontos 22px</span></div><p class="note">Alternativa mais leve pra bloco pequeno e card de destaque.</p></div>
     </div>
-    <div class="rule"><b>Regra:</b> o fade das bordas da grade sai como camada de gradiente na cor do fundo, não como <code class="inline">mask-image</code>. Mesmo resultado e sem depender de suporte a máscara.</div>
+    <div class="rule" data-rot="Regra">O fade das bordas da grade sai como camada de gradiente na cor do fundo, não como <code class="inline">mask-image</code>. Mesmo resultado e sem depender de suporte a máscara.</div>
 
     <h3><span class="id">06.3</span> Chuva de glifos</h3>
     <div class="grid g2">
@@ -1234,7 +1234,7 @@ code.inline{
       </div>
     </div>
     <p class="note">É o efeito de "tem máquina rodando por trás". Usar quando o assunto é <b>tecnologia, automação ou sistema</b>: seção de IA, bloco de produto, capa de aula. Nunca em seção sobre pessoa, case ou preço.</p>
-    <div class="rule">Cada coluna solta streams em intervalo aleatório, a cabeça é clara e a cauda esmaece atrás. Cerca de 35% dos streams atravessam a tela inteira e o resto morre no caminho, que é o que evita o padrão de cortina. O loop <b>pausa quando a seção sai da tela</b> (IntersectionObserver) e não roda com <code class="inline">prefers-reduced-motion</code>.</div>
+    <div class="rule" data-rot="Regra">Cada coluna solta streams em intervalo aleatório, a cabeça é clara e a cauda esmaece atrás. Cerca de 35% dos streams atravessam a tela inteira e o resto morre no caminho, que é o que evita o padrão de cortina. O loop <b>pausa quando a seção sai da tela</b> (IntersectionObserver) e não roda com <code class="inline">prefers-reduced-motion</code>.</div>
     <pre><span class="c">// comercial/bezaos-site/index.html · bloco "Chuva de glifos"</span>
 const CABECA   = '#FFFFFF';   <span class="c">// cabeça do stream</span>
 const CAUDA    = '#CFCDF0';   <span class="c">// no fundo claro: #6E6CBE</span>
@@ -1272,7 +1272,7 @@ const FADE_INT = 25;                <span class="c">// dureza da queda</span>
       <tr><td>Chuva de glifos</td><td>Seção de tecnologia, IA, automação e produto</td><td class="mono">20%</td></tr>
       <tr><td>Quadradinhos</td><td>Seção de lista e explicação, atrás de card</td><td class="mono">12–14%</td></tr>
     </table>
-    <div class="rule">Uma textura viva por seção, e no máximo <b>duas por página</b>. As duas rodam em canvas e pausam fora da tela, mas três seções animadas ao mesmo tempo derrubam o scroll no celular.</div>
+    <div class="rule" data-rot="Regra">Uma textura viva por seção, e no máximo <b>duas por página</b>. As duas rodam em canvas e pausam fora da tela, mas três seções animadas ao mesmo tempo derrubam o scroll no celular.</div>
   </section>
 
   <!-- ================= 07 LUZ ================= -->
@@ -1326,8 +1326,7 @@ const FADE_INT = 25;                <span class="c">// dureza da queda</span>
         </div>
       </div>
     </div>
-    <div class="rule">
-      <b>O contorno segue o fundo do tema:</b> <code class="inline">#0A0A10</code> no escuro, branco no claro. É o que mantém a seta legível passando por cima de card branco, slide escuro ou foto.<br>
+    <div class="rule" data-rot="Contorno">O contorno segue o fundo do tema: <code class="inline">#0A0A10</code> no escuro, branco no claro. É o que mantém a seta legível passando por cima de card branco, slide escuro ou foto.<br>
       <b>É cursor nativo</b> (SVG de 24px em <code class="inline">cursor:</code>, hotspot 5 3), não um elemento que persegue o mouse. Sem atraso, sem pintar nada por cima do conteúdo, e vale em qualquer tela, inclusive dashboard e área logada.
     </div>
     <p class="note"><b>O que saiu:</b> o glow lilás de 480px que seguia o ponteiro foi aposentado em 20/ago/2026. Borrava o texto por baixo, arrastava em página longa e não servia em tela densa.</p>
@@ -1350,7 +1349,7 @@ const FADE_INT = 25;                <span class="c">// dureza da queda</span>
       <div class="borda-demo b-gradiente"><span class="t">Gradiente</span><span>padding-box + border-box — a borda acende num canto e apaga no outro</span></div>
       <div class="borda-demo b-glow"><span class="t">Acesa</span><span>borda lilás + halo externo — só no elemento mais importante da tela</span></div>
     </div>
-    <div class="rule"><b>Regra do brilho interno:</b> todo elemento sólido e claro (botão primary, CTA branco, pill de opção selecionada) leva <code class="inline">inset 0 1px 0 rgba(255,255,255,.25)</code>. É o detalhe que separa "botão de gradiente" de "objeto com material".</div>
+    <div class="rule" data-rot="Brilho interno">Todo elemento sólido e claro (botão primary, CTA branco, pill de opção selecionada) leva <code class="inline">inset 0 1px 0 rgba(255,255,255,.25)</code>. É o detalhe que separa "botão de gradiente" de "objeto com material".</div>
 
     <h3><span class="id">08.2</span> Escala de raio</h3>
     <div class="raio-grid">
@@ -1367,16 +1366,36 @@ const FADE_INT = 25;                <span class="c">// dureza da queda</span>
   <section class="sec soft" id="sombras">
     <div class="sec-head"><span class="sec-num">09</span>
       <span class="eyebrow"><span class="dot"></span>Elevação</span>
-      <h2>Sombra escura por baixo, <span class="em">cor por fora</span>.</h2>
-      <p class="intro">Em fundo escuro a sombra sozinha quase não aparece. Por isso a elevação combina duas coisas: uma sombra profunda pra separar do fundo e uma linha de cor pra dizer que o elemento está ativo.</p>
+      <h2>Sombra por baixo, <span class="em">cor por fora</span>.</h2>
+      <p class="intro">Em fundo escuro a sombra sozinha quase não aparece, e em fundo claro ela suja rápido. Por isso a elevação do sistema combina duas coisas: uma sombra pra separar do fundo e uma linha de cor pra dizer que o elemento está ativo.</p>
     </div>
 
-    <div class="sombra-grid">
-      <div class="sombra s1"><b>Repouso</b><span class="so-escuro">0 28px 60px rgba(0,0,0,.45)</span><span class="so-claro">0 22px 48px rgba(35,34,60,.10)</span></div>
-      <div class="sombra s2"><b>Ativo / hover</b>sombra + 0 0 0 1px na cor de accent</div>
-      <div class="sombra s3"><b>Flutuante (glass)</b>inset de luz + 0 12px 40px + contorno escuro</div>
+    <h3><span class="id">09.1</span> Os quatro níveis</h3>
+    <div class="grid g4">
+      <div class="sombra s0"><b>00 · Plano</b>Sem sombra. Borda sutil e só</div>
+      <div class="sombra s1"><b>01 · Repouso</b><span class="so-escuro">0 28px 60px rgba(0,0,0,.45)</span><span class="so-claro">0 22px 48px rgba(35,34,60,.10)</span></div>
+      <div class="sombra s2"><b>02 · Ativo</b>A mesma sombra + 0 0 0 1px na cor de accent</div>
+      <div class="sombra s3"><b>03 · Flutuante</b>Luz interna no topo + sombra + contorno</div>
     </div>
-    <p class="note">Elemento parado no fluxo da página não leva sombra: leva borda sutil. Sombra é reservada pra card que levanta no hover, painel flutuante e card de preço.</p>
+
+    <h3><span class="id">09.2</span> Densidade: onde cada nível entra</h3>
+    <table class="spec">
+      <tr><th>Nível</th><th>Onde</th><th>Onde não</th></tr>
+      <tr><td>00 · Plano</td><td>Card dentro de grid, bloco de conteúdo, tabela, seção</td><td>Nada que precise parecer clicável</td></tr>
+      <tr><td>01 · Repouso</td><td>Card de preço, card que levanta no hover, mockup</td><td>Card em lista longa: 12 sombras juntas viram borrão</td></tr>
+      <tr><td>02 · Ativo</td><td>Estado de hover e de seleção</td><td>Estado parado</td></tr>
+      <tr><td>03 · Flutuante</td><td>Nav, dropdown, drawer, modal, toast</td><td>Qualquer coisa que esteja no fluxo da página</td></tr>
+    </table>
+    <div class="rule" data-rot="Densidade">No máximo <b>um elemento com sombra 01 por dobra de tela</b>, e nível 03 só no que realmente flutua. Sombra é o que diz "isso está mais perto de você": se tudo tem, nada está.</div>
+
+    <h3><span class="id">09.3</span> A sombra troca com o tema</h3>
+    <table class="spec">
+      <tr><th>Nível</th><th>Escuro</th><th>Claro</th></tr>
+      <tr><td>01 · Repouso</td><td class="mono">0 28px 60px rgba(0,0,0,.45)</td><td class="mono">0 22px 48px rgba(35,34,60,.10)</td></tr>
+      <tr><td>02 · Ativo</td><td class="mono">01 + 0 0 0 1px #9A9BE5</td><td class="mono">01 + 0 0 0 1px #6E6CBE</td></tr>
+      <tr><td>03 · Flutuante</td><td class="mono">inset 0 1px 0 rgba(255,255,255,.04)<br>0 12px 40px rgba(0,0,0,.4)</td><td class="mono">inset 0 1px 0 rgba(255,255,255,.7)<br>0 10px 30px rgba(35,34,60,.08)</td></tr>
+    </table>
+    <p class="note">No claro a sombra é <b>mais curta, mais fraca e azulada</b>. Preto a 45% em fundo claro não lê como profundidade, lê como sujeira. E a linha de luz interna do topo sobe de 4% pra 70%, porque em superfície clara é ela que faz a borda superior existir.</p>
   </section>
   <!-- ================= 10 ESPAÇAMENTO ================= -->
   <section class="sec" id="espaco">
@@ -1469,7 +1488,7 @@ const FADE_INT = 25;                <span class="c">// dureza da queda</span>
         <p class="note">A mesma queda em pouca altura come metade da palavra. Em texto pequeno o certo é <b>cor sólida</b>, e o destaque fica só no lilás.</p>
       </div>
     </div>
-    <div class="rule">O gradient branco esmaecendo (<code class="inline">#ECEDF6</code> a <code class="inline">#8B8DA1</code>) vale de <b>40px pra cima</b>. Abaixo disso, texto sólido em <code class="inline">#ECEDF6</code>. Isso também vale em slide: o título de capa é grande e aceita, o texto de apoio não.</div>
+    <div class="rule" data-rot="Regra">O gradient branco esmaecendo (<code class="inline">#ECEDF6</code> a <code class="inline">#8B8DA1</code>) vale de <b>40px pra cima</b>. Abaixo disso, texto sólido em <code class="inline">#ECEDF6</code>. Isso também vale em slide: o título de capa é grande e aceita, o texto de apoio não.</div>
 
     <h3><span class="id">11.4</span> Caixa</h3>
     <div class="sim-nao">
@@ -1552,7 +1571,7 @@ const FADE_INT = 25;                <span class="c">// dureza da queda</span>
         <p class="note">Assinatura embaixo do nome, legenda sob imagem, ajuda sob campo, caption de rodapé. Está por baixo: vai em <b>texto normal, sentence case</b>.</p>
       </div>
     </div>
-    <div class="rule"><b>Teste rápido:</b> se dá pra apagar o texto e o bloco continua se explicando, é caption, não overline. Overline apagado deixa o bloco órfão.</div>
+    <div class="rule" data-rot="Teste rápido">Se dá pra apagar o texto e o bloco continua se explicando, é caption, não overline. Overline apagado deixa o bloco órfão.</div>
 
     <h3><span class="id">12.4</span> As três exceções declaradas</h3>
     <table class="spec">
@@ -1689,7 +1708,7 @@ const FADE_INT = 25;                <span class="c">// dureza da queda</span>
     </div>
     <p class="note">Entra pela direita, 360px de largura, 400ms em <code class="inline">cubic-bezier(0.16,1,0.3,1)</code>, com backdrop blur de 8px atrás. Cases viram accordion.</p>
 
-    <div class="rule"><b>Auto-hide:</b> em página de case a nav some fora do hero e da seção final de CTA, e volta quando um dos dois entra na tela. Quem controla é IntersectionObserver, não scroll direction.</div>
+    <div class="rule" data-rot="Auto-hide">Em página de case a nav some fora do hero e da seção final de CTA, e volta quando um dos dois entra na tela. Quem controla é IntersectionObserver, não scroll direction.</div>
   </section>
 
   <!-- ================= 16 RODAPÉ ================= -->
@@ -1733,6 +1752,7 @@ const FADE_INT = 25;                <span class="c">// dureza da queda</span>
     <p class="note">Altura 44px, raio 10px, fonte 15px. Em formulário público a fonte sobe pra <b>16px</b> e a altura pra 48px, porque abaixo disso o Safari do iPhone dá zoom no foco e quebra o layout.</p>
 
     <h3><span class="id">17.2</span> Formulário público: uma pergunta por vez</h3>
+    <div class="rule" data-rot="Em revisão">O formato do formulário público está sendo refeito. O que está aqui é o que roda hoje em <code class="inline">/vamos-conversar</code>. Quando o novo estiver de pé, esse bloco é atualizado.</div>
     <div class="conversa-demo">
       <div class="conversa-top">
         <span class="voltar"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M11 7H3m0 0l3.5-3.5M3 7l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
@@ -1747,8 +1767,7 @@ const FADE_INT = 25;                <span class="c">// dureza da queda</span>
         <button class="opcao">Vem lead, mas não fecha</button>
       </div>
     </div>
-    <div class="rule">
-      <b>Regras que não se quebram:</b> a pergunta é o label do campo, não um heading solto. Voltar preserva tudo. Escolha única avança sozinha em 380ms, mas só no toque ou clique. Altura em <code class="inline">svh</code>, nunca <code class="inline">vh</code>. Erro aparece embaixo do campo com ícone e texto, nunca só por cor.
+    <div class="rule" data-rot="Não se quebra">A pergunta é o label do campo, não um heading solto. Voltar preserva tudo. Escolha única avança sozinha em 380ms, mas só no toque ou clique. Altura em <code class="inline">svh</code>, nunca <code class="inline">vh</code>. Erro aparece embaixo do campo com ícone e texto, nunca só por cor.
     </div>
     <p class="note">Vale pra todo formulário público: captação, pré-qualificação, pesquisa e inscrição. Formulário de área logada continua em página única, com os campos empilhados. Referência no ar: <code class="inline">/vamos-conversar</code>.</p>
   </section>
@@ -1775,7 +1794,7 @@ const FADE_INT = 25;                <span class="c">// dureza da queda</span>
 
     <h3><span class="id">18.2</span> Reveal no scroll</h3>
     <p class="note">Elemento entra com <code class="inline">opacity</code> de 0 a 1 e <code class="inline">translateY</code> de 24px a 0, disparado por IntersectionObserver. Em grid, cada item ganha um atraso escalonado por <code class="inline">--reveal-delay</code>.</p>
-    <div class="rule"><b>Sempre incluir</b> o bloco de <code class="inline">prefers-reduced-motion</code>. Não é detalhe de acessibilidade: sem ele, quem tem essa preferência ligada vê a página tremer.</div>
+    <div class="rule" data-rot="Regra">Sempre incluir o bloco de <code class="inline">prefers-reduced-motion</code>. Não é detalhe de acessibilidade: sem ele, quem tem essa preferência ligada vê a página tremer.</div>
   </section>
 
   <!-- ================= 19 PÁGINA ================= -->
@@ -1787,13 +1806,20 @@ const FADE_INT = 25;                <span class="c">// dureza da queda</span>
     </div>
 
     <div class="grid g2">
-      <div class="stage"><span class="tag">19.1 · marquee</span>
-        <div style="overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:16px 0;margin-top:12px">
-          <div style="display:flex;gap:34px;white-space:nowrap;font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:var(--text-muted)">
-            <span>Conteúdo</span><span>·</span><span>Identidade</span><span>·</span><span>Performance</span><span>·</span><span>Social</span><span>·</span><span>Sites</span>
+      <div class="stage" style="grid-column:1/-1;padding-left:0;padding-right:0"><span class="tag">19.1 · faixa deslizante</span>
+        <div class="marquee" style="margin-top:12px">
+          <div class="marquee-track">
+            <span>Conteúdo em constância<i></i></span><span>Proposta que vira link<i></i></span><span>Identidade completa<i></i></span><span>Site que converte<i></i></span><span>Tráfego com leitura<i></i></span><span>Operação que roda sozinha<i></i></span>
+            <span>Conteúdo em constância<i></i></span><span>Proposta que vira link<i></i></span><span>Identidade completa<i></i></span><span>Site que converte<i></i></span><span>Tráfego com leitura<i></i></span><span>Operação que roda sozinha<i></i></span>
           </div>
         </div>
-        <p class="note">Faixa de serviços deslizando entre duas linhas finas. Mono, tracking 0.22em, separador em dot lilás.</p>
+        <p class="note" style="padding:0 34px">Faixa entre duas linhas finas, mono com tracking 0.22em e dot lilás separando. Serve pra listar serviço, entrega ou prova sem gastar altura de página.</p>
+        <div style="padding:0 34px">
+        <div class="rule" data-rot="Como funciona">A lista aparece <b>duas vezes</b> dentro do track, e a animação anda <code class="inline">-50%</code>. Como o segundo bloco é idêntico ao primeiro, a volta cai exatamente onde começou e ninguém vê o corte. 46s em <code class="inline">linear</code>: qualquer coisa mais rápida vira ruído, e easing faz a faixa parecer que trava.</div>
+        <pre>.marquee-track{ display:flex; width:max-content; animation:desliza 46s linear infinite; }
+@keyframes desliza{ to{ transform:translateX(-50%); } }
+<span class="c">/* a mesma lista repetida 2x no HTML, e guarda de prefers-reduced-motion */</span></pre>
+        </div>
       </div>
       <div class="stage"><span class="tag">19.2 · barra de progresso</span>
         <div style="height:2px;background:rgba(255,255,255,.06);border-radius:999px;margin-top:16px;overflow:hidden"><i style="display:block;height:100%;width:62%;background:linear-gradient(90deg,#9A9BE5,#7B79C9)"></i></div>
@@ -1806,14 +1832,14 @@ const FADE_INT = 25;                <span class="c">// dureza da queda</span>
         <p class="note" style="margin-top:12px">Logo em WebGL reagindo ao ponteiro. Abre <b>toda</b> proposta comercial, e vira o slide 1 do deck. Arquivo: <code class="inline">marca/capa-proposta-liquid.html</code>, cliente pela URL <code class="inline">?cliente=</code>.</p>
       </div>
     </div>
-    <div class="rule"><b>Duas regras da capa líquida, as duas já quebraram na prática:</b> nada encosta no logo (a pill se ancora na caixa real do desenho, medida em tempo de render, nunca em percentual chutado) e as pills encolhem em tela estreita (padding em <code class="inline">em</code> e fonte com teto de vw). Validar em 312px e 1440px antes de publicar.</div>
+    <div class="rule" data-rot="Já quebrou na prática">Nada encosta no logo (a pill se ancora na caixa real do desenho, medida em tempo de render, nunca em percentual chutado) e as pills encolhem em tela estreita (padding em <code class="inline">em</code> e fonte com teto de vw). Validar em 312px e 1440px antes de publicar.</div>
   </section>
   <!-- ================= 20 SLIDES ================= -->
   <section class="sec" id="slides">
     <div class="sec-head"><span class="sec-num">20</span>
       <span class="eyebrow"><span class="dot"></span>Slides e deck</span>
       <h2>O deck é a landing <span class="em">em 16:9</span>.</h2>
-      <p class="intro">O sistema antigo de três fundos alternando (escuro, lilás, claro) morreu. Agora todo slide é escuro, com o lilás chapado reservado pra um ou dois momentos de clímax.</p>
+      <p class="intro">O sistema antigo de três fundos alternando dentro do mesmo deck morreu. O deck escolhe um tema e vai até o fim: escuro por padrão, claro quando a sala é clara ou o projetor é fraco. O lilás chapado fica reservado pra um ou dois momentos de clímax.</p>
     </div>
 
     <h3><span class="id">20.1</span> Anatomia</h3>
@@ -1847,8 +1873,7 @@ const FADE_INT = 25;                <span class="c">// dureza da queda</span>
     <p class="note">Display dinâmico na capa: 2 palavras curtas em 200px, 2 longas ou 3 palavras em 180px, 4+ em 160px ou quebra.</p>
 
     <h3><span class="id">20.3</span> Regras de deck HTML</h3>
-    <div class="rule">
-      <b>Overline fixo:</b> breadcrumb não anima na troca de slide, senão a moldura pisca.<br>
+    <div class="rule" data-rot="Regras de deck"><b>Overline fixo:</b> breadcrumb não anima na troca de slide, senão a moldura pisca.<br>
       <b>Clique não navega:</b> só teclado (setas, espaço, PageDown, que é o que o controle remoto manda).<br>
       <b>A medida sai do nome:</b> em slide de pessoa, a largura do nome define o bloco e o apoio passa no máximo 20% dela.<br>
       <b>Zero viúva:</b> <code class="inline">text-wrap: balance</code> em título e apoio.<br>
@@ -1887,7 +1912,7 @@ const FADE_INT = 25;                <span class="c">// dureza da queda</span>
           <tr><td>Texto</td><td class="mono">#15151A</td></tr>
           <tr><td>Accent</td><td class="mono">#7B79C9 a #5D5BA8</td></tr>
         </table>
-        <div class="rule"><b>Nada de overline no checkout.</b> Label em mono, caixa alta e tracking é linguagem de área logada. Aqui o label é leitura na hora exata em que a pessoa digita: texto padrão, sentence case, 13px, peso 500. Vale também pros labels dentro do iframe do Stripe.</div>
+        <div class="rule" data-rot="Sem overline aqui">Label em mono, caixa alta e tracking é linguagem de área logada. Aqui o label é leitura na hora exata em que a pessoa digita: texto padrão, sentence case, 13px, peso 500. Vale também pros labels dentro do iframe do Stripe.</div>
         <p class="note">Mono só onde o conteúdo é código de verdade (o copia-e-cola do Pix), e mesmo ali sem caixa alta e sem tracking: o payload é sensível a maiúscula e minúscula.</p>
       </div>
     </div>

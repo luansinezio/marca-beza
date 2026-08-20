@@ -82,7 +82,13 @@ Nunca usar branco puro `#FFFFFF` em texto. Nunca usar cinza neutro (tipo gray do
 /* Texto hero — corpo (branco esmaecendo) */
 background: linear-gradient(180deg, #ECEDF6 0%, #8B8DA1 100%);
 
-/* Texto hero — destaque (lilás profundo) */
+/* Texto hero — destaque: o lilás que roda (padrão desde 20/ago/2026) */
+background-image: linear-gradient(135deg, #BCBDF3 0%, #9A9BE5 50%, #BCBDF3 100%);
+background-size: 200% auto;
+animation: aurora 4s ease-in-out infinite alternate;   /* @keyframes aurora { to { background-position: 100% 50% } } */
+/* No tema claro: #A5A3E4 → #7674C6 → #A5A3E4 */
+
+/* Versão estática (material sem CSS animado: slide exportado, imagem, PDF) */
 background: linear-gradient(180deg, #A2A3EA, #7B79C9);
 
 /* Botão primary */
@@ -98,7 +104,9 @@ background-image:
 background-size: 80px 80px;
 ```
 
-Pra usar gradient em texto, sempre: `-webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;`
+Pra usar gradient em texto, sempre: `-webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;` — e sempre `background-image`, nunca a shorthand `background`, que reseta o clip e transforma o texto em bloco sólido.
+
+**Tamanho mínimo do gradient.** O gradient branco esmaecendo (`#ECEDF6` → `#8B8DA1`) só vale de **40px pra cima**. Abaixo disso a queda pro cinza come metade da palavra e o texto parece apagado: usar cor sólida `#ECEDF6` e deixar o destaque só no lilás. Vale também em slide (título de capa aceita, texto de apoio não).
 
 ### Cores de estado
 
@@ -131,6 +139,15 @@ Dark-first só faz sentido com um segundo tema documentado. O claro não é vers
   --beza-roxo-deep: #55539E;
   --error:         #C9342F;
 }
+```
+
+**O lilás de destaque no claro** é o mesmo da página no ar em os.beza.media, e é mais claro do que o accent de UI:
+
+```css
+/* destaque de texto no tema claro */
+.em { background-image: linear-gradient(135deg, #A5A3E4 0%, #7674C6 50%, #A5A3E4 100%); }
+/* número e gradient estático no tema claro */
+.em-fixo { background-image: linear-gradient(180deg, #8C8AD8, #6E6CBE); }
 ```
 
 **As cinco regras da tradução:**
@@ -448,28 +465,20 @@ Em mobile (≤700px), reduzir padding pra `20px`.
 | Nav glass | `14px` |
 | Imagem em card | inherit do card |
 
-### Sombras (em fundo escuro)
+### Sombras e elevação
 
-Em fundo escuro, sombras são **escuras + cor de accent**, não cinzas. Padrão:
+Quatro níveis, e a sombra troca com o tema:
 
-```css
-/* Card */
-box-shadow: 0 28px 60px rgba(0,0,0,0.45);
+| Nível | Escuro | Claro | Onde |
+|-------|--------|-------|------|
+| 00 · Plano | sem sombra | sem sombra | Card em grid, bloco de conteúdo, tabela, seção |
+| 01 · Repouso | `0 28px 60px rgba(0,0,0,.45)` | `0 22px 48px rgba(35,34,60,.10)` | Card de preço, card que levanta no hover, mockup |
+| 02 · Ativo | 01 + `0 0 0 1px #9A9BE5` | 01 + `0 0 0 1px #6E6CBE` | Hover e seleção |
+| 03 · Flutuante | `inset 0 1px 0 rgba(255,255,255,.04)` + `0 12px 40px rgba(0,0,0,.4)` | `inset 0 1px 0 rgba(255,255,255,.7)` + `0 10px 30px rgba(35,34,60,.08)` | Nav, dropdown, drawer, modal, toast |
 
-/* Card com hover (accent + glow) */
-box-shadow:
-  0 28px 60px rgba(0,0,0,0.45),
-  0 0 0 1px var(--accent-color);   /* color-mix do accent ou roxo */
+**Densidade:** no máximo **um elemento com sombra 01 por dobra de tela**, e nível 03 só no que realmente flutua. Sombra diz "isso está mais perto de você": se tudo tem, nada está. Elemento parado no fluxo leva borda sutil, não sombra.
 
-/* Botão primary hover (glow lilás) */
-box-shadow: 0 0 60px 0 rgba(154,155,229,0.5);
-
-/* Nav glass */
-box-shadow:
-  inset 0 1px 0 rgba(255,255,255,0.04),
-  0 12px 40px rgba(0,0,0,0.4),
-  0 0 0 1px rgba(0,0,0,0.2);
-```
+No tema claro a sombra é **mais curta, mais fraca e azulada** — preto a 45% em fundo claro lê como sujeira, não como profundidade. E a linha de luz interna do topo sobe de 4% pra 70%, porque em superfície clara é ela que faz a borda superior existir.
 
 ---
 
@@ -701,6 +710,49 @@ Linhas finas formando grid 80×80px, opacity baixíssima. Usar como fundo de her
 }
 ```
 
+### Chuva de glifos (canvas)
+
+Efeito de "tem máquina rodando por trás". Usar quando o assunto é **tecnologia, automação ou sistema**: seção de IA, bloco de produto, capa de aula. Nunca em seção sobre pessoa, case ou preço. Código-fonte em `comercial/bezaos-site/index.html`.
+
+```js
+const CABECA   = '#FFFFFF';   // cabeça do stream (no fundo claro: o lilás)
+const CAUDA    = '#CFCDF0';   // cauda (no fundo claro: #6E6CBE)
+const TAMANHO  = 10;          // px por glifo
+const VELOC    = 6;           // glifos por segundo
+const DENSIDADE= 50;          // 50 empacota as colunas, 1 espalha
+const CAUDA_N  = 18;          // glifos por stream
+const GLIFOS   = 'ｱｲｳｴｵｶｷｸ0123456789ABCDEFｸｿﾝ';
+/* .rain { position:absolute; inset:0; opacity:0.2; pointer-events:none; z-index:0 } */
+```
+
+Cada coluna solta streams em intervalo aleatório; ~35% atravessam a tela inteira e o resto morre no caminho (é o que evita o padrão de cortina). O loop **pausa quando a seção sai da tela** (IntersectionObserver) e não roda com `prefers-reduced-motion`.
+
+### Quadradinhos piscando (canvas)
+
+Textura mais calma que a chuva. Fundo de seção com lista, card ou explicação, onde a chuva competiria com a leitura. A cor sai do `color` do contêiner, então cada tema entrega o lilás dele.
+
+```js
+const GRADE    = 95;                // células no lado maior
+const PREENCH  = 0.7;               // fração do quadrado dentro da célula
+const VELOC    = 30;                // 1 a 100
+const FADE_DIR = 'diag-sup-dir';    // cheio na quina de cima à direita
+const FADE_INT = 25;                // dureza da queda
+/* .quadrados { position:absolute; inset:0; opacity:0.12; color:var(--roxo) } */
+```
+
+**Uma textura viva por seção, no máximo duas por página.** Três seções animadas ao mesmo tempo derrubam o scroll no celular.
+
+### Faixa deslizante (marquee)
+
+Faixa entre duas linhas finas pra listar serviço, entrega ou prova sem gastar altura de página. Mono, tracking 0.22em, dot lilás separando.
+
+```css
+.marquee-track{ display:flex; width:max-content; animation:desliza 46s linear infinite; }
+@keyframes desliza{ to{ transform:translateX(-50%); } }
+```
+
+A lista aparece **duas vezes** dentro do track e a animação anda `-50%`, então a volta cai exatamente onde começou. 46s em `linear`: mais rápido vira ruído, e easing faz a faixa parecer que trava.
+
 ### Scroll progress bar
 
 Em páginas longas (case, proposta, ebook web), barra horizontal fina no topo mostrando progresso de leitura:
@@ -890,6 +942,13 @@ lê ou digita.
 Implementação de referência: `membros/app/comprar/` (o `layout.tsx` força o
 bloco claro com `data-theme="light"`) e `components/ui/Field.tsx`
 (`labelStyle="plain"`).
+
+**Email transacional também é claro** (20/ago/2026). Convite de call e afins
+saem no padrão claro pelo mesmo motivo do checkout, mais um: o email chega
+numa caixa de entrada quase sempre clara, e card escuro dentro de inbox clara
+briga com a interface em volta. Vale a mesma regra de label do checkout (sem
+overline, sentence case 13px peso 500) e o logo escuro. Implementação em
+`scripts/convite-call/convite.py`.
 
 ---
 
