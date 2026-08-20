@@ -935,6 +935,17 @@ Para materiais de clientes, a identidade da Beza fica em background — o brandi
 
 ---
 
+## Capa líquida de proposta (adicionado 20/ago/2026)
+
+Toda proposta comercial sai com a capa líquida (`marca/capa-proposta-liquid.html`). Duas regras de layout que não se quebram, porque as duas já quebraram na prática:
+
+- **Nada encosta no logo.** A pill do topo e a tag de cliente se ancoram na caixa real do desenho, nunca em percentual medido a olho. O `--band-top` é escrito pelo heightmap em tempo de render e é a fração de altura vazia acima da caixa do logo: `top: calc(var(--band-top) - var(--capa-gap))` com `translate(-50%, -100%)` na pill, e `top: calc(100% - var(--band-top) + var(--capa-gap))` com `translate(-50%, 0)` no cliente. `--capa-gap` é 22px no desktop e 12px em ≤700px. Percentual chutado dá overlap em alguma largura, sempre.
+- **As pills são `nowrap`, então precisam encolher em tela estreita.** Padding em `em` (não px) pra escalar junto com a fonte, e a fonte com teto de vw: `min(12px, 3.3vw)` na pill e `min(13px, 3.5vw)` no cliente, mais `max-width: calc(100% - 16px)`. Sem isso a pill dupla vaza pelas duas bordas num celular de 312px.
+
+Validar sempre em 312px e em 1440px antes de publicar.
+
+---
+
 ## O que NUNCA fazer
 
 - Branco puro `#FFFFFF` em texto (sempre `#ECEDF6`)
