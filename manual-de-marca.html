@@ -429,11 +429,11 @@ code.inline{
 .demo-box{
   height:190px;border-radius:14px;border:1px solid var(--border);
   position:relative;overflow:hidden;background:var(--bg-soft);
-  display:flex;align-items:flex-end;padding:16px;
+  display:flex;align-items:flex-start;padding:14px 16px;
 }
 .demo-box .lbl{
-  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--texto-2);position:relative;z-index:2;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text-muted);position:relative;z-index:2;
 }
 .tex-grain::before{
   content:'';position:absolute;inset:0;opacity:.14;mix-blend-mode:screen;
@@ -627,7 +627,7 @@ code.inline{
 .logo-box.claro img{filter:brightness(0)}
 .logo-box.lilas{background:#9A9BE5}
 .logo-box.lilas img{filter:brightness(0)}
-.logo-cap{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);margin-top:10px;display:block;text-align:center}
+.logo-cap{font-size:13px;color:var(--text-muted);margin-top:10px;display:block;text-align:center}
 
 /* ============ NUNCA ============ */
 .nunca{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
@@ -1396,20 +1396,20 @@ code.inline{
     </div>
   </section>
 
-  <!-- ================= 12 EYEBROW ================= -->
+  <!-- ================= 12 OVERLINE E EYEBROW ================= -->
   <section class="sec" id="eyebrow">
     <div class="sec-head"><span class="sec-num">12</span>
-      <span class="eyebrow"><span class="dot"></span>Eyebrow</span>
-      <h2>A pill que <span class="em">abre todo bloco</span>.</h2>
-      <p class="intro">Dot lilás de 6px pulsando, texto mono uppercase com tracking 0.18em, borda e fundo lilás em opacidade baixa.</p>
+      <span class="eyebrow"><span class="dot"></span>Overline e eyebrow</span>
+      <h2>Overline é o que fica <span class="em">por cima</span>.</h2>
+      <p class="intro">Mono em caixa alta com tracking largo é o recurso mais forte do sistema, e por isso o mais fácil de estragar. A regra é literal: overline é rótulo que <b>encima</b> alguma coisa. Se não está por cima, não é overline, e não vira caixa alta só pra parecer da marca. Eyebrow é o caso especial do overline que abre um bloco: o mesmo mono, dentro de uma pill com dot.</p>
     </div>
 
     <div class="grid g2">
-      <div class="stage"><span class="tag">12.1 · pill (padrão)</span>
+      <div class="stage"><span class="tag">12.1 · eyebrow em pill</span>
         <span class="eyebrow"><span class="dot"></span>Expertise</span><br>
         <span class="eyebrow"><span class="dot"></span>Cases · 2026</span>
       </div>
-      <div class="stage"><span class="tag">12.2 · solto (sem pill)</span>
+      <div class="stage"><span class="tag">12.2 · eyebrow solto</span>
         <div style="display:inline-flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:var(--text-muted)">
           <span style="width:6px;height:6px;border-radius:999px;background:#9A9BE5;box-shadow:0 0 10px rgba(154,155,229,.9);animation:pulse 2.4s ease-in-out infinite"></span>O que a Beza faz
         </div>
@@ -1418,12 +1418,50 @@ code.inline{
     </div>
 
     <table class="spec">
-      <tr><th>Usar em</th><th>Não usar em</th></tr>
+      <tr><th>Usar eyebrow em</th><th>Não usar em</th></tr>
       <tr><td>Capa de página e hero</td><td>Card pequeno</td></tr>
       <tr><td>Abertura de seção temática</td><td>Heading de lista</td></tr>
       <tr><td>Capa de proposta</td><td>Body text</td></tr>
       <tr><td>Capa de slide e carrossel</td><td>Checkout (a regra do 21)</td></tr>
     </table>
+
+    <h3><span class="id">12.3</span> O critério: em cima, ou nada</h3>
+    <div class="sim-nao">
+      <div class="sn ok"><div class="cab">É overline</div>
+        <div style="margin-bottom:24px">
+          <div class="t-mono" style="margin-bottom:8px">Expertise</div>
+          <div style="font-size:20px;font-weight:500">Como a operação funciona</div>
+        </div>
+        <div style="margin-bottom:24px">
+          <div class="t-mono" style="margin-bottom:8px">Versão</div>
+          <div style="font-size:15px;color:var(--texto-2)">v2 · ago/2026</div>
+        </div>
+        <p class="note">Kicker acima do título, label acima do campo, cabeçalho acima da coluna, categoria acima do card. Ele encima o que nomeia.</p>
+      </div>
+      <div class="sn no"><div class="cab">Não é overline</div>
+        <div style="margin-bottom:24px">
+          <div style="font-size:20px;font-weight:500">Sistema visual da Beza</div>
+          <div class="t-mono" style="margin-top:8px">V2 · AGO/2026 · DARK-FIRST</div>
+        </div>
+        <div style="margin-bottom:24px">
+          <div style="height:46px;border-radius:10px;border:1px solid var(--border);background:var(--surface-hi)"></div>
+          <div class="t-mono" style="margin-top:8px">Formato aceito: PNG</div>
+        </div>
+        <p class="note">Assinatura embaixo do nome, legenda sob imagem, ajuda sob campo, caption de rodapé. Está por baixo: vai em <b>texto normal, sentence case</b>.</p>
+      </div>
+    </div>
+    <div class="rule"><b>Teste rápido:</b> se dá pra apagar o texto e o bloco continua se explicando, é caption, não overline. Overline apagado deixa o bloco órfão.</div>
+
+    <h3><span class="id">12.4</span> As três exceções declaradas</h3>
+    <table class="spec">
+      <tr><th>Onde</th><th>Por quê</th></tr>
+      <tr><td>Breadcrumb no rodapé do slide</td><td>É moldura fixa do deck, não legenda de conteúdo, e aparece em cima e embaixo como par</td></tr>
+      <tr><td>Copyright no rodapé do site</td><td>Fecha a página como faixa de sistema e é o único mono da região</td></tr>
+      <tr><td>Ano e categoria no card de case</td><td>Metadata pareada com o nome na mesma linha, não texto de apoio embaixo</td></tr>
+    </table>
+
+    <h3><span class="id">12.5</span> Dose por tela</h3>
+    <p class="note" style="margin-top:0">Mono em caixa alta é tempero. A conta que vale: <b>um eyebrow por bloco</b> e, fora dele, no máximo <b>três rótulos mono visíveis ao mesmo tempo</b> na área da tela. Passou disso, a página começa a parecer painel de controle e o recurso perde o efeito de sinalizar o que importa.</p>
   </section>
 
   <!-- ================= 13 BOTÕES ================= -->
