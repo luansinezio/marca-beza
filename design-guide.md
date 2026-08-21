@@ -3,6 +3,7 @@
 > Você pode editar esse arquivo a qualquer momento.
 > As skills de carrossel, proposta e slide leem este arquivo antes de criar qualquer visual.
 > Fonte de verdade visual: tema WP em `projetos/site-beza/wp-theme/beza-theme/` (no ar em https://www.beza.media).
+> Versão visual desse guia (renderizada, com tema claro e escuro): `marca/manual-de-marca.html`, no ar em https://manual-marca-beza-v2.vercel.app
 
 ---
 
