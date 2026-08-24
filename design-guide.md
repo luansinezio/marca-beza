@@ -1002,11 +1002,49 @@ Valem pra toda apresentação da casa. O template pronto com essas regras já ap
 - **Foto de pessoa entra como plano de fundo à direita**, com degradê do fundo escuro cobrindo a esquerda até o meio. Nunca texto direto sobre o rosto.
 - **Imagem comprimida antes de entrar:** JPG em 1920px de largura. PNG de câmera ou export de 4 MB engasga na hora de virar o slide ao vivo.
 
+### Blocos de deck HTML (fechados em 24/ago/2026, na proposta da Vest)
+
+Seis blocos que viraram padrão da casa. Todos estreados em `propostas/proposta-veste-2026-08-24.html`, que serve de referência de implementação.
+
+**1. Divisória de bloco.** Todo bloco temático de slides abre com uma divisória que anuncia o tema do que vem a seguir. Composição: o blob da marca gigante ao fundo em `rgba(199,201,214,0.05)` (o SVG do logo recortado só na parte cursiva, `viewBox="0 0 335 198.15"`, largura 135vw, centralizado), a pilha de luzes por cima e o título do bloco em lilás no centro. Nada mais. Sem logo, sem linha divisória, sem eyebrow. A pilha de luzes, nessa ordem de cima pra baixo:
+
+```css
+background:
+  radial-gradient(135% 135% at 50% 50%, transparent 58%, rgba(0,0,5,0.35) 100%),   /* vinheta */
+  radial-gradient(70% 45% at 50% -10%, rgba(236,237,246,0.10) 0%, transparent 70%), /* luz de topo */
+  radial-gradient(115% 75% at 50% 118%, rgba(154,155,229,0.15) 0%, rgba(154,155,229,0.06) 50%, transparent 78%),
+  linear-gradient(180deg, transparent 55%, rgba(123,121,201,0.07) 100%);
+```
+
+A vinheta vem primeiro por ser a camada de cima. Trocar a ordem apaga o efeito e ninguém percebe olhando o código.
+
+**2. Slider de portfólio.** Case de cliente entra como foto cheia em card 16:9, fundo claro, sem cromo nenhum, com as fotos passando sozinhas a cada 1,9s (crossfade de 0,55s mais um Ken Burns lento de 4,5s). No rodapé do card, um fade escuro com **só o nome da marca**. Sem ano, sem categoria, sem legenda: o slide já está dentro do bloco de identidade visual e a metadata só suja. O nome entra animado 0,35s depois da foto, subindo 14px em fade. Largura amarrada à altura disponível (`width: min(100%, calc((100vh - 96px) * 16 / 9))`) pra foto nunca cortar nem estourar a tela.
+
+**3. Landing page ao vivo.** Página de vendas de case entra rodando de verdade num iframe navegável, não como print. Detalhes de implementação e o checklist do que conferir antes (headers de iframe, links do menu apontando pra fora) estão na memória `site-ao-vivo-dentro-do-deck`.
+
+**4. Capa com grade em deriva.** A grade de fundo da capa desliza devagar na horizontal. O deslocamento é de exatamente uma célula (80px em `background-size: 80px 80px`), o que faz o loop não ter emenda. 18s lineares, infinito, desligado em `prefers-reduced-motion`.
+
+**5. Bloco de entregas e valores.** Slide de fechamento em duas colunas. À esquerda a revisão das entregas com preço por linha, à direita o valor total, a condição de pagamento e a validade da proposta. Preço aparece **só nesse slide**: os slides de escopo carregam a condição (verba à parte, tempo de contrato) e nunca o número, senão o cliente decide antes de ver o conjunto.
+
+**6. Eyebrow é o único badge.** Deck não inventa badge próprio. Todo rótulo acima de título usa o eyebrow oficial (pill 999px, mono 11px uppercase, letter-spacing 0.18em, dot lilás pulsante). Badge de canto arredondado em Plex Sans com fundo chapado saiu do sistema em 24/ago.
+
 ### Fundo padrão
 
-- **Fundo escuro** (`#0A0A10` ou gradient `#0A0A10 → #14141C`) — usar em **todos os slides**
+- **Fundo escuro** (`#0A0A10` ou gradient `#0A0A10 → #14141C`) — o padrão do deck
 - **Lilás chapado** (`#9A9BE5`) — só em slide de pergunta/clímax pontual (1-2 por apresentação, no máximo)
-- **Fundo claro** — só quando a apresentação inteira roda no tema claro (sala clara, projeção fraca). Nunca alternando com slide escuro no mesmo deck
+- **Fundo claro** — permitido como **bloco inteiro** dentro de deck escuro (revisado em 24/ago/2026, antes era proibido alternar). Serve pra mostrar identidade de cliente e página de vendas, onde o escuro competiria com o material. Vale por bloco, nunca slide sim slide não
+
+**Transição de slide claro (obrigatória).** Com `.slide` em `position: fixed` e fundo escuro atrás, um slide claro entrando com `translateY` vira um painel branco subindo, e o olho vai pro movimento em vez do conteúdo. Duas correções, sempre juntas:
+
+```css
+body { transition: background-color 0.5s ease; }
+body.deck-claro { background: #FAF9FC; }          /* o chão acompanha o slide */
+.slide.claro, .slide.claro.active { transform: none; }  /* entra só em fade */
+```
+
+Slide escuro não precisa: o movimento existe igual, mas some contra um fundo da mesma cor.
+
+**Cromo some em slide de arte.** Nos slides que são só imagem (case, arte cheia), o breadcrumb de topo e rodapé, a barra de progresso e os controles de navegação vão a `opacity: 0` e voltam no hover do canto. No celular não existe hover, então os controles ficam sempre visíveis por `@media (hover: none)` e por `max-width: 900px`.
 
 ### Texto em slide
 
@@ -1073,7 +1111,7 @@ O texto central é contextual (nome da apresentação ou cliente). Auto Layout s
 
 ### Checklist obrigatório antes de entregar
 
-1. **Fundo escuro** em todos os slides — exceção lilás chapado só em 1-2 slides de clímax
+1. **Fundo escuro** como padrão — lilás chapado só em 1-2 slides de clímax, claro só em bloco inteiro (com a transição corrigida)
 2. **Texto branco lilás** (`#ECEDF6`), nunca branco puro
 3. **Destaque inline em lilás** (`#9A9BE5`) — não usar peso, usar cor
 4. **Eyebrow** em capa e início de seção (mono lilás + dot)
