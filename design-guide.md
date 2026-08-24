@@ -1022,7 +1022,7 @@ A vinheta vem primeiro por ser a camada de cima. Trocar a ordem apaga o efeito e
 
 **3. Landing page ao vivo.** Página de vendas de case entra rodando de verdade num iframe navegável, não como print. Detalhes de implementação e o checklist do que conferir antes (headers de iframe, links do menu apontando pra fora) estão na memória `site-ao-vivo-dentro-do-deck`.
 
-**4. Capa com grade em deriva.** A grade de fundo da capa desliza devagar na horizontal. O deslocamento é de exatamente uma célula (80px em `background-size: 80px 80px`), o que faz o loop não ter emenda. 18s lineares, infinito, desligado em `prefers-reduced-motion`.
+**4. Capa com grade em deriva.** A grade de fundo da capa desliza na horizontal. O deslocamento é de exatamente uma célula (80px em `background-size: 80px 80px`), o que faz o loop não ter emenda. Linha em `rgba(199,201,214,0.085)`, animação de **9s lineares** infinita (calibrado em 24/ago: em 0.04 e 18s a grade sumia na projeção e o movimento não se lia), desligada em `prefers-reduced-motion`.
 
 **5. Bloco de entregas e valores.** Slide de fechamento em duas colunas. À esquerda a revisão das entregas com preço por linha, à direita o valor total, a condição de pagamento e a validade da proposta. Preço aparece **só nesse slide**: os slides de escopo carregam a condição (verba à parte, tempo de contrato) e nunca o número, senão o cliente decide antes de ver o conjunto.
 
