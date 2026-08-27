@@ -2536,21 +2536,23 @@ code.inline{
 
   <h3><span class="id">06.5</span> A receita calibrada, medida nas peças de julho</h3>
     <p class="note"><b>Overlay não serve em fundo quase preto.</b> A camada de grão em <code class="inline">mix-blend-mode: overlay</code> some no <code class="inline">#0E0E0E</code>, e a peça sai lisa mesmo com o CSS no lugar. Medido: 0,00 de desvio numa área chapada, contra 10,19 nas peças reais do perfil.</p>
-    <p class="note">A receita que bate com o feed é um grão <b>esparso que acende</b>, com a turbulência cortada por <code class="inline">feComponentTransfer</code> pra que só as pontas do ruído sobrevivam. Assim o grão aparece sem levantar o preto.</p>
+    <p class="note"><b>O grão é monocromático.</b> O <code class="inline">feTurbulence</code> gera ruído nos três canais separados, então sem o <code class="inline">feColorMatrix</code> a peça ganha pontinhos coloridos, que é saturação entrando por fora da foto. Com ele, o croma medido fica em 0,00.</p>
+    <p class="note">A dose é <b>leve</b>: o grão existe pra dar pele, não pra aparecer. A receita é um grão <b>esparso que acende</b>, com a turbulência cortada por <code class="inline">feComponentTransfer</code> pra que só as pontas do ruído sobrevivam. Assim o grão aparece sem levantar o preto.</p>
     <pre><code>&lt;filter&gt;
   &lt;feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/&gt;
+  &lt;feColorMatrix type="saturate" values="0"/&gt;   &lt;!-- sem esta linha o grão sai colorido --&gt;
   &lt;feComponentTransfer&gt;
     &lt;feFunc[RGB] type="linear" slope="8" intercept="-4.8"/&gt;
   &lt;/feComponentTransfer&gt;
 &lt;/filter&gt;
 
-/* escuro */ opacity: .40;
-/* claro  */ opacity: .70; filter: invert(1); mix-blend-mode: multiply;</code></pre>
+/* escuro */ opacity: .12;
+/* claro  */ opacity: .22; filter: invert(1); mix-blend-mode: multiply;</code></pre>
     <table class="spec">
       <tr><th>Suporte</th><th>Opacidade</th><th>Desvio medido</th><th>Referência do perfil</th></tr>
-      <tr><td>Post escuro</td><td class="mono">0,40</td><td class="mono">10,5</td><td>10,19 no "foca e expande"</td></tr>
-      <tr><td>Post claro</td><td class="mono">0,70 invertido</td><td class="mono">18,9</td><td>24,2 no "e se"</td></tr>
-      <tr><td>Página web</td><td class="mono">0,12</td><td class="mono">3 a 4</td><td>tela pede menos que arte</td></tr>
+      <tr><td>Post escuro</td><td class="mono">0,12</td><td class="mono">3,4</td><td>croma 0,00 medido</td></tr>
+      <tr><td>Post claro</td><td class="mono">0,22 invertido</td><td class="mono">5,7</td><td>croma 0,00 medido</td></tr>
+      <tr><td>Página web</td><td class="mono">0,08</td><td class="mono">2,3</td><td>tela pede menos que arte</td></tr>
     </table>
     <p class="note">No claro o mesmo grão entra invertido e em <code class="inline">multiply</code>: em vez de acender, ele escurece em pontos esparsos, que é como o grão se comporta em papel.</p>
 

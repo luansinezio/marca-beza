@@ -125,20 +125,26 @@ e a peça sai lisa mesmo com o CSS no lugar (0,00 de desvio medido contra 10,19 
 
 A receita é um grão esparso que acende, com a turbulência cortada por `feComponentTransfer`:
 
+**O grão é monocromático.** O `feTurbulence` gera ruído nos três canais separados, então sem o
+`feColorMatrix` a peça ganha pontinhos coloridos, que é saturação entrando por fora da foto.
+
 ```html
 <filter>
   <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+  <feColorMatrix type="saturate" values="0"/>          <!-- sem isso o grão sai colorido -->
   <feComponentTransfer>
     <feFuncR type="linear" slope="8" intercept="-4.8"/>  <!-- idem G e B -->
   </feComponentTransfer>
 </filter>
 ```
 
+A dose é leve: o grão existe pra dar pele, não pra aparecer.
+
 | Suporte | Opacidade | Desvio medido | Referência |
 |---------|-----------|---------------|------------|
-| Post escuro | 0,40 | 10,5 | 10,19 no "foca e expande" |
-| Post claro | 0,70 invertido, em multiply | 18,9 | 24,2 no "e se" |
-| Página web | 0,12 | 3 a 4 | tela pede menos que arte |
+| Post escuro | 0,12 | 3,4 | croma 0,00 |
+| Post claro | 0,22 invertido, em multiply | 5,7 | croma 0,00 |
+| Página web | 0,08 | 2,3 | tela pede menos que arte |
 
 No claro o mesmo grão entra invertido e em `multiply`: escurece em pontos esparsos, como grão em papel.
 
