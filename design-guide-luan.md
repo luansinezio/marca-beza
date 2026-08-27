@@ -109,10 +109,11 @@ Matiz entre 20 e 45 graus, temperatura de cena entre 2700K e 3400K. Nada de verd
 ## Assinatura
 
 `@luansinezio` sai em **IBM Plex Sans 400, 30px, sem tracking**, na cor de texto do tema com
-**opacity de 0,38**. Mono e letter-spacing ficam fora: aquilo é rótulo, e a assinatura é texto normal recuado.
+**opacity de 0,20**. Mono e letter-spacing ficam fora: aquilo é rótulo, e a assinatura é texto normal recuado.
 
-Medido na peça de julho: `#656366` sobre fundo em 19 de luminância, que é branco a 38% exatos.
-Faixa de trabalho de 30% a 40%, ajustada por peça quando o fundo pede.
+Fechado em 0,20, que entrega `#434343` no escuro e `#B2B2B2` no claro. A peça de julho trazia `#656366`,
+equivalente a 38%, e o valor desceu de propósito: a assinatura credita, não compete.
+Faixa de trabalho de 20% a 30%, ajustada por peça quando o fundo pede.
 
 Sobre foto a conta muda com a área embaixo do texto, então ali a medida vale contra o ponto mais claro.
 
