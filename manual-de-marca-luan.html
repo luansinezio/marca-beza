@@ -993,6 +993,35 @@ code.inline{
 .amostra-tema.escuro .chip{background:#242424;color:#D4D4D4;border:1px solid #333}
 .amostra-tema.claro .chip{background:#D4D4D4;color:#242424;border:1px solid #7A7A7A}
 
+/* ============================================================
+   FILEIRA DE MINIATURAS (correção de 27/ago)
+   Miniaturas com proporção real e largura igual davam alturas
+   diferentes, e a fileira ficava com legenda pendurada em quatro
+   alturas. Agora a altura é que é fixa e a largura sai da proporção:
+   a fileira vira prateleira, com topo e base alinhados.
+   ============================================================ */
+.g1-frames{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+.g1-frames > *{flex:0 0 auto;display:flex;flex-direction:column;max-width:100%}
+.g1-frames .g1-frame{height:250px;width:auto;max-width:100%}
+.g1-frames .g1-legenda{margin-top:10px}
+@media(max-width:700px){
+  .g1-frames{gap:14px}
+  .g1-frames .g1-frame{height:190px}
+}
+
+/* Foto simulada usa a referência real, sem brilho colorido inventado */
+.g1-cena,.noite{background:url("refs-luan/foto-cena.jpg") center/cover no-repeat !important}
+.g1-cena{filter:saturate(.42) contrast(1.06)}   /* rota B: o teto de dessaturação do sistema */
+.g1-foto.g1-bw .g1-cena{filter:grayscale(1) contrast(1.12) brightness(.88)}
+.g1-foto.g1-papel .g1-cena{filter:grayscale(1) contrast(1.15) brightness(1.45)}
+
+/* Mesma prateleira na fileira de layouts de post: altura fixa, largura pela proporção */
+.g6-quad{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.g6-quad > *{flex:0 0 auto;display:flex;flex-direction:column;max-width:100%}
+.g6-quad .g6-peca{height:250px;width:auto;max-width:100%}
+.g6-quad .g6-cap{margin-top:12px}
+@media(max-width:700px){.g6-quad .g6-peca{height:186px}}
+
 </style>
 <style>
 /* ============ GRUPO g1 · princípios, assinatura e cor ============ */
@@ -1019,8 +1048,7 @@ code.inline{
   box-shadow:inset 0 0 0 1px var(--border-strong)}
 .g1-foto .g1-cena{position:absolute;inset:0;
   background:
-    radial-gradient(150px 150px at 74% 30%, #C9A24E 0%, #806838 26%, #3A2F1B 52%, #16130F 74%, #0E0E0E 100%),
-    linear-gradient(180deg,#151311 0%,#0E0E0E 100%)}
+    url("refs-luan/foto-cena.jpg") center/cover no-repeat}
 .g1-foto .g1-vinheta{position:absolute;inset:0;
   background:radial-gradient(120% 92% at 52% 44%, rgba(0,0,0,0) 26%, rgba(0,0,0,.86) 100%)}
 .g1-foto.g1-bw .g1-cena{filter:grayscale(1) contrast(1.15) brightness(.82)}
@@ -1203,7 +1231,7 @@ code.inline{
 /* ---- 04.4 · foto e scrim ---- */
 .g2-foto{position:relative;height:250px;border-radius:12px;overflow:hidden;isolation:isolate}
 .g2-foto .cena{position:absolute;inset:0}
-.g2-foto .cena.noite{background:radial-gradient(ellipse 32% 44% at 70% 42%,#806838 0%,#4A3C20 15%,#1A150C 36%,#050505 66%,#000000 100%)}
+.g2-foto .cena.noite{background:url("refs-luan/foto-cena.jpg") center/cover no-repeat}
 .g2-foto .cena.papel{background:radial-gradient(ellipse 38% 50% at 68% 40%,#F5F5F5 0%,#C8C8C8 24%,#767676 56%,#333333 82%,#1C1C1C 100%)}
 .g2-foto .scrim-esc{position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,14,14,.85) 0%,rgba(14,14,14,0) 64%)}
 .g2-foto .scrim-cla{position:absolute;inset:0;background:rgba(234,234,234,.88)}
@@ -1589,11 +1617,11 @@ code.inline{
 .g6-tarja{position:absolute; left:0; right:0; background:var(--p-ac); display:flex; align-items:center}
 .g6-tarja .g6-mono{position:static; color:var(--p-bg)}
 
-/* foto simulada: o croma vive só aqui dentro, e o âmbar é a âncora medida #806838 */
+/* foto simulada em cinza: o quente de verdade só existe dentro de foto real */
 .g6-foto{position:absolute; inset:0; z-index:0;
   background:
-    radial-gradient(26% 19% at 67% 31%, #806838 0%, #5A4823 34%, rgba(20,16,8,0) 74%),
-    radial-gradient(66% 52% at 62% 40%, #241C10 0%, rgba(14,14,14,0) 72%),
+    radial-gradient(26% 19% at 67% 31%, #8C8C8C 0%, #4F4F4F 34%, rgba(20,20,20,0) 74%),
+    radial-gradient(66% 52% at 62% 40%, #242424 0%, rgba(14,14,14,0) 72%),
     linear-gradient(178deg, #0B0B0B 0%, #000000 100%);
 }
 .g6-claro .g6-foto{
@@ -1961,7 +1989,6 @@ code.inline{
         <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;color:#8C8C8C">@luansinezio</span>
         <span class="g1-fio" style="background:#9A9BE5"></span>
         <span style="font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:14px;letter-spacing:-.01em;color:#9A9BE5">Beza Media</span>
-        <span class="g1-pill" style="color:#9A9BE5;box-shadow:inset 0 0 0 1px rgba(154,155,229,.4)">Collab</span>
       </div>
       <div class="g1-legenda">Escuro · lilás #9A9BE5 dá 7,53:1 sobre #0E0E0E</div>
     </div>
@@ -1970,18 +1997,17 @@ code.inline{
         <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;color:#616161">@luansinezio</span>
         <span class="g1-fio" style="background:#6E6CBE"></span>
         <span style="font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:14px;letter-spacing:-.01em;color:#55539E">Beza Media</span>
-        <span class="g1-pill" style="color:#55539E;box-shadow:inset 0 0 0 1px rgba(110,108,190,.45)">Collab</span>
       </div>
       <div class="g1-legenda">Claro · fio em #6E6CBE, palavra em #55539E</div>
     </div>
   </div>
 
-  <p class="note">Collab tem <b>três casos e nada além deles</b>: a logo da Beza está no quadro, a peça vende a agência e sai no perfil dele, ou o conteúdo sai nos dois perfis com selo de collab. Falar da Beza e assinar com a Beza são atos diferentes: post que conta case de cliente, número de folha, contratação errada ou bastidor do time continua 100% neutro, porque ali ele é o autor e a agência é o assunto.</p>
+  <p class="note">Collab tem <b>três casos e nada além deles</b>: a logo da Beza está no quadro, a peça vende a agência e sai no perfil dele, ou o conteúdo sai nos dois perfis. Falar da Beza e assinar com a Beza são atos diferentes: post que conta case de cliente, número de folha, contratação errada ou bastidor do time continua 100% neutro, porque ali ele é o autor e a agência é o assunto.</p>
 
   <table class="spec">
     <tr><th>Regra</th><th>Valor</th></tr>
     <tr><td>Dose</td><td>No máximo 2 elementos lilás, somando teto de 5% da área do quadro</td></tr>
-    <tr><td>Lugares liberados</td><td>Logo da Beza no rodapé, dot do eyebrow, fio de 2px entre as assinaturas, preenchimento de um ícone, pill do selo</td></tr>
+    <tr><td>Lugares liberados</td><td>Logo da Beza no rodapé, dot do eyebrow, fio de 2px entre as assinaturas, preenchimento de um ícone</td></tr>
     <tr><td>Fundo</td><td class="mono">Não muda. #0E0E0E ou #EAEAEA, tokens dele inteiros</td></tr>
     <tr><td>Lilás no escuro</td><td class="mono">#9A9BE5 · 7,53:1 no bg, 6,79:1 no soft, 6,06:1 no chumbo</td></tr>
     <tr><td>Lilás no claro, objeto gráfico</td><td class="mono">#6E6CBE · 3,84:1 no bg, 3,50:1 no soft, 4,23:1 no card</td></tr>
@@ -2196,29 +2222,7 @@ code.inline{
     </div>
   </div>
 
-  <h4>Teto de saturação por zona, em HSL</h4>
-  <div style="margin-top:10px">
-    <div class="g1-zona">
-      <span class="g1-amostra" style="background:#C9A24E"></span>
-      <span class="g1-txt"><b>Núcleo da fonte de luz</b>Abajur, poste, lâmpada, janela de fim de tarde, luz de tela, brasa</span>
-      <span class="g1-teto">60%</span>
-    </div>
-    <div class="g1-zona">
-      <span class="g1-amostra" style="background:#806838"></span>
-      <span class="g1-txt"><b>Pele e madeira</b>Âncora medida: o core do abajur de "perder o sono" em #806838, 3,64:1 contra o fundo</span>
-      <span class="g1-teto">15% a 30%</span>
-    </div>
-    <div class="g1-zona">
-      <span class="g1-amostra" style="background:#3A3733"></span>
-      <span class="g1-txt"><b>Todo o resto do quadro</b>Céu, parede, piso, asfalto e roupa neutra saem dessaturados na correção</span>
-      <span class="g1-teto">abaixo de 8%</span>
-    </div>
-    <div class="g1-zona">
-      <span class="g1-amostra" style="background:#2A2620"></span>
-      <span class="g1-txt"><b>Média global do quadro</b>Passou disso, virou foto colorida e sai do sistema</span>
-      <span class="g1-teto">45%</span>
-    </div>
-  </div>
+  
 
   <table class="spec">
     <tr><th>Parâmetro</th><th>Valor</th></tr>
@@ -2325,7 +2329,7 @@ code.inline{
         <div class="cap-foto sobre-esc">você está ficando<br>confortável demais.</div>
         <div class="marca-foto sobre-esc">@luansinezio</div>
       </div>
-      <p class="g2-cap"><b>Escuro, foto como cena.</b> O quente vive no núcleo da luz prática (<code class="inline">#806838</code> medido no abajur do "perder o sono"), o resto do quadro desce até o preto e encosta no chão da página. Scrim em degradê no terço superior e texto em <code class="inline">#F5F5F5</code>.</p>
+      <p class="g2-cap"><b>Escuro, foto como cena.</b> O quente vive no núcleo da luz prática e o resto do quadro desce até o preto, encostando no chão da página. Scrim em degradê no terço superior e texto em <code class="inline">#F5F5F5</code>.</p>
     </div>
     <div>
       <div class="g2-foto">
@@ -2628,6 +2632,8 @@ background: linear-gradient(
       </div>
     </div>
   </div>
+
+  <p class="note"><b>A janela é recurso pontual, não camada padrão.</b> Ela entra em peça que tem foto e em fundo claro tirado contra parede, no ritmo de no máximo uma peça a cada cinco do feed. Post de tese com fundo chapado não recebe janela: sem sujeito pra receber a luz, o gradiente vira mancha e o texto perde o chão.</p>
 
   <h3><span class="id">07.4</span> Luz raspando a quina</h3>
   <p class="note">O quarto instrumento não cobre área, ele desenha uma linha. É um fio de 1px de luz no topo do objeto no tema escuro e uma sombra de 1px embaixo do objeto no tema claro, porque a física muda de lado quando o chão muda de valor. Serve pra card, campo, painel e barra, nunca pra peça de feed.</p>
@@ -3735,7 +3741,20 @@ border: 1px solid <span class="p">rgba(28,28,28,.14)</span>;    <span class="c">
   </table>
   <p class="note">A tipografia é a mesma nas duas marcas: IBM Plex Sans no corpo e no título, IBM Plex Mono em eyebrow, breadcrumb, número e timestamp, com os mesmos pesos. É o que mantém os dois decks na mesma família sem deixar os dois com a mesma cara.</p>
 
-  <div class="rule" data-rot="Nunca">Slide sem grão. No deck do Luan o grão é obrigatório em todo slide, inclusive nos que são só texto, porque é ele que separa o preto do Luan do preto de qualquer template escuro.</div>
+  <h3><span class="id">20.4</span> Os blocos estruturais vêm do deck da Beza</h3>
+    <p class="note">A estrutura de bloco já está resolvida do outro lado e não precisa ser reinventada aqui. O deck do Luan usa os mesmos seis blocos fechados em 24/ago/2026 na proposta da Vest, trocando só a camada de cor.</p>
+    <table class="spec">
+      <tr><th>Bloco da Beza</th><th>O que muda no deck do Luan</th></tr>
+      <tr><td>Divisória de bloco</td><td>Mesma composição, com a pilha de luzes em cinza neutro e o título do bloco em #F5F5F5. O blob de marca sai, porque não existe símbolo desenhado</td></tr>
+      <tr><td>Slider de portfólio</td><td>Igual, com as fotos na rota A. Só o nome no rodapé, sem ano e sem categoria</td></tr>
+      <tr><td>Página ao vivo em iframe</td><td>Igual, sem alteração</td></tr>
+      <tr><td>Capa com grade em deriva</td><td>Mesma deriva de uma célula em 9s, com a linha em rgba(212,212,212,.06)</td></tr>
+      <tr><td>Bloco de entregas e valores</td><td>Vale quando o deck é comercial. Em aula ele não existe</td></tr>
+      <tr><td>Eyebrow como único badge</td><td>Igual, com o dot neutro no lugar do lilás pulsante</td></tr>
+    </table>
+    <p class="note">Outros padrões de fundo entram quando o Luan trouxer as referências. Até lá o fundo do deck é chapado com grão, e a estrutura acima é o repertório fechado.</p>
+
+    <div class="rule" data-rot="Nunca">Slide sem grão. No deck do Luan o grão é obrigatório em todo slide, inclusive nos que são só texto, porque é ele que separa o preto do Luan do preto de qualquer template escuro.</div>
   <div class="rule" data-rot="Nunca">Mais de um bloco invertido por bloco de aula, ou bloco invertido passando de 20% da altura útil (216px num canvas de 1080). O bloco preenchido é o pico da sequência e ele só funciona sendo raro.</div>
   <div class="rule" data-rot="Nunca">Breadcrumb com três níveis ou mais. Quem está numa aula precisa saber em que bloco está, não a árvore inteira.</div>
 </section>
@@ -3916,7 +3935,7 @@ border: 1px solid <span class="p">rgba(28,28,28,.14)</span>;    <span class="c">
 
     <div class="g6-item">
       <span class="g6-n">05</span>
-      <div><p class="g6-o">Foto colorida sem tratamento</p><p class="g6-por">Rota B tem teto por zona em HSL: núcleo da luz, pele e madeira, e todo o resto do quadro. Passou disso, virou foto colorida e sai do sistema.</p></div>
+      <div><p class="g6-o">Foto colorida sem tratamento</p><p class="g6-por">Na rota B o quente vive na fonte de luz, na pele e na madeira. Passou disso, virou foto colorida e sai do sistema.</p></div>
       <span class="g6-val">60% no núcleo<br>15% a 30% na pele<br>abaixo de 8% no resto<br>média global 45%</span>
     </div>
 

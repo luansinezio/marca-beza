@@ -106,19 +106,49 @@ Matiz entre 20 e 45 graus, temperatura de cena entre 2700K e 3400K. Nada de verd
 
 ---
 
+## Luz
+
+A luz do sistema é branca e cinza, em três instrumentos: vinheta que fecha o canto, halo neutro atrás
+do sujeito e luz de janela. Nenhum deles tem cor.
+
+**Brilho colorido está fora.** Glow âmbar, halo quente e qualquer radial com croma não entram na
+identidade. Se um material precisar disso, entra por pedido do Luan, caso a caso.
+
+**A janela é recurso pontual, não camada padrão.** Ela entra em peça que tem foto e em fundo claro
+tirado contra parede, no ritmo de no máximo uma peça a cada cinco do feed. Post de tese com fundo
+chapado não recebe janela: sem sujeito pra receber a luz, o gradiente vira mancha.
+
+---
+
+## Slide e aula
+
+O deck roda em 1920x1080 com o mesmo fundo, o mesmo grão e a mesma rampa das peças de feed.
+
+A estrutura de bloco vem pronta do deck da Beza (os seis blocos fechados em 24/ago/2026 na proposta
+da Vest) e só troca a camada de cor: divisória de bloco, slider de portfólio, página ao vivo em iframe,
+capa com grade em deriva, bloco de entregas e valores, e o eyebrow como único badge. Sai o lilás,
+sai o blob de marca (não existe símbolo desenhado), e o dot do eyebrow fica neutro.
+
+Outros padrões de fundo entram quando o Luan trouxer as referências.
+
+---
+
 ## Collab com a Beza
 
 O lilás entra em três casos, e nada além deles:
 
 1. A logo da Beza está no quadro.
 2. A peça vende a agência e sai no perfil dele.
-3. O conteúdo sai nos dois perfis com selo de collab.
+3. O conteúdo sai nos dois perfis.
 
 Falar da Beza e assinar com a Beza são coisas diferentes. Post que conta case de cliente, número de folha
 ou contratação errada continua 100% neutro: ali ele é o autor e a agência é o assunto.
 
 Dose máxima: 2 elementos e teto de 5% da área do quadro, somados. O fundo nunca vira lilás
 e a tipografia inteira nunca vira lilás.
+
+Os dois créditos convivem lado a lado (@luansinezio, fio, Beza Media) e pronto. Não existe pill
+escrita "collab" na arte: quem vê os dois nomes já entende.
 
 ---
 
