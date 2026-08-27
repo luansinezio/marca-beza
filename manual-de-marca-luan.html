@@ -1893,7 +1893,7 @@ code.inline{
       <div class="g1-corte" style="min-height:150px;justify-content:center">
         <div class="g1-item"><span style="font-size:24px">@luansinezio</span></div>
       </div>
-      <p class="note">IBM Plex Mono 500, caixa baixa, tracking <code class="inline">0.14em</code>. Assina post, capa de reel e slide de aula. É a forma padrão e cobre 90% das peças.</p>
+      <p class="note">IBM Plex Sans 400, caixa baixa, sem tracking. Assina post, capa de reel e slide de aula. É a forma padrão e cobre 90% das peças.</p>
     </div>
     <div class="stage"><span class="tag">forma longa</span>
       <div class="g1-corte" style="min-height:150px;justify-content:center">
@@ -1945,9 +1945,9 @@ code.inline{
   <h4>Especificação por superfície</h4>
   <table class="spec">
     <tr><th>Peça</th><th>Forma</th><th>Corpo</th><th>Posição</th><th>Degrau</th></tr>
-    <tr><td>Post estático</td><td>@ em Mono 500</td><td class="mono">22px · ls 0.14em</td><td>Centralizado no eixo 540, baseline a 84px da base</td><td class="mono">600</td></tr>
-    <tr><td>Capa de reel</td><td>@ em Mono 500</td><td class="mono">24px · ls 0.14em</td><td>x 72px, baseline a 96px do topo</td><td class="mono">600</td></tr>
-    <tr><td>Slide de aula</td><td>@ em Mono 500</td><td class="mono">14px · ls 0.18em</td><td>Rodapé esquerdo, 56px da borda e 40px da base</td><td class="mono">600</td></tr>
+    <tr><td>Post estático</td><td>@ em Sans 400</td><td class="mono">22px · ls 0.14em</td><td>Centralizado no eixo 540, baseline a 84px da base</td><td class="mono">600</td></tr>
+    <tr><td>Capa de reel</td><td>@ em Sans 400</td><td class="mono">24px · ls 0.14em</td><td>x 72px, baseline a 96px do topo</td><td class="mono">600</td></tr>
+    <tr><td>Slide de aula</td><td>@ em Sans 400</td><td class="mono">14px · ls 0.18em</td><td>Rodapé esquerdo, 56px da borda e 40px da base</td><td class="mono">600</td></tr>
     <tr><td>Capa de deck</td><td>Nome em Sans 500 + @ em Mono 400</td><td class="mono">28px e 13px</td><td>Canto inferior esquerdo, 72px das duas bordas</td><td class="mono">nome em 900/1000, @ em 600</td></tr>
   </table>
   <p class="note">A assinatura da capa de reel sobe pro topo porque o rodapé do frame vertical some atrás da barra do player e do corte quadrado da grade. Assinar embaixo ali é assinar onde ninguém vê.</p>
@@ -1959,7 +1959,7 @@ code.inline{
     <div class="g1-item"><span style="font-size:14px;letter-spacing:.18em">@luansinezio</span><em>14px · slide de aula</em></div>
   </div>
 
-  <div class="rule" data-rot="Opacidade fica em 100%">O valor da assinatura vem do <b>degrau da rampa</b>, nunca de <code class="inline">opacity</code>. Assinatura a 60% sobre o fundo <code class="inline">#0E0E0E</code> e a mesma assinatura a 60% sobre chumbo <code class="inline">#242424</code> resultam em dois cinzas diferentes, e nenhum dos dois está na rampa. Degrau 600 entrega <code class="inline">#8C8C8C</code> no escuro (5,74:1 sobre o fundo) e <code class="inline">#616161</code> no claro (5,15:1), que é crédito legível sem competir com a headline.</div>
+  <div class="rule" data-rot="Opacidade, medida">A assinatura sai em <b>IBM Plex Sans 400, 30px, sem tracking</b>, na cor do texto do tema com <b>opacity de 0,38</b>. Medido na peça de julho: <code class="inline">#656366</code> sobre fundo em 19 de luminância, que é exatamente branco a 38%. Faixa de trabalho de 30% a 40%, ajustada por peça quando o fundo pede. Sobre foto a conta muda com a área embaixo do texto, então ali a medida vale contra o ponto mais claro.</div>
 
   <h3><span class="id">02.3</span> Assinatura sobre foto</h3>
   <div class="grid g2">

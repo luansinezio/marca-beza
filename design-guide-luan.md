@@ -106,6 +106,18 @@ Matiz entre 20 e 45 graus, temperatura de cena entre 2700K e 3400K. Nada de verd
 
 ---
 
+## Assinatura
+
+`@luansinezio` sai em **IBM Plex Sans 400, 30px, sem tracking**, na cor de texto do tema com
+**opacity de 0,38**. Mono e letter-spacing ficam fora: aquilo é rótulo, e a assinatura é texto normal recuado.
+
+Medido na peça de julho: `#656366` sobre fundo em 19 de luminância, que é branco a 38% exatos.
+Faixa de trabalho de 30% a 40%, ajustada por peça quando o fundo pede.
+
+Sobre foto a conta muda com a área embaixo do texto, então ali a medida vale contra o ponto mais claro.
+
+---
+
 ## Caixa
 
 Todo texto de peça começa com **maiúscula na primeira letra**, como frase. Vale pra headline,
