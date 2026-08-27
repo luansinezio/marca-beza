@@ -1201,6 +1201,9 @@ Validar sempre em 312px e em 1440px antes de publicar.
 
 ## Marca pessoal do Luan (founder)
 
+> Fechado em 27/ago/2026 num guia próprio: `marca/design-guide-luan.md`, renderizado em `marca/manual-de-marca-luan.html`.
+> O resumo abaixo continua valendo como ponte; a fonte de verdade da marca pessoal é o guia de lá.
+
 A marca pessoal do Luan usa o mesmo sistema da Beza, numa leitura ainda mais escura e monocromática. Serve pros materiais de founder-led growth: posts pessoais, apresentações e aulas onde ele assina como Luan, não como Beza.
 
 Diferenças em relação ao guia da Beza:
