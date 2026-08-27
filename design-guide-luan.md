@@ -106,6 +106,54 @@ Matiz entre 20 e 45 graus, temperatura de cena entre 2700K e 3400K. Nada de verd
 
 ---
 
+## Caixa
+
+Todo texto de peça começa com **maiúscula na primeira letra**, como frase. Vale pra headline,
+rótulo de gráfico, legenda e item de lista. Title Case, com maiúscula em toda palavra, continua fora.
+
+Rótulo em Mono é a exceção e sai em caixa alta inteira. A assinatura `@luansinezio` é minúscula sempre,
+porque é o handle real.
+
+---
+
+## Grão
+
+O grão é a marca mais reconhecível das peças, e a receita é medida, não estimada.
+
+**Overlay não serve em fundo quase preto.** Em `#0E0E0E` a camada em `mix-blend-mode: overlay` some,
+e a peça sai lisa mesmo com o CSS no lugar (0,00 de desvio medido contra 10,19 nas peças reais).
+
+A receita é um grão esparso que acende, com a turbulência cortada por `feComponentTransfer`:
+
+```html
+<filter>
+  <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+  <feComponentTransfer>
+    <feFuncR type="linear" slope="8" intercept="-4.8"/>  <!-- idem G e B -->
+  </feComponentTransfer>
+</filter>
+```
+
+| Suporte | Opacidade | Desvio medido | Referência |
+|---------|-----------|---------------|------------|
+| Post escuro | 0,40 | 10,5 | 10,19 no "foca e expande" |
+| Post claro | 0,70 invertido, em multiply | 18,9 | 24,2 no "e se" |
+| Página web | 0,12 | 3 a 4 | tela pede menos que arte |
+
+No claro o mesmo grão entra invertido e em `multiply`: escurece em pontos esparsos, como grão em papel.
+
+---
+
+## Réplica de referência
+
+Referência de conteúdo se adapta, não se reimagina. A estrutura, a ordem dos elementos e o texto
+da peça original ficam como estão. O que muda é o visual: cor, tipografia, grão, posição da assinatura.
+
+Não entra headline que a referência não tinha, não entra eyebrow que a referência não tinha,
+e o texto não é reescrito.
+
+---
+
 ## Luz
 
 A luz do sistema é branca e cinza, em três instrumentos: vinheta que fecha o canto, halo neutro atrás

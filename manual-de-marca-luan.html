@@ -2534,7 +2534,27 @@ code.inline{
 }</pre>
   <p class="note">Três detalhes que quebram na prática. O <code class="inline">feTurbulence</code> gera R, G e B <b>independentes</b>, então o ruído sai colorido por padrão: o <code class="inline">feColorMatrix type='saturate' values='0'</code> é o que zera isso e devolve R=G=B por pixel. O <code class="inline">isolation:isolate</code> no pai é o que segura o blend dentro do bloco, sem ele o overlay vaza pro que está atrás. E em editor de imagem o equivalente é ruído gaussiano com a caixa <b>Monocromático</b> marcada, aplicado depois da correção de cor.</p>
 
-  <div class="rule" data-rot="Nunca">Ruído colorido, em qualquer densidade. O grão é R=G=B por pixel e vale pra tela e pra peça exportada. Ruído com matiz devolve cor pro sistema pelo mesmo caminho do scrim tingido, e a neutralidade dos cinzas é o que separa esse perfil do da Beza no feed. Também não existe grão animado nem grão que muda de densidade dentro da mesma peça: é um valor por peça, do primeiro slide ao último.</div>
+  <h3><span class="id">06.5</span> A receita calibrada, medida nas peças de julho</h3>
+    <p class="note"><b>Overlay não serve em fundo quase preto.</b> A camada de grão em <code class="inline">mix-blend-mode: overlay</code> some no <code class="inline">#0E0E0E</code>, e a peça sai lisa mesmo com o CSS no lugar. Medido: 0,00 de desvio numa área chapada, contra 10,19 nas peças reais do perfil.</p>
+    <p class="note">A receita que bate com o feed é um grão <b>esparso que acende</b>, com a turbulência cortada por <code class="inline">feComponentTransfer</code> pra que só as pontas do ruído sobrevivam. Assim o grão aparece sem levantar o preto.</p>
+    <pre><code>&lt;filter&gt;
+  &lt;feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/&gt;
+  &lt;feComponentTransfer&gt;
+    &lt;feFunc[RGB] type="linear" slope="8" intercept="-4.8"/&gt;
+  &lt;/feComponentTransfer&gt;
+&lt;/filter&gt;
+
+/* escuro */ opacity: .40;
+/* claro  */ opacity: .70; filter: invert(1); mix-blend-mode: multiply;</code></pre>
+    <table class="spec">
+      <tr><th>Suporte</th><th>Opacidade</th><th>Desvio medido</th><th>Referência do perfil</th></tr>
+      <tr><td>Post escuro</td><td class="mono">0,40</td><td class="mono">10,5</td><td>10,19 no "foca e expande"</td></tr>
+      <tr><td>Post claro</td><td class="mono">0,70 invertido</td><td class="mono">18,9</td><td>24,2 no "e se"</td></tr>
+      <tr><td>Página web</td><td class="mono">0,12</td><td class="mono">3 a 4</td><td>tela pede menos que arte</td></tr>
+    </table>
+    <p class="note">No claro o mesmo grão entra invertido e em <code class="inline">multiply</code>: em vez de acender, ele escurece em pontos esparsos, que é como o grão se comporta em papel.</p>
+
+    <div class="rule" data-rot="Nunca">Ruído colorido, em qualquer densidade. O grão é R=G=B por pixel e vale pra tela e pra peça exportada. Ruído com matiz devolve cor pro sistema pelo mesmo caminho do scrim tingido, e a neutralidade dos cinzas é o que separa esse perfil do da Beza no feed. Também não existe grão animado nem grão que muda de densidade dentro da mesma peça: é um valor por peça, do primeiro slide ao último.</div>
 </section>
 <section class="sec soft" id="luz">
   <div class="sec-head">
@@ -3545,8 +3565,8 @@ border: 1px solid <span class="p">rgba(28,28,28,.14)</span>;    <span class="c">
   </table>
   <p class="note">Pitch entre linhas de 72px no corpo 70. Espaço entre estrofes de 194px, que são 2,7 pitches. Esse buraco é o que faz o bloco respirar com o leading colado em 1,03, e ele não encolhe.</p>
 
-  <h3><span class="id">18.5</span> Caixa baixa e crescimento de tamanho</h3>
-  <p class="note">Todo texto de peça sai em <b>caixa baixa</b>, inclusive o começo da frase. Só o ponto final aparece. Nome próprio e sigla mantêm a caixa que têm na vida real. O eyebrow em Mono é a única exceção e sai em caixa alta, porque ali a caixa alta é o que separa rótulo de conteúdo.</p>
+  <h3><span class="id">18.5</span> Caixa e crescimento de tamanho</h3>
+  <p class="note">Todo texto de peça começa com <b>maiúscula na primeira letra</b>, como frase. Vale pra headline, para o rótulo de gráfico, para a legenda e para o item de lista. O que continua fora é Title Case, com maiúscula em toda palavra. Rótulo em Mono é a exceção e sai em caixa alta inteira, porque ali a caixa é o que separa rótulo de conteúdo. A assinatura <code class="inline">@luansinezio</code> é minúscula sempre, porque é o handle real.</p>
   <p class="note">Crescimento de tamanho dentro da mesma frase é liberado quando o tamanho carrega o sentido, do jeito que já acontece em "tudo que você foca expande". Teto de 4 degraus e razão máxima de <b>2,2×</b> entre a menor e a maior palavra. Acima disso a frase deixa de ser lida e vira composição.</p>
 
   <div class="rule" data-rot="Nunca">Peça com dois blocos invertidos, ou com bloco invertido passando de 20% da altura do quadro. É <b>um por peça</b>. Dois blocos preenchidos em polos opostos brigam e a peça perde o ponto de entrada.</div>
