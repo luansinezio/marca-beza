@@ -171,6 +171,15 @@ da peça original ficam como estão. O que muda é o visual: cor, tipografia, gr
 Não entra headline que a referência não tinha, não entra eyebrow que a referência não tinha,
 e o texto não é reescrito.
 
+**Se a referência tem ícone, a réplica tem ícone.** O que não entra é o clipart colorido dela:
+o ícone é redesenhado como pictograma de traço, monocromático, no mesmo peso do resto da peça.
+Trocar o ícone por número, ou simplesmente não colocar, descaracteriza a referência.
+
+**Geometria antes do texto.** Em peça de diagrama (radial, matriz, árvore, funil), primeiro se
+posiciona a estrutura, as linhas e os marcadores nas posições da referência. O corpo do texto se
+ajusta depois pra caber nos corredores que sobraram, mesmo que isso desça um degrau na escala
+tipográfica. O contrário deforma o diagrama pra servir ao texto.
+
 ---
 
 ## Luz
