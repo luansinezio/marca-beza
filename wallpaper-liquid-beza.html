@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beza · Wallpaper</title>
+<style>
+:root {
+  --beza-roxo: #9A9BE5;
+  --beza-roxo-deep: #7B79C9;
+  --beza-light: #ECEDF6;
+  --bg: #0A0A10;
+  --stage-w: 100vw;
+  --grid-op: 0.04;   /* mesma da capa da proposta */
+  --grid-speed: 10s;   /* tempo pra grade andar uma celula (80px) */
+  --grid-shift: -80px; /* negativo anda pra esquerda, positivo pra direita */
+  /* escuro e o padrao da casa */
+  --grid-rgb: 199,201,214;   /* #C7C9D6, o cinza lilas claro */
+  --grid-boost: 1;
+  --grao-op: 0.04;           /* grao a 4% em overlay */
+  --grao-blend: overlay;
+  --err: #F34D4D;
+}
+/* ------------------------------------------------------------------
+   TEMA CLARO (design guide, secao "Tema claro", 20/ago/2026).
+   Nao e o escuro enfraquecido: e a mesma identidade com a luz
+   invertida. Entra sozinho quando o macOS esta em modo claro.
+   ------------------------------------------------------------------ */
+:root[data-tema="claro"] {
+  --bg: #FAF9FC;
+  --beza-roxo: #6E6CBE;      /* regra 1: o lilas desce, #9A9BE5 lava no claro */
+  --beza-roxo-deep: #55539E;
+  --beza-light: #23222E;
+  --grid-rgb: 35,34,46;      /* a linha da grade inverte junto com o fundo */
+  --grid-boost: 1.25;        /* mesma proporcao do --border claro (0.10/0.08) */
+  --grao-op: 0.03;           /* regra 2: o grao inverte, 3% */
+  --grao-blend: multiply;    /* regra 2: overlay vira multiply */
+  --err: #C9342F;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+/* grão idêntico ao da proposta */
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 50;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/></svg>");
+  opacity: var(--grao-op);
+  mix-blend-mode: var(--grao-blend);
+}
+/* grade da capa: 1px a 4%, celula de 80px, sumindo nas bordas.
+   a grade anda de lado: a textura mora no filho e desliza uma celula
+   inteira em loop, entao a emenda nunca aparece. o transform roda na
+   GPU; animar background-position repintaria a tela toda a cada frame.
+   mascara e recorte ficam no pai, parados em relacao a tela. */
+.cover-grid {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0;
+  overflow: hidden;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 45%, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 45%, black 30%, transparent 75%);
+}
+.cover-grid::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -80px;
+  width: calc(100% + 160px); height: 100%;
+  background-image:
+    linear-gradient(rgba(var(--grid-rgb), calc(var(--grid-op) * var(--grid-boost))) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--grid-rgb), calc(var(--grid-op) * var(--grid-boost))) 1px, transparent 1px);
+  background-size: 80px 80px;
+  will-change: transform;
+  animation: grid-drift var(--grid-speed) linear infinite;
+}
+@keyframes grid-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(var(--grid-shift), 0, 0); }
+}
+/* o "Pausar animacao" da barra de menus congela a grade junto com o logo */
+html.capa-paused .cover-grid::before { animation-play-state: paused; }
+#capa-stage {
+  z-index: 2;
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--stage-w);
+  max-width: 2400px;
+}
+#capa-gl { display: block; width: 100%; height: auto; }
+#capa-err {
+  position: fixed; bottom: 12px; left: 12px;
+  color: var(--err); font: 12px ui-monospace, monospace;
+  display: none; z-index: 99;
+}
+</style>
+</head>
+<body>
+  <div class="cover-grid"></div>
+  <div id="capa-stage"><canvas id="capa-gl"></canvas></div>
+  <div id="capa-err"></div>
+<script>
+/* largura do logo ajustável: wallpaper.html?stagew=75 */
+(() => {
+  const q = new URLSearchParams(location.search);
+  const p = q.get('stagew');
+  if (p && !isNaN(parseFloat(p))) {
+    document.documentElement.style.setProperty('--stage-w', parseFloat(p) + 'vw');
+  }
+  const g = q.get('grid');
+  if (g !== null && !isNaN(parseFloat(g))) {
+    document.documentElement.style.setProperty('--grid-op', parseFloat(g));
+  }
+  /* velocidade da grade: wallpaper.html?gridspeed=10  (segundos por celula) */
+  const gs = q.get('gridspeed');
+  if (gs !== null && parseFloat(gs) > 0) {
+    document.documentElement.style.setProperty('--grid-speed', parseFloat(gs) + 's');
+  }
+  /* lado pra onde ela anda: ?griddir=esq (padrao) ou ?griddir=dir */
+  const gd = (q.get('griddir') || '').toLowerCase();
+  if (gd === 'dir' || gd === 'right') {
+    document.documentElement.style.setProperty('--grid-shift', '80px');
+  } else if (gd === 'esq' || gd === 'left') {
+    document.documentElement.style.setProperty('--grid-shift', '-80px');
+  }
+
+  /* ---------------------------------------------------------------
+     TEMA: segue a aparencia do macOS (Ajustes > Aparencia).
+     Pra fixar um tema e ignorar o sistema, troque TEMA_FIXO por
+     'claro' ou 'escuro'. Vazio = segue o Mac.
+     --------------------------------------------------------------- */
+  const TEMA_FIXO = '';
+  const qt = (q.get('tema') || '').toLowerCase();
+  const fixo = (qt === 'claro' || qt === 'escuro') ? qt : TEMA_FIXO;
+  const mqClaro = window.matchMedia('(prefers-color-scheme: light)');
+  window.__bezaTemaSubs = [];
+  function aplicaTema() {
+    const t = (fixo === 'claro' || fixo === 'escuro')
+      ? fixo
+      : (mqClaro.matches ? 'claro' : 'escuro');
+    document.documentElement.dataset.tema = t;
+    window.__bezaTema = t;
+    window.__bezaTemaSubs.forEach((fn) => fn(t));
+  }
+  aplicaTema();
+  mqClaro.addEventListener('change', aplicaTema);
+
+  /* o app pausa o logo escrevendo window.__capaPaused pela barra de menus.
+     espelha isso numa classe pra grade parar junto, sem mudar o que quem
+     le a variavel enxerga. */
+  let capaPaused = false;
+  Object.defineProperty(window, '__capaPaused', {
+    configurable: true,
+    get() { return capaPaused; },
+    set(v) {
+      capaPaused = !!v;
+      document.documentElement.classList.toggle('capa-paused', capaPaused);
+    },
+  });
+})();
+</script>
+<script>
+(() => {
+'use strict';
+
+/* ============================================================
+   Réplica local do shader "Logo Gradient" (Framer) com o logo
+   da Beza. Duas passadas WebGL2:
+   1. buffer "push" (ping-pong, meia resolução, rgba16f) que
+      acumula a velocidade do cursor como campo fluido
+   2. passada principal: heightmap do logo + turbulência +
+      paleta OKLab, deslocada pelo campo do push
+   ============================================================ */
+
+// Paleta Beza (design guide): mapeada na mesma rampa
+// escuro -> lilás de marca -> lilás profundo -> off-white
+const CONFIG = {
+  colors: [
+    [46/255,  46/255,  92/255 ],   // lilás escuro profundo
+    [154/255, 155/255, 229/255],   // #9A9BE5 lilás de marca
+    [123/255, 121/255, 201/255],   // #7B79C9 lilás profundo
+    [236/255, 237/255, 246/255],   // #ECEDF6 off-white lilás
+  ],
+  colorBack: [0, 0, 0, 0],
+  // base: instância do hero do site de referência (speed lá era 0.59,
+  // subido aqui porque a animação idle ficava imperceptível no nosso logo)
+  angle: 229, bend: 0.24, contour: 0.8, motionMode: 0,
+  scale: 1.53, seed: 6, speed: 1.5,
+  turbAmp: 0.16, turbFreq: 0.9, turbIter: 4, waveFreq: 2.1,
+  mousePersist: 0.8, mousePush: 0.5, mouseRadius: 1.0, mouseStretch: 0.1,
+  mouseGain: 1.0,   // multiplica a velocidade do cursor antes do depósito
+  pushResolutionScale: 0.5,
+  antialias: 0,           // ?aa via ?antialias=1
+  heightmapWidth: 4096,   // >= largura do canvas, senao o logo e esticado
+  heightmapPad: 0.10,     // respiro em volta do logo (fração da largura)
+  heightmapBlur: 16,      // px de blur pro campo de profundidade
+  vincoFenda: 6,          // px: fecha a SILHUETA nas fendas capilares e deixa o vao como vinco de sombra
+};
+
+// overrides via query string pra afinar sem editar: ?mouseGain=4&speed=0
+for (const [k, v] of new URLSearchParams(location.search)) {
+  if (k in CONFIG && typeof CONFIG[k] === 'number' && !isNaN(parseFloat(v))) {
+    CONFIG[k] = parseFloat(v);
+  }
+}
+
+/* Rampa do metal liquido por tema. Os dois ficam inteiros na familia
+   lilas: extremo neutro (branco ou tinta) chapa o logo e mata o efeito
+   de metal. A rampa escura nao e monotonica (escuro -> medio-claro ->
+   medio -> claríssimo) e esse salto e o que desenha a dobra metalica;
+   a clara espelha o mesmo salto com a luz invertida, indo do lilas
+   claro ao indigo profundo, que e o mesmo extremo dos dois temas. */
+const RGB = (hex) => [
+  parseInt(hex.slice(1, 3), 16) / 255,
+  parseInt(hex.slice(3, 5), 16) / 255,
+  parseInt(hex.slice(5, 7), 16) / 255,
+];
+const PALETAS = {
+  escuro: CONFIG.colors,
+  claro: [
+    RGB('#C9CAF5'),   // lilas claro: o brilho, no lugar do off-white
+    RGB('#55539E'),   // lilas profundo no claro (regra 1)
+    RGB('#6E6CBE'),   // lilas de marca no claro (regra 1)
+    RGB('#2E2E5C'),   // indigo profundo: mesmo extremo do tema escuro
+  ],
+};
+/* as uniformes de cor sobem a cada frame, entao trocar CONFIG.colors
+   vale na hora: o tema muda sem recarregar a pagina. */
+function aplicaPaleta(t) { CONFIG.colors = PALETAS[t] || PALETAS.escuro; }
+aplicaPaleta(window.__bezaTema || 'escuro');
+(window.__bezaTemaSubs || []).push(aplicaPaleta);
+
+const LOGO_SVG = `<svg width="760.35" height="198.15" viewBox="0 0 760.35 198.15" fill="none" xmlns="http://www.w3.org/2000/svg"><g fill="#FFFFFF"><path d="M320.05,136.99c-9.08,7.92-23.31,9.59-33.91,4.88-6.77-3.01-10.71-9.6-9.75-17.05,1.15-8.95,7.5-17.38,13.18-24.41,1.93-2.39,3.41-4.74,1.47-6.03-.58-.38-1.91-.15-2.53.61-2.42,2.95-4.46,5.91-6.36,9.25l-10.26,17.97c-5.6,9.82-12.77,20.22-24.49,21.44-7.07.73-13.4-1.95-17.79-7.23-1.18-1.42-3.43-1.42-4.79-.42-1.28.94-1.98,2.11-2.7,3.58-7.32,15.1-16.83,28.84-28.93,40.52-9.76,9.43-23.82,18.5-37.47,18.03-9.05-.32-16.81-4.05-19.6-12.85-2.63-8.29-.43-16.69,5.56-22.97,3.51-3.68,7.49-6.43,12-9.01l37.75-21.56c3.23-1.85,8.33-5.02,6.49-7.11-.75-.85-2.41-.52-3.28.07-5.53,3.72-12.62,6.54-17.15,1.57-4.86-5.33-1.14-12.69,4.54-17.4l8.33-6.92c.49-.41.93-1.66.82-2.21s-1.2-1.43-1.85-1.42c-1.45.02-3.11.7-4.18,1.71l-12.35,11.58c-7.51,7.04-15.09,13.59-23.38,19.7-11.03,8.13-24.43,14.14-38.23,12.5-6.4-.76-11.89-4.38-14.91-10.01l-3.41-6.36c-1.3-2.43-4.12-3.42-6.55-1.88-5.76,3.64-11.49,6.81-17.61,9.93-8.19,4.17-16.64,7.08-25.85,8.15-13.52,1.58-26.7-1.31-35.07-12.38-4.03-5.33-6.7-11.4-7.39-18.2-.56-5.49-.49-11.1-.02-16.62.7-8.2,2.71-15.73,5.51-23.43,7.03-19.31,17.71-36.82,31.95-51.62C48.5,10.29,60.83,1.94,76.36.15c3.86-.45,7.78.1,11.37,1.68,9.32,4.11,13.29,14.78,9.49,24.21-3.27,8.09-9.15,14.68-16.75,19.05l-28.51,16.4c-6.68,3.84-13.11,7.46-19.53,11.63-4.35,2.82-10.29,9.18-7.25,11.62.79.63,2.68.96,3.72.04,5.48-4.84,10.67-9.68,16.52-14.21,9.9-7.67,22.28-15.55,34.74-16.92,10.74-1.17,20.41,4.07,25.65,13.38,1.07,1.9,2.49,3.99,4.87,4.19,1.92.17,3.82-1.05,5.38-2.17,8.19-5.88,16.86-10.55,26.61-13.2,6.48-1.76,13.01-2.1,19.35-.1,5.48,1.74,9.1,6.33,9.29,12.06.3,8.73-6.1,15.56-13.48,19.76l-9.27,5.27c-.59.34-1.31,1.49-1.26,2.08s.92,1.66,1.61,1.9c1.55.54,3.5.06,4.91-.91,3.67-2.5,6.99-5.18,10.31-8.17l14.83-13.41c12.85-11.62,29.89-19.37,47.28-20.1,4.39-.18,8.61.43,12.31,2.63,4.85,2.87,7.04,8.39,6.58,14.09-.59,7.3-5.01,13.49-11.08,17.46l-11.4,7.45c-.63.41-1.19,1.72-1.05,2.33.46,2,3.85,1.88,7.03.04s5.64-3.89,8.22-6.32l17.57-16.49c10.34-8.98,22.16-15.87,35.39-19.54,6.8-1.89,13.68-1.99,20.4-.39,9.56,2.27,16.46,10.58,16.05,20.46-.2,4.77-2.2,9.03-4.73,12.93-3.96,6.1-9.25,10.75-15.25,14.79-1.58,1.06-3.21,1.99-4.07,3.82-.26.55.81,1.82,1.37,1.94.65.14,1.9.07,2.62-.34,7.71-4.32,17.33-11.16,22.93-3.29,2.33,3.27,2.96,7.37,2.18,11.4-1.48,7.73-5.35,14.62-11.27,19.78h.01Z"/><path d="M759.98,131.77l-3.24-7.47-18.11-37.26-9.28-20c-1.92-4.13-5.78-5.7-10.07-5.68h-13.04c-4.71,0-8.7,1.59-10.8,6.06l-13.64,29.02-9.72,20.27c-.35.74-1.47.49-1.47-.33l-.09-48.95c-.53-2.65-2.37-5.74-5.43-5.76l-18.02-.13c-2.82-.02-6.22,2.72-6.22,5.81v14.76c0,.88-1.22,1.15-1.57.34-3.39-7.89-9.69-14.13-18.06-17.49-4.78-1.92-9.46-2.83-14.72-3.46l-48.76.06c-2.3,0-5.37,3.15-5.37,5.39l-.15,46.21c0,2.71-1.34,5.19-4.43,5.19h-51.72v.03c-1.61,0-2.8-.94-2.75-2.6l.14-4.62c.05-1.63,2.3-2.01,3.66-2.01l41.27-.04c3.02,0,5.62-2.87,5.66-5.68l.1-7.54c.03-2.6-1.75-4.95-4.16-5.83-1.79-.65-3.68-.39-5.58-.39l-22-.02-17.41-.21c-2.32-.03-2.38-7.39,0-7.39l33.27-.03,13.57.1c3.22.02,7.07-1.87,7.09-5.45l.07-9.75c.02-3.57-3.56-5.6-6.76-5.57l-4.88.05-3.69.07-61.56.05c-1.88,0-3.82.91-5.24,2.3-1.13,1.11-2.96,1.14-4.01-.06-1.47-1.69-3.58-2.8-5.96-2.8l-22.28.03c-3.85,0-7.26,2.83-8.75,6.27l-11.6,26.79-3.93,9.42c-.12.29-.74.79-1.03.77-.29-.02-.9-.49-1.01-.76l-15.13-35.86c-1.57-3.71-4.98-6.7-9.06-6.7l-24.19.03c-3.78,0-6.84,2.94-8.02,6.26-1.02,2.88-1.11,5.68-1.15,8.71l-.24,20.66-.13,35.48c-.01,3.91,2.49,7.38,6.7,7.39l15.58.05c4.76-.72,7.73-4.75,6.83-9.36l.71-21.55c.02-.63,1.95-.45,2.26.2l11.9,25.33c1.45,3.08,3.98,5.4,7.58,5.39h13.96c3.67,0,6.33-2.26,7.83-5.55l11.63-25.57,1.43-.31c.32-.07.71.91.72,1.35v22.63c0,3.72,2.73,7.33,6.61,7.34l14.28.05c1.72,0,3.48-.74,4.81-1.96.98-.9,2.51-.94,3.52-.07,1.65,1.42,4.05,2.07,5.98,2.05l9.6-.09,61.17-.09c2.44-.01,4.3-.5,6.06-1.97,1.14-.95,2.85-1.31,4.15-.55l4.44,2.59,46.85-.32c7.59-.06,14.71-2.74,21.07-6.37,6.06-3.45,10.53-8.59,13.21-14.68.35-.8,1.56-.53,1.56.35v14.27c0,2.94,2.19,6.52,5.24,6.54l16.29.1c2.23.01,4.02-.44,5.72-1.86,3.29-2.74,5.13.5,8.44,1.73h11.02c2.97.01,5.4-2.94,6.56-5.31l2.65-5.43c.57-1.17,1.77-2.57,3.31-2.57h25.37c1.3,0,2.51,1.18,2.98,2.14l2.33,4.75c1.35,2.75,3.91,6.43,7.41,6.44l17.05.06c3.54.01,6.16-4.29,4.79-7.44ZM612.48,107.54c-1.64,6.38-8.61,10.67-14.61,10.71l-15.22.11c-1.05.01-2.27-1.03-2.27-2.24v-31.83c0-1.3,1.03-2.3,2.27-2.3l11.27-.03c4.32,0,8.42.28,12.29,2.33s6.17,5.67,6.73,10.03c.56,4.42.66,8.84-.46,13.22ZM716.89,106.08l-8.13.04c-.37,0-1.19-.23-1.32-.52-.13-.29-.25-.92-.33-1.38l4.2-9.06c.11-.27.61-1.04.9-.92l1.24.51,4.4,9.56c.35.41-.25,1.77-.96,1.77Z"/></g></svg>`;
+
+const LOGO_SVG_V = `<svg width="331.62" height="198.15" viewBox="0 0 331.62 198.15" fill="none" xmlns="http://www.w3.org/2000/svg"><g fill="#FFFFFF"><path d="M320.05,136.99c-9.08,7.92-23.31,9.59-33.91,4.88-6.77-3.01-10.71-9.6-9.75-17.05,1.15-8.95,7.5-17.38,13.18-24.41,1.93-2.39,3.41-4.74,1.47-6.03-.58-.38-1.91-.15-2.53.61-2.42,2.95-4.46,5.91-6.36,9.25l-10.26,17.97c-5.6,9.82-12.77,20.22-24.49,21.44-7.07.73-13.4-1.95-17.79-7.23-1.18-1.42-3.43-1.42-4.79-.42-1.28.94-1.98,2.11-2.7,3.58-7.32,15.1-16.83,28.84-28.93,40.52-9.76,9.43-23.82,18.5-37.47,18.03-9.05-.32-16.81-4.05-19.6-12.85-2.63-8.29-.43-16.69,5.56-22.97,3.51-3.68,7.49-6.43,12-9.01l37.75-21.56c3.23-1.85,8.33-5.02,6.49-7.11-.75-.85-2.41-.52-3.28.07-5.53,3.72-12.62,6.54-17.15,1.57-4.86-5.33-1.14-12.69,4.54-17.4l8.33-6.92c.49-.41.93-1.66.82-2.21s-1.2-1.43-1.85-1.42c-1.45.02-3.11.7-4.18,1.71l-12.35,11.58c-7.51,7.04-15.09,13.59-23.38,19.7-11.03,8.13-24.43,14.14-38.23,12.5-6.4-.76-11.89-4.38-14.91-10.01l-3.41-6.36c-1.3-2.43-4.12-3.42-6.55-1.88-5.76,3.64-11.49,6.81-17.61,9.93-8.19,4.17-16.64,7.08-25.85,8.15-13.52,1.58-26.7-1.31-35.07-12.38-4.03-5.33-6.7-11.4-7.39-18.2-.56-5.49-.49-11.1-.02-16.62.7-8.2,2.71-15.73,5.51-23.43,7.03-19.31,17.71-36.82,31.95-51.62C48.5,10.29,60.83,1.94,76.36.15c3.86-.45,7.78.1,11.37,1.68,9.32,4.11,13.29,14.78,9.49,24.21-3.27,8.09-9.15,14.68-16.75,19.05l-28.51,16.4c-6.68,3.84-13.11,7.46-19.53,11.63-4.35,2.82-10.29,9.18-7.25,11.62.79.63,2.68.96,3.72.04,5.48-4.84,10.67-9.68,16.52-14.21,9.9-7.67,22.28-15.55,34.74-16.92,10.74-1.17,20.41,4.07,25.65,13.38,1.07,1.9,2.49,3.99,4.87,4.19,1.92.17,3.82-1.05,5.38-2.17,8.19-5.88,16.86-10.55,26.61-13.2,6.48-1.76,13.01-2.1,19.35-.1,5.48,1.74,9.1,6.33,9.29,12.06.3,8.73-6.1,15.56-13.48,19.76l-9.27,5.27c-.59.34-1.31,1.49-1.26,2.08s.92,1.66,1.61,1.9c1.55.54,3.5.06,4.91-.91,3.67-2.5,6.99-5.18,10.31-8.17l14.83-13.41c12.85-11.62,29.89-19.37,47.28-20.1,4.39-.18,8.61.43,12.31,2.63,4.85,2.87,7.04,8.39,6.58,14.09-.59,7.3-5.01,13.49-11.08,17.46l-11.4,7.45c-.63.41-1.19,1.72-1.05,2.33.46,2,3.85,1.88,7.03.04s5.64-3.89,8.22-6.32l17.57-16.49c10.34-8.98,22.16-15.87,35.39-19.54,6.8-1.89,13.68-1.99,20.4-.39,9.56,2.27,16.46,10.58,16.05,20.46-.2,4.77-2.2,9.03-4.73,12.93-3.96,6.1-9.25,10.75-15.25,14.79-1.58,1.06-3.21,1.99-4.07,3.82-.26.55.81,1.82,1.37,1.94.65.14,1.9.07,2.62-.34,7.71-4.32,17.33-11.16,22.93-3.29,2.33,3.27,2.96,7.37,2.18,11.4-1.48,7.73-5.35,14.62-11.27,19.78h.01Z"/><path d="M324.69,39.97l-1.41-3.24-7.86-16.17-4.03-8.68c-.83-1.79-2.51-2.47-4.37-2.46h-5.66c-2.04,0-3.78.69-4.69,2.63l-5.92,12.59-4.22,8.8c-.15.32-.64.21-.64-.14l-.04-21.24c-.23-1.15-1.03-2.49-2.36-2.5l-7.82-.06c-1.22,0-2.7,1.18-2.7,2.52v6.41c0,.38-.53.5-.68.15-1.47-3.42-4.21-6.13-7.84-7.59-2.07-.83-4.1-1.23-6.39-1.5l-21.16.03c-1,0-2.33,1.37-2.33,2.34l-.07,20.05c0,1.18-.58,2.25-1.92,2.25h-22.45c-.69.01-1.21-.39-1.19-1.12l.06-2c.02-.71,1-.87,1.59-.87l17.91-.02c1.31,0,2.44-1.25,2.46-2.46l.04-3.27c.01-1.13-.76-2.15-1.81-2.53-.78-.28-1.6-.17-2.42-.17h-9.55s-7.55-.1-7.55-.1c-1.01-.01-1.03-3.21,0-3.21h14.44s5.89.03,5.89.03c1.4,0,3.07-.81,3.08-2.36l.03-4.23c0-1.55-1.54-2.43-2.93-2.42l-2.12.02-1.6.03-26.71.02c-.82,0-1.66.39-2.27,1-.49.48-1.29.49-1.74-.03-.64-.73-1.55-1.21-2.59-1.21h-9.67c-1.67.01-3.15,1.24-3.8,2.73l-5.03,11.62-1.71,4.09c-.05.13-.32.34-.45.33-.13,0-.39-.21-.44-.33l-6.57-15.56c-.68-1.61-2.16-2.91-3.93-2.91h-10.5c-1.64.01-2.97,1.29-3.48,2.73-.44,1.25-.48,2.46-.5,3.78l-.1,8.96-.06,15.4c0,1.7,1.08,3.2,2.91,3.21l6.76.02c2.07-.31,3.35-2.06,2.96-4.06l.31-9.35c0-.27.85-.2.98.09l5.16,10.99c.63,1.34,1.73,2.34,3.29,2.34h6.06c1.59,0,2.75-.98,3.4-2.41l5.05-11.1.62-.13c.14-.03.31.39.31.59v9.82c0,1.61,1.18,3.18,2.87,3.18l6.2.02c.75,0,1.51-.32,2.09-.85.43-.39,1.09-.41,1.53-.03.72.61,1.76.9,2.6.89l4.17-.04,26.54-.04c1.06,0,1.87-.22,2.63-.85.49-.41,1.24-.57,1.8-.24l1.93,1.12,20.33-.14c3.29-.03,6.38-1.19,9.14-2.76,2.63-1.5,4.57-3.73,5.73-6.37.15-.35.68-.23.68.15v6.19c0,1.28.95,2.83,2.27,2.84l7.07.04c.97,0,1.74-.19,2.48-.81,1.43-1.19,2.23.22,3.66.75h4.78c1.29,0,2.34-1.28,2.85-2.3l1.15-2.36c.25-.51.77-1.12,1.44-1.12h11.01c.56,0,1.09.51,1.29.93l1.01,2.06c.59,1.19,1.7,2.79,3.22,2.79l7.4.03c1.54,0,2.67-1.86,2.08-3.23ZM260.69,29.45c-.71,2.77-3.74,4.63-6.34,4.65l-6.6.05c-.46,0-.99-.45-.99-.97v-13.81c0-.56.45-1,.99-1h4.89c1.87-.02,3.65.11,5.33,1s2.68,2.46,2.92,4.35c.24,1.92.29,3.84-.2,5.74ZM305.99,28.82l-3.53.02c-.16,0-.52-.1-.57-.23-.06-.13-.11-.4-.14-.6l1.82-3.93c.05-.12.26-.45.39-.4l.54.22,1.91,4.15c.15.18-.11.77-.42.77Z"/></g></svg>`;
+
+// ---------- Shaders (portados do bundle do site, GLSL ES 3.00) ----------
+
+const VERT = `#version 300 es
+precision highp float;
+layout(location = 0) in vec2 a_pos;
+out vec2 v_uv;
+void main() {
+  v_uv = a_pos * 0.5 + 0.5;
+  gl_Position = vec4(a_pos, 0.0, 1.0);
+}`;
+
+// Passada 1: campo fluido do mouse (ping-pong)
+const PUSH_FRAG = `#version 300 es
+precision highp float;
+in vec2 v_uv;
+out vec4 fragColor;
+
+uniform sampler2D u_push_buffer;
+uniform vec2  u_resolution;
+uniform float u_deltaTime;
+uniform vec4  u_mousePosition;   // xy = pos uv, zw = velocidade uv/frame
+uniform float u_mouseHover;
+uniform float u_mousePersist;
+uniform float u_mousePush;
+uniform float u_mouseRadius;
+uniform float u_mouseStretch;
+
+void main() {
+    float aspect = u_resolution.x / u_resolution.y;
+    vec2 aspectFix = vec2(aspect, 1.0);
+
+    vec2 texel = 1.0 / u_resolution;
+
+    vec4 prev = texture(u_push_buffer, v_uv);
+    vec2 c  = prev.xy;
+    vec2 nl = texture(u_push_buffer, v_uv - vec2(texel.x, 0.0)).xy;
+    vec2 nr = texture(u_push_buffer, v_uv + vec2(texel.x, 0.0)).xy;
+    vec2 nd = texture(u_push_buffer, v_uv - vec2(0.0, texel.y)).xy;
+    vec2 nu = texture(u_push_buffer, v_uv + vec2(0.0, texel.y)).xy;
+
+    vec2 blurred = (nl + nr + nd + nu) * 0.25;
+    vec2 field = mix(c, blurred, 0.12);
+
+    float r = clamp(u_deltaTime * 60.0, 0.0, 3.0);
+    float decay = pow(mix(0.86, 0.985, clamp(u_mousePersist, 0.0, 1.0)), r);
+    field *= decay;
+
+    vec2 rawVel = u_mousePosition.zw * aspectFix * u_mouseHover;
+    float smoothK = 1.0 - pow(0.75, r);
+    vec2 mouseVel = mix(prev.zw, rawVel, smoothK);
+
+    float speed    = length(mouseVel);
+    float brush    = max(u_mouseRadius * 0.1, 0.001);
+
+    float speedPerSec = speed / max(u_deltaTime, 1e-4);
+    float moving      = 1.0 - exp(-speedPerSec * 0.5);
+
+    vec2 dir       = speed > 1e-5 ? mouseVel / speed : vec2(1.0, 0.0);
+    vec2 ortho     = vec2(-dir.y, dir.x);
+
+    vec2 toMouse   = (v_uv - u_mousePosition.xy) * aspectFix;
+
+    float along    = dot(toMouse, dir);
+    float across   = dot(toMouse, ortho);
+    float ra       = brush * (1.0 + u_mouseStretch * moving);
+    float rb       = brush;
+    float d2       = (along * along) / (ra * ra) + (across * across) / (rb * rb);
+    float falloff  = exp(-d2);
+
+    field += mouseVel * falloff * (u_mousePush * 0.1) * u_mouseHover;
+
+    field = clamp(field, -1.0, 1.0);
+
+    fragColor = vec4(field, mouseVel);
+}`;
+
+// Passada 2: o metal líquido em cima do heightmap do logo
+const MAIN_FRAG = `#version 300 es
+precision highp float;
+in vec2 v_uv;
+out vec4 fragColor;
+
+uniform sampler2D u_image_heightmap;
+uniform sampler2D u_push_buffer;
+uniform vec2  u_resolution;
+uniform float u_time;
+uniform float u_pixelRatio;
+
+uniform vec4  u_colors[8];
+uniform int   u_colors_length;
+uniform vec4  u_colorBack;
+uniform float u_angle;
+uniform float u_bend;
+uniform float u_contour;
+uniform float u_motionMode;
+uniform float u_scale;
+uniform float u_seed;
+uniform float u_speed;
+uniform float u_turbAmp;
+uniform float u_turbFreq;
+uniform float u_turbIter;
+uniform float u_waveFreq;
+
+const float GOLDEN_ANGLE = 2.3999632;
+const float TAU = 6.28318530;
+
+uvec3 hash3(uvec3 v) {
+    v = v * 1664525u + 1013904223u;
+    v.x += v.y * v.z;
+    v.y += v.z * v.x;
+    v.z += v.x * v.y;
+    v ^= v >> 16u;
+    v.x += v.y * v.z;
+    v.y += v.z * v.x;
+    v.z += v.x * v.y;
+    return v;
+}
+
+vec3 seedRandom(float seedVal) {
+    uvec3 s = uvec3(
+        floatBitsToUint(seedVal),
+        floatBitsToUint(seedVal * 1.5 + 7.31),
+        floatBitsToUint(seedVal * 2.7 + 13.37)
+    );
+    s = hash3(s);
+    return vec3(s) / float(0xFFFFFFFFu);
+}
+
+vec3 toLinear(vec3 c) { return pow(c, vec3(2.2)); }
+vec3 toSrgb(vec3 c) { return pow(clamp(c, 0.0, 1.0), vec3(0.4545)); }
+
+vec3 linearToOklab(vec3 c) {
+    float l = 0.4122214708 * c.r + 0.5363325363 * c.g + 0.0514459929 * c.b;
+    float m = 0.2119034982 * c.r + 0.6806995451 * c.g + 0.1073969566 * c.b;
+    float s = 0.0883024619 * c.r + 0.2817188376 * c.g + 0.6299787005 * c.b;
+    l = pow(max(l, 0.0), 1.0 / 3.0);
+    m = pow(max(m, 0.0), 1.0 / 3.0);
+    s = pow(max(s, 0.0), 1.0 / 3.0);
+    return vec3(
+        0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+        1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+        0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s
+    );
+}
+
+vec3 oklabToLinear(vec3 c) {
+    float l = c.x + 0.3963377774 * c.y + 0.2158037573 * c.z;
+    float m = c.x - 0.1055613458 * c.y - 0.0638541728 * c.z;
+    float s = c.x - 0.0894841775 * c.y - 1.2914855480 * c.z;
+    l = l * l * l;
+    m = m * m * m;
+    s = s * s * s;
+    return vec3(
+        +4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+        -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+        -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
+    );
+}
+
+vec3 oklabToLch(vec3 lab) { return vec3(lab.x, length(lab.yz), atan(lab.z, lab.y)); }
+vec3 lchToOklab(vec3 lch) { return vec3(lch.x, lch.y * cos(lch.z), lch.y * sin(lch.z)); }
+
+vec3 mixLch(vec3 lab0, vec3 lab1, float t) {
+    vec3 lch0 = oklabToLch(lab0);
+    vec3 lch1 = oklabToLch(lab1);
+    if (lch0.y < 0.05) lch0.z = lch1.z;
+    if (lch1.y < 0.05) lch1.z = lch0.z;
+    float dh = lch1.z - lch0.z;
+    if (dh > 3.14159265) dh -= 6.28318530;
+    if (dh < -3.14159265) dh += 6.28318530;
+    return lchToOklab(vec3(
+        mix(lch0.x, lch1.x, t),
+        mix(lch0.y, lch1.y, t),
+        lch0.z + dh * t
+    ));
+}
+
+vec3 getColor(int idx) {
+    if (u_colors_length < 1) return vec3(0.0);
+    int safeIdx = clamp(idx, 0, u_colors_length - 1);
+    return u_colors[safeIdx].rgb;
+}
+
+vec3 paletteN(float t, int count) {
+    if (count < 1) return vec3(0.0);
+    if (count < 2) return toLinear(getColor(0));
+    float segmentSize = 1.0 / float(count - 1);
+    t = clamp(t, 0.0, 1.0);
+    int idx = min(int(floor(t / segmentSize)), count - 2);
+    float localT = clamp((t - float(idx) * segmentSize) / segmentSize, 0.0, 1.0);
+    vec3 lab0 = linearToOklab(toLinear(getColor(idx)));
+    vec3 lab1 = linearToOklab(toLinear(getColor(idx + 1)));
+    return oklabToLinear(mixLch(lab0, lab1, localT));
+}
+
+vec3 softGamutMap(vec3 linearRgb) {
+    float maxC = max(linearRgb.r, max(linearRgb.g, linearRgb.b));
+    float minC = min(linearRgb.r, min(linearRgb.g, linearRgb.b));
+    if (minC >= 0.0 && maxC <= 1.0) return linearRgb;
+    vec3 lab = linearToOklab(max(linearRgb, 0.0));
+    float L = clamp(lab.x, 0.0, 1.0);
+    float C = length(lab.yz);
+    float h = atan(lab.z, lab.y);
+    float maxChroma = 0.4 * (1.0 - pow(abs(2.0 * L - 1.0), 2.0));
+    if (C > maxChroma * 0.7) {
+        float knee = maxChroma * 0.7;
+        C = knee + (maxChroma - knee) * tanh((C - knee) / (maxChroma - knee + 0.001));
+    }
+    return clamp(oklabToLinear(vec3(L, C * cos(h), C * sin(h))), 0.0, 1.0);
+}
+
+float blurDepth3x3(vec2 uv, vec2 dudx, vec2 dudy, vec2 texel, float radius) {
+    vec2 r = radius * texel;
+    float sum = 4.0 * textureGrad(u_image_heightmap, uv, dudx, dudy).r;
+    sum += 2.0 * textureGrad(u_image_heightmap, uv + vec2(0.0, -r.y), dudx, dudy).r;
+    sum += 2.0 * textureGrad(u_image_heightmap, uv + vec2(0.0,  r.y), dudx, dudy).r;
+    sum += 2.0 * textureGrad(u_image_heightmap, uv + vec2(-r.x, 0.0), dudx, dudy).r;
+    sum += 2.0 * textureGrad(u_image_heightmap, uv + vec2( r.x, 0.0), dudx, dudy).r;
+    sum += textureGrad(u_image_heightmap, uv + vec2(-r.x, -r.y), dudx, dudy).r;
+    sum += textureGrad(u_image_heightmap, uv + vec2( r.x, -r.y), dudx, dudy).r;
+    sum += textureGrad(u_image_heightmap, uv + vec2(-r.x,  r.y), dudx, dudy).r;
+    sum += textureGrad(u_image_heightmap, uv + vec2( r.x,  r.y), dudx, dudy).r;
+    return sum / 16.0;
+}
+
+vec2 heightGrad(vec2 uv, vec2 dudx, vec2 dudy, vec2 texel, float blurRadius) {
+    float eps = 4.0;
+    float dR = blurDepth3x3(uv + vec2(eps * texel.x, 0.0), dudx, dudy, texel, blurRadius);
+    float dL = blurDepth3x3(uv - vec2(eps * texel.x, 0.0), dudx, dudy, texel, blurRadius);
+    float dU = blurDepth3x3(uv + vec2(0.0, eps * texel.y), dudx, dudy, texel, blurRadius);
+    float dD = blurDepth3x3(uv - vec2(0.0, eps * texel.y), dudx, dudy, texel, blurRadius);
+    return vec2(dR - dL, dU - dD) / (2.0 * eps * texel);
+}
+
+void main() {
+    vec2 uv = vec2(v_uv.x, 1.0 - v_uv.y);
+    vec2 texSize = vec2(textureSize(u_image_heightmap, 0));
+    float imgAspect = texSize.x / texSize.y;
+    float canvasAspect = u_resolution.x / u_resolution.y;
+
+    if (canvasAspect > imgAspect) {
+        uv.x = (uv.x - 0.5) * (canvasAspect / imgAspect) + 0.5;
+    } else {
+        uv.y = (uv.y - 0.5) * (imgAspect / canvasAspect) + 0.5;
+    }
+
+    vec2 dudx = dFdx(uv);
+    vec2 dudy = dFdy(uv);
+
+    vec4 hm = textureGrad(u_image_heightmap, uv, dudx, dudy);
+    float fw_b = 0.5 * fwidth(hm.b);
+    float hardMask = smoothstep(0.5 - fw_b, 0.5 + fw_b, hm.b);
+    float opacity = hardMask * (1.0 - hm.g);
+
+    float edgeDist;
+    if (canvasAspect > imgAspect) {
+        edgeDist = min(uv.x, 1.0 - uv.x);
+    } else if (canvasAspect < imgAspect) {
+        edgeDist = min(uv.y, 1.0 - uv.y);
+    } else {
+        edgeDist = 1.0;
+    }
+    opacity *= smoothstep(0.0, 1.0 * fwidth(edgeDist), edgeDist);
+
+    if (opacity < 0.001) {
+        fragColor = vec4(u_colorBack.rgb * u_colorBack.a, u_colorBack.a);
+        return;
+    }
+
+    vec2 texel = 1.0 / texSize;
+    int colorCount = u_colors_length;
+
+    if (colorCount < 1) {
+        fragColor = vec4(u_colorBack.rgb * u_colorBack.a, u_colorBack.a);
+        return;
+    }
+
+    float rawDepth = blurDepth3x3(uv, dudx, dudy, texel, 6.0);
+    float depth = max(rawDepth, 0.001);
+
+    vec2 grad = heightGrad(uv, dudx, dudy, texel, 6.0);
+    float gradMag = min(length(grad), 5.0);
+    vec2 gradDir = gradMag > 0.001 ? normalize(grad) : vec2(0.0);
+    vec2 contourDir = vec2(-gradDir.y, gradDir.x);
+
+    float t = mod(u_time * u_speed, 3600.0);
+    float isMelt = step(0.5, u_motionMode);
+
+    vec3 seedOffset = seedRandom(u_seed);
+    vec3 seedOffset2 = seedRandom(u_seed + 100.0);
+    float seedAngle = u_seed * GOLDEN_ANGLE;
+    vec2 seedPhase = (seedOffset2.xy - 0.5) * TAU;
+
+    vec2 p = (uv - 0.5) * 2.0;
+    p.x *= imgAspect;
+
+    float cs = cos(seedAngle);
+    float sn = sin(seedAngle);
+    p = mat2(cs, -sn, sn, cs) * p;
+
+    float ang = u_angle * 3.14159 / 180.0;
+    float cosA = cos(ang);
+    float sinA = sin(ang);
+    p = vec2(p.x * cosA - p.y * sinA, p.x * sinA + p.y * cosA);
+
+    // === MOUSE PUSH (campo fluido do buffer) ===
+    vec2 pf = texture(u_push_buffer, v_uv).xy;
+    pf.y = -pf.y;
+    if (canvasAspect <= imgAspect) {
+        pf *= imgAspect / canvasAspect;
+    }
+    pf = mat2(cs, -sn, sn, cs) * pf;
+    pf = vec2(pf.x * cosA - pf.y * sinA, pf.x * sinA + pf.y * cosA);
+    p -= pf * 2.0;
+
+    float tTurb = t * mix(1.0, 0.4, isMelt);
+    vec2 meltOffset = vec2(1.0, 0.0) * t * 0.4 * isMelt;
+
+    // === DEFORMAÇÃO GUIADA PELA FORMA ===
+    float edgeProximity = 1.0 - smoothstep(0.0, 0.8, depth);
+
+    float coordScale = max(0.4, 0.1 + depth * 1.0);
+    p *= coordScale;
+
+    p += contourDir * edgeProximity * u_bend * 2.0;
+    p -= gradDir * edgeProximity * u_bend * 0.5;
+    p *= max(0.5, mix(1.0, 0.4 + 0.6 * smoothstep(0.0, 0.5, depth), u_contour));
+
+    // === TURBULÊNCIA ===
+    int turbIter = int(u_turbIter);
+    float freq = 1.0 / max(u_turbFreq, 0.01);
+
+    vec2 q = p * u_scale + meltOffset;
+
+    float a = seedPhase.x;
+    float d = seedPhase.y;
+
+    for (int j = 2; j < 10; j++) {
+        if (j >= turbIter) break;
+        float fj = float(j);
+        q += u_turbAmp * sin(length(q) / freq * fj + tTurb + vec2(a, d) + seedOffset.xy * fj) / fj;
+        a += cos(fj + d * 1.2 + q.x * 2.0 - tTurb + seedOffset2.z);
+        d += sin(fj * q.y + a + seedOffset.z + tTurb + seedOffset2.y);
+    }
+
+    float base = length(q.yx + vec2(a, d) * 0.2) * u_waveFreq + seedOffset.x;
+    float val = 0.5 + 0.125 * sin(base + 1.0) + 0.25 * sin(base + 4.0) + 0.125 * sin(base + 9.0);
+    val = clamp((val - 0.3) / 0.4, 0.0, 1.0);
+
+    float innerIntensity = smoothstep(0.0, 0.4, depth);
+    float contourHeat = (1.0 - innerIntensity) * u_contour;
+    val = mix(val, val * innerIntensity + contourHeat, 0.5 + 0.5 * u_contour);
+
+    vec3 col = paletteN(val, colorCount);
+    col = softGamutMap(col);
+    col = toSrgb(col);
+
+    col *= opacity;
+    vec3 bgColor = u_colorBack.rgb * u_colorBack.a;
+    col = col + bgColor * (1.0 - opacity);
+    float finalAlpha = opacity + u_colorBack.a * (1.0 - opacity);
+
+    fragColor = vec4(col, finalAlpha);
+}`;
+
+// ---------- Blur gaussiano na mao ----------
+// O WebKit ignora ctx.filter = blur() em canvas 2D (medido: zero difusao).
+// Sem esse blur o heightmap vira binario e o logo perde todo o relevo, que e
+// exatamente o que da o metal inflado do Chrome. Tres box blurs seguidos
+// aproximam uma gaussiana; janela deslizante, entao o custo nao cresce com o raio.
+
+function boxH(src, dst, W, H, r) {
+  const div = 2 * r + 1;
+  for (let y = 0; y < H; y++) {
+    const o = y * W;
+    let soma = 0;
+    for (let i = -r; i <= r; i++) soma += src[o + Math.min(W - 1, Math.max(0, i))];
+    for (let x = 0; x < W; x++) {
+      dst[o + x] = soma / div;
+      soma += src[o + Math.min(W - 1, x + r + 1)] - src[o + Math.max(0, x - r)];
+    }
+  }
+}
+
+function boxV(src, dst, W, H, r) {
+  // acumula TODAS as colunas ao mesmo tempo, varrendo linha a linha:
+  // coluna a coluna o acesso pula de W em W e o cache morre.
+  const div = 2 * r + 1;
+  const soma = new Float32Array(W);
+  for (let i = -r; i <= r; i++) {
+    const o = Math.min(H - 1, Math.max(0, i)) * W;
+    for (let x = 0; x < W; x++) soma[x] += src[o + x];
+  }
+  for (let y = 0; y < H; y++) {
+    const o = y * W;
+    for (let x = 0; x < W; x++) dst[o + x] = soma[x] / div;
+    const oa = Math.min(H - 1, y + r + 1) * W;
+    const orr = Math.max(0, y - r) * W;
+    for (let x = 0; x < W; x++) soma[x] += src[oa + x] - src[orr + x];
+  }
+}
+
+function blurGauss(src, W, H, sigma) {
+  // 3 box de largura 2r+1 dao variancia 3*((2r+1)^2-1)/12  ->  r ~= sigma
+  const r = Math.max(1, Math.round(sigma));
+  let a = Float32Array.from(src);
+  const b = new Float32Array(W * H);
+  for (let p = 0; p < 3; p++) { boxH(a, b, W, H, r); boxV(b, a, W, H, r); }
+  return a;
+}
+
+// ---------- Heightmap: rasteriza o SVG e monta os canais ----------
+// R = profundidade (alpha borrado remapeado), G = 0, B = máscara nítida
+
+function buildHeightmap(img) {
+  const pad = CONFIG.heightmapPad;
+  const W = CONFIG.heightmapWidth;
+  const logoW = W * (1 - pad * 2);
+  const logoH = logoW * (img.height / img.width);
+  const H = Math.round(logoH + W * pad * 1.2);
+
+  const sharp = document.createElement('canvas');
+  sharp.width = W; sharp.height = H;
+  const sctx = sharp.getContext('2d');
+  const x = (W - logoW) / 2, y = (H - logoH) / 2;
+  sctx.drawImage(img, x, y, logoW, logoH);
+
+  const sd = sctx.getImageData(0, 0, W, H).data;
+
+  // alpha nitido -> blur proprio (ctx.filter nao funciona aqui)
+  const alpha = new Float32Array(W * H);
+  for (let i = 0; i < W * H; i++) alpha[i] = sd[i * 4 + 3];
+  const borrado = blurGauss(alpha, W, H, CONFIG.heightmapBlur * (W / 2048));
+
+  // VINCO NO LUGAR DO ARRANHAO
+  // O lettermark "beza" e traco continuo: onde duas letras se encostam sobra
+  // um corte de fio de cabelo. Como o shader poe brilho especular em toda
+  // borda da silhueta, esse corte vira um arranhao aceso no meio do metal.
+  // Fechar o corte resolve o brilho mas funde as letras e mata a leitura.
+  // Entao: fecha so a SILHUETA (canal B) e mantem a PROFUNDIDADE (canal R)
+  // vinda do alpha original. O vao deixa de cortar a superficie e passa a ser
+  // um vinco de sombra: a letra continua legivel, sem borda acesa.
+  let mascara = alpha;
+  if (CONFIG.vincoFenda > 0) {
+    const r = CONFIG.vincoFenda * (W / 2048);
+    const b = blurGauss(alpha, W, H, r);
+    mascara = new Float32Array(W * H);
+    for (let i = 0; i < W * H; i++) {
+      const t = b[i] / 255;
+      const s = t <= 0.38 ? 0 : t >= 0.62 ? 1 : (() => { const u = (t - 0.38) / 0.24; return u * u * (3 - 2 * u); })();
+      mascara[i] = Math.max(alpha[i], s * 255);
+    }
+  }
+
+  const out = new Uint8ClampedArray(W * H * 4);
+
+  for (let i = 0; i < W * H; i++) {
+    const sa = mascara[i] / 255;
+    const ba = borrado[i] / 255;
+    // profundidade: 0 na borda da letra, 1 no miolo do traço
+    const depth = Math.min(1, Math.max(0, (ba - 0.42) / 0.5));
+    out[i * 4 + 0] = depth * 255;
+    out[i * 4 + 1] = 0;
+    out[i * 4 + 2] = sa * 255;
+    out[i * 4 + 3] = 255;
+  }
+  const logoTop = (H - logoH) / 2;
+  return { data: new ImageData(out, W, H), width: W, height: H, bandTop: logoTop / H };
+}
+
+// ---------- WebGL harness ----------
+
+function fail(msg) {
+  const el = document.getElementById('capa-err');
+  el.textContent = msg;
+  el.style.display = 'block';
+  throw new Error(msg);
+}
+
+function compile(gl, type, src) {
+  const sh = gl.createShader(type);
+  gl.shaderSource(sh, src);
+  gl.compileShader(sh);
+  if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+    fail('Erro de shader: ' + gl.getShaderInfoLog(sh));
+  }
+  return sh;
+}
+
+function program(gl, fragSrc) {
+  const p = gl.createProgram();
+  gl.attachShader(p, compile(gl, gl.VERTEX_SHADER, VERT));
+  gl.attachShader(p, compile(gl, gl.FRAGMENT_SHADER, fragSrc));
+  gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
+    fail('Erro de link: ' + gl.getProgramInfoLog(p));
+  }
+  return p;
+}
+
+function start(heightmap) {
+  const canvas = document.getElementById('capa-gl');
+  const gl = canvas.getContext('webgl2', { alpha: true, premultipliedAlpha: true, antialias: CONFIG.antialias > 0 });
+  if (!gl) fail('WebGL2 indisponível nesse navegador.');
+
+  const floatExt = gl.getExtension('EXT_color_buffer_float') || gl.getExtension('EXT_color_buffer_half_float');
+  const pushEnabled = !!floatExt;
+
+  // geometria: triângulo fullscreen
+  const vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);
+  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+
+  // textura do heightmap
+  const hmTex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, hmTex);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, heightmap.data);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+  // textura zero pro caso do push estar indisponível
+  const zeroTex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, zeroTex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0, 0]));
+
+  const pushProg = program(gl, PUSH_FRAG);
+  const mainProg = program(gl, MAIN_FRAG);
+
+  const U = (prog, name) => gl.getUniformLocation(prog, name);
+
+  // ping-pong do buffer push
+  let pushA = null, pushB = null, fboA = null, fboB = null;
+  let pushW = 0, pushH = 0;
+
+  function makePushTex(w, h) {
+    const tex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, w, h, 0, gl.RGBA, gl.HALF_FLOAT, null);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    const fbo = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    return { tex, fbo };
+  }
+
+  function allocPush() {
+    if (!pushEnabled) return;
+    pushW = Math.max(2, Math.floor(canvas.width * CONFIG.pushResolutionScale));
+    pushH = Math.max(2, Math.floor(canvas.height * CONFIG.pushResolutionScale));
+    for (const t of [pushA, pushB]) {
+      if (t) { gl.deleteTexture(t.tex); gl.deleteFramebuffer(t.fbo); }
+    }
+    pushA = makePushTex(pushW, pushH);
+    pushB = makePushTex(pushW, pushH);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, pushA.fbo);
+    const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    if (status !== gl.FRAMEBUFFER_COMPLETE) {
+      console.warn('push FBO incompleto, interacao de mouse desativada:', status);
+      pushA = pushB = null;
+    }
+  }
+
+  // sonda de depuracao: varre o buffer push inteiro e acha o pico do campo
+  window.__dbg = () => {
+    if (!pushA) return { pushEnabled, max: null };
+    gl.bindFramebuffer(gl.FRAMEBUFFER, pushA.fbo);
+    const px = new Float32Array(pushW * pushH * 4);
+    gl.readPixels(0, 0, pushW, pushH, gl.RGBA, gl.FLOAT, px);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    let maxF = 0, maxV = 0, fx = 0, fy = 0;
+    for (let i = 0; i < pushW * pushH; i++) {
+      const f = Math.hypot(px[i * 4], px[i * 4 + 1]);
+      const v = Math.hypot(px[i * 4 + 2], px[i * 4 + 3]);
+      if (f > maxF) { maxF = f; fx = (i % pushW) / pushW; fy = Math.floor(i / pushW) / pushH; }
+      if (v > maxV) maxV = v;
+    }
+    return { pushEnabled, maxField: maxF, at: [fx, fy], maxVel: maxV, mouse: { ...mouse } };
+  };
+
+  // tamanho do canvas segue o container, aspecto segue o heightmap
+  const stage = document.getElementById('capa-stage');
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const cssW = stage.clientWidth;
+    const cssH = cssW * (heightmap.height / heightmap.width);
+    canvas.style.height = cssH + 'px';
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    allocPush();
+  }
+  new ResizeObserver(resize).observe(stage);
+  resize();
+  stage.style.setProperty('--band-top', (heightmap.bandTop * 100).toFixed(2) + '%');
+
+  // mouse em uv (y pra cima), velocidade por frame
+  const mouse = { x: 0.5, y: 0.5, px: 0.5, py: 0.5, vx: 0, vy: 0, hover: 0, has: false };
+  window.addEventListener('pointermove', (e) => {
+    const r = canvas.getBoundingClientRect();
+    const nx = (e.clientX - r.left) / r.width;
+    const ny = 1 - (e.clientY - r.top) / r.height;
+    if (!mouse.has) { mouse.px = nx; mouse.py = ny; mouse.has = true; }
+    mouse.x = nx; mouse.y = ny;
+    mouse.hover = (nx >= -0.05 && nx <= 1.05 && ny >= -0.05 && ny <= 1.05) ? 1 : 0;
+  });
+  window.addEventListener('pointerleave', () => { mouse.hover = 0; });
+
+  let last = performance.now();
+  const t0 = last;
+
+  function frame(now) {
+    if (window.__capaPaused) { last = now; requestAnimationFrame(frame); return; }
+    const dt = Math.min(Math.max((now - last) / 1000, 0.0001), 0.1);
+    last = now;
+    const time = (now - t0) / 1000;
+
+    // velocidade em uv por segundo (unidade que o runtime do Framer usa)
+    mouse.vx = (mouse.x - mouse.px) / dt;
+    mouse.vy = (mouse.y - mouse.py) / dt;
+    mouse.px = mouse.x;
+    mouse.py = mouse.y;
+
+    // passada 1: push (ping-pong)
+    if (pushA) {
+      gl.bindFramebuffer(gl.FRAMEBUFFER, pushB.fbo);
+      gl.viewport(0, 0, pushW, pushH);
+      gl.useProgram(pushProg);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, pushA.tex);
+      gl.uniform1i(U(pushProg, 'u_push_buffer'), 0);
+      gl.uniform2f(U(pushProg, 'u_resolution'), pushW, pushH);
+      gl.uniform1f(U(pushProg, 'u_deltaTime'), dt);
+      gl.uniform4f(U(pushProg, 'u_mousePosition'), mouse.x, mouse.y,
+        mouse.vx * CONFIG.mouseGain, mouse.vy * CONFIG.mouseGain);
+      gl.uniform1f(U(pushProg, 'u_mouseHover'), mouse.hover);
+      gl.uniform1f(U(pushProg, 'u_mousePersist'), CONFIG.mousePersist);
+      gl.uniform1f(U(pushProg, 'u_mousePush'), CONFIG.mousePush);
+      gl.uniform1f(U(pushProg, 'u_mouseRadius'), CONFIG.mouseRadius);
+      gl.uniform1f(U(pushProg, 'u_mouseStretch'), CONFIG.mouseStretch);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      const tmp = pushA; pushA = pushB; pushB = tmp;
+    }
+
+    // passada 2: principal
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.useProgram(mainProg);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, hmTex);
+    gl.uniform1i(U(mainProg, 'u_image_heightmap'), 0);
+
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, pushA ? pushA.tex : zeroTex);
+    gl.uniform1i(U(mainProg, 'u_push_buffer'), 1);
+
+    gl.uniform2f(U(mainProg, 'u_resolution'), canvas.width, canvas.height);
+    gl.uniform1f(U(mainProg, 'u_time'), time);
+    gl.uniform1f(U(mainProg, 'u_pixelRatio'), Math.min(window.devicePixelRatio || 1, 2));
+
+    const flat = new Float32Array(8 * 4);
+    CONFIG.colors.forEach((c, i) => { flat.set([c[0], c[1], c[2], 1], i * 4); });
+    gl.uniform4fv(U(mainProg, 'u_colors'), flat);
+    gl.uniform1i(U(mainProg, 'u_colors_length'), CONFIG.colors.length);
+    gl.uniform4fv(U(mainProg, 'u_colorBack'), CONFIG.colorBack);
+
+    gl.uniform1f(U(mainProg, 'u_angle'), CONFIG.angle);
+    gl.uniform1f(U(mainProg, 'u_bend'), CONFIG.bend);
+    gl.uniform1f(U(mainProg, 'u_contour'), CONFIG.contour);
+    gl.uniform1f(U(mainProg, 'u_motionMode'), CONFIG.motionMode);
+    gl.uniform1f(U(mainProg, 'u_scale'), CONFIG.scale);
+    gl.uniform1f(U(mainProg, 'u_seed'), CONFIG.seed);
+    gl.uniform1f(U(mainProg, 'u_speed'), CONFIG.speed);
+    gl.uniform1f(U(mainProg, 'u_turbAmp'), CONFIG.turbAmp);
+    gl.uniform1f(U(mainProg, 'u_turbFreq'), CONFIG.turbFreq);
+    gl.uniform1f(U(mainProg, 'u_turbIter'), CONFIG.turbIter);
+    gl.uniform1f(U(mainProg, 'u_waveFreq'), CONFIG.waveFreq);
+
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    requestAnimationFrame(frame);
+  }
+
+  requestAnimationFrame(frame);
+}
+
+// bootstrap: SVG inline -> Image -> heightmap -> WebGL
+const LOGO_ATIVO = matchMedia('(max-width: 700px)').matches ? LOGO_SVG_V : LOGO_SVG;
+const svgBlob = new Blob([LOGO_ATIVO], { type: 'image/svg+xml' });
+const svgUrl = URL.createObjectURL(svgBlob);
+const img = new Image();
+img.onload = () => {
+  URL.revokeObjectURL(svgUrl);
+  start(buildHeightmap(img));
+};
+img.onerror = () => fail('Falha ao carregar o SVG do logo.');
+img.src = svgUrl;
+
+CONFIG.heightmapPad = 0.08;
+})();
+</script>
+</body>
+</html>
