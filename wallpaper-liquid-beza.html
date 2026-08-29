@@ -198,7 +198,6 @@ const CONFIG = {
   heightmapWidth: 4096,   // >= largura do canvas, senao o logo e esticado
   heightmapPad: 0.10,     // respiro em volta do logo (fração da largura)
   heightmapBlur: 16,      // px de blur pro campo de profundidade
-  vincoFenda: 6,          // px: fecha a SILHUETA nas fendas capilares e deixa o vao como vinco de sombra
 };
 
 // overrides via query string pra afinar sem editar: ?mouseGain=4&speed=0
@@ -672,30 +671,10 @@ function buildHeightmap(img) {
   for (let i = 0; i < W * H; i++) alpha[i] = sd[i * 4 + 3];
   const borrado = blurGauss(alpha, W, H, CONFIG.heightmapBlur * (W / 2048));
 
-  // VINCO NO LUGAR DO ARRANHAO
-  // O lettermark "beza" e traco continuo: onde duas letras se encostam sobra
-  // um corte de fio de cabelo. Como o shader poe brilho especular em toda
-  // borda da silhueta, esse corte vira um arranhao aceso no meio do metal.
-  // Fechar o corte resolve o brilho mas funde as letras e mata a leitura.
-  // Entao: fecha so a SILHUETA (canal B) e mantem a PROFUNDIDADE (canal R)
-  // vinda do alpha original. O vao deixa de cortar a superficie e passa a ser
-  // um vinco de sombra: a letra continua legivel, sem borda acesa.
-  let mascara = alpha;
-  if (CONFIG.vincoFenda > 0) {
-    const r = CONFIG.vincoFenda * (W / 2048);
-    const b = blurGauss(alpha, W, H, r);
-    mascara = new Float32Array(W * H);
-    for (let i = 0; i < W * H; i++) {
-      const t = b[i] / 255;
-      const s = t <= 0.38 ? 0 : t >= 0.62 ? 1 : (() => { const u = (t - 0.38) / 0.24; return u * u * (3 - 2 * u); })();
-      mascara[i] = Math.max(alpha[i], s * 255);
-    }
-  }
-
   const out = new Uint8ClampedArray(W * H * 4);
 
   for (let i = 0; i < W * H; i++) {
-    const sa = mascara[i] / 255;
+    const sa = sd[i * 4 + 3] / 255;
     const ba = borrado[i] / 255;
     // profundidade: 0 na borda da letra, 1 no miolo do traço
     const depth = Math.min(1, Math.max(0, (ba - 0.42) / 0.5));
