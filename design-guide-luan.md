@@ -20,7 +20,10 @@ O que muda:
 3. **A ênfase vem do valor, não da cor.** Sem lilás pra destacar a palavra-chave, quem carrega a tese
    sobe pro topo da rampa e a linha de apoio desce. Essa inversão não é opcional: sem ela o destaque
    some no escuro e fica ilegível no claro.
-4. **O lilás `#9A9BE5` só entra em peça de collab com a Beza**, na dose e nos lugares da seção "Collab".
+4. **O lilás `#9A9BE5` tem dois usos, e só esses dois.** Como assinatura, em peça de collab com a Beza,
+   na dose e nos lugares da seção "Collab". Como realce ultra pontual em peça 100% dele, marcando o ponto
+   de chegada da estrutura, pelas regras da seção "Realce pontual". A regra 3 continua valendo nos dois
+   casos: ênfase de palavra dentro de texto corrido sobe pelo valor, nunca pela cor.
 5. **O claro é cinza papel, não quase-branco.** As artes dele já vivem em `#D2D2D2` e `#949494`.
 
 ---
@@ -83,7 +86,7 @@ Borda (`#333333` no escuro, `#D4D4D4` no claro) é fio de composição e nunca s
 
 - Preto absoluto `#000000` e branco puro `#FFFFFF` em fundo e em tipografia. Os dois só existem dentro da foto.
 - Cinza com temperatura: o lilás da Beza e o cinza azulado do Tailwind.
-- Lilás `#9A9BE5` fora de peça de collab.
+- Lilás `#9A9BE5` fora dos dois usos da regra 4, ou acima do teto de área de cada um.
 - Fundo híbrido misturando o `#0E0E0E` dele com o `#0A0A10` da Beza. A diferença de 1,09 de L* lê como erro de exportação.
 
 ---
@@ -225,6 +228,31 @@ e a tipografia inteira nunca vira lilás.
 
 Os dois créditos convivem lado a lado (@luansinezio, fio, Beza Media) e pronto. Não existe pill
 escrita "collab" na arte: quem vê os dois nomes já entende.
+
+---
+
+## Realce pontual
+
+Emenda de 27/ago/2026, escrita aqui em 01/set/2026. Antes disso o lilás era exclusivo de collab.
+O lote de aplicação e as duas peças de referência estão em `conteudo/luan/posts/_prompt-realce-lilas.md`.
+
+Em peça 100% dele, o lilás entra como realce, e a escala de cinza continua idêntica, com desvio de
+croma zero. O lilás passa por cima da rampa e nunca tinge ela.
+
+**O hex muda por tema, e isso é contraste medido, não gosto.** Escuro (fundo `#0E0E0E`): `#9A9BE5`,
+7,53:1, e tipografia escura por cima dele dá os mesmos 7,53:1. Claro (fundo `#EAEAEA`): `#55539E`,
+5,60:1. O `#9A9BE5` no claro cai pra 2,13:1 e some. O `#6E6CBE` do tema claro da Beza fica em 3,84:1
+e reprova pra texto. Declarar como token `--lilas` no topo do CSS da peça.
+
+**Onde entra, regra única: o lilás marca o ponto de chegada da estrutura da peça.** O último degrau do
+funil, a faixa mais externa da hierarquia, o quadrante alvo da matriz, a fase final da linha do tempo,
+o círculo interno do diagrama. Um ponto de chegada por peça. Peça sem hierarquia interna (comparação
+sem vencedor, lista de itens equivalentes, definição) não ganha realce.
+
+**Onde nunca entra:** fundo, scrim e grão, que são cinza puro sempre. Título, subtítulo e ênfase inline.
+Peça que já tenha a marca da Beza dentro, onde o lilás já é assinatura. Em mais de 2 elementos, ou acima
+de ~2% da área do quadro. Se o elemento de chegada for uma região extensa, realce só a borda e o rótulo
+dele, nunca o preenchimento.
 
 ---
 
