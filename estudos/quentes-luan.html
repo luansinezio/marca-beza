@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-tema="escuro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tons quentes — marca pessoal do Luan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0E0E0E; --bg-soft:#1A1A1A; --bg-card:#242424;
+  --text:#E8E8E8; --text-muted:#A8A8A8; --text-dim:#8C8C8C;
+  --border:#333333; --border-strong:#757575;
+  --accent:#F5F5F5; --cinza-claro:#D4D4D4;
+  --grao:0.09; --grao-blend:screen; --grao-invert:0;
+}
+:root[data-tema="claro"]{
+  --bg:#EAEAEA; --bg-soft:#E0E0E0; --bg-card:#F5F5F5;
+  --text:#1C1C1C; --text-muted:#4F4F4F; --text-dim:#616161;
+  --border:#D4D4D4; --border-strong:#7A7A7A;
+  --accent:#242424; --cinza-claro:#4F4F4F;
+  --grao:0.16; --grao-blend:multiply; --grao-invert:1;
+}
+
+/* ── as seis famílias quentes ─────────────────────────────── */
+[data-cor="ambar"]{
+  --q-100:#E8E2D9; --q-200:#D7C1A2; --q-300:#E2A550; --q-500:#C58120; --q-700:#8B5913; --q-900:#58390E;
+  --q:#E2A44F; --q-rgb:226,164,79;
+}
+[data-cor="cobre"]{
+  --q-100:#E7DFDA; --q-200:#D3B8A6; --q-300:#D88C5A; --q-500:#BA652C; --q-700:#83451C; --q-900:#532D13;
+  --q:#D98F5F; --q-rgb:217,143,95;
+}
+[data-cor="terracota"]{
+  --q-100:#E6DEDB; --q-200:#D0B4A9; --q-300:#CF8263; --q-500:#B05836; --q-700:#7B3C23; --q-900:#4E2718;
+  --q:#D08466; --q-rgb:208,132,102;
+}
+[data-cor="ocre"]{
+  --q-100:#E5E1DC; --q-200:#CCC0AD; --q-300:#C4A36E; --q-500:#A37E43; --q-700:#72572C; --q-900:#48381E;
+  --q:#C9A97A; --q-rgb:201,169,122;
+}
+[data-cor="brasa"]{
+  --q-100:#E8DED9; --q-200:#D5B5A4; --q-300:#DE8454; --q-500:#C15B25; --q-700:#873E17; --q-900:#562910;
+  --q:#E08A5A; --q-rgb:224,138,90;
+}
+[data-cor="palha"]{
+  --q-100:#E5E2DC; --q-200:#CDC3AD; --q-300:#C6AB6C; --q-500:#A58740; --q-700:#745E2B; --q-900:#493C1D;
+  --q:#D6C08E; --q-rgb:214,192,142;
+}
+/* no claro o quente desce na rampa pra sustentar contraste */
+:root[data-tema="claro"] [data-cor]{ --q:var(--q-700); }
+:root[data-tema="claro"] [data-cor="ambar"]{--q:#8A5A15;--q-rgb:138,90,21}
+:root[data-tema="claro"] [data-cor="cobre"]{--q:#8F4E22;--q-rgb:143,78,34}
+:root[data-tema="claro"] [data-cor="terracota"]{--q:#8E4526;--q-rgb:142,69,38}
+:root[data-tema="claro"] [data-cor="ocre"]{--q:#7A5F32;--q-rgb:122,95,50}
+:root[data-tema="claro"] [data-cor="brasa"]{--q:#94441C;--q-rgb:148,68,28}
+:root[data-tema="claro"] [data-cor="palha"]{--q:#6E5E36;--q-rgb:110,94,54}
+
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+  font-weight:400; line-height:1.6; letter-spacing:-0.004em;
+  transition:background .35s ease,color .35s ease;
+}
+/* grão monocromático, receita do guia */
+body::after{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:99;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncR type='linear' slope='8' intercept='-4.8'/><feFuncG type='linear' slope='8' intercept='-4.8'/><feFuncB type='linear' slope='8' intercept='-4.8'/></feComponentTransfer></filter><rect width='240' height='240' filter='url(%23g)'/></svg>");
+  opacity:var(--grao); mix-blend-mode:var(--grao-blend); filter:invert(var(--grao-invert));
+}
+
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+
+/* ── topo ─────────────────────────────────────────────────── */
+.topo{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.topo-in{max-width:1240px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.marca{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);margin-right:auto}
+.btn{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;
+  padding:9px 15px;border:1px solid var(--border-strong);background:transparent;color:var(--text-muted);
+  cursor:pointer;border-radius:2px;transition:.2s
+}
+.btn:hover{color:var(--text);border-color:var(--text)}
+.btn[aria-pressed="true"]{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+
+/* ── tipografia ───────────────────────────────────────────── */
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text-dim);display:flex;align-items:center;gap:9px}
+.eyebrow::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex:none}
+h1{font-weight:500;font-size:clamp(34px,5.2vw,58px);line-height:1.06;letter-spacing:-0.028em}
+h2{font-weight:500;font-size:clamp(24px,3vw,34px);line-height:1.14;letter-spacing:-0.024em}
+h3{font-weight:500;font-size:19px;letter-spacing:-0.018em}
+p{color:var(--text-muted);max-width:62ch}
+.lead{font-size:17px;color:var(--cinza-claro);max-width:66ch}
+.mono{font-family:'IBM Plex Mono',monospace}
+.dim{color:var(--text-dim)}
+strong{font-weight:500;color:var(--accent)}
+
+header.hero{padding:76px 0 56px}
+header.hero .eyebrow{margin-bottom:26px}
+header.hero h1{margin-bottom:24px;max-width:17ch}
+
+/* ── critério ─────────────────────────────────────────────── */
+.criterio{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin:44px 0 0}
+.criterio > div{background:var(--bg);padding:22px 20px}
+.criterio h4{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-weight:400;margin-bottom:10px}
+.criterio p{font-size:14px;color:var(--text-muted)}
+
+/* ── referência do lilás ──────────────────────────────────── */
+.ref{display:flex;align-items:center;gap:18px;padding:20px 22px;border:1px solid var(--border);margin-top:1px;flex-wrap:wrap}
+.ref .chip{width:34px;height:34px;border-radius:50%;background:#9A9BE5;flex:none;box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+:root[data-tema="claro"] .ref .chip{background:#6E6CBE}
+.ref p{font-size:14px}
+
+.sec{padding:64px 0 12px}
+.sec-hd{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:10px}
+.sec-hd .num{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.2em;color:var(--text-dim)}
+
+/* ── card de opção ────────────────────────────────────────── */
+.opcao{border:1px solid var(--border);margin-top:26px;background:var(--bg-soft)}
+.opcao.rec{border-color:var(--border-strong)}
+.op-hd{padding:26px 26px 22px;display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.op-dot{width:44px;height:44px;border-radius:50%;background:var(--q);flex:none;margin-top:3px}
+.op-id{flex:1;min-width:210px}
+.op-id h3{margin-bottom:5px}
+.op-id .hexes{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.06em;color:var(--text-dim);margin-top:7px}
+.op-nota{font-size:14px;color:var(--text-muted);flex:1.6;min-width:270px}
+.tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;padding:4px 9px;border:1px solid var(--q);color:var(--q);border-radius:2px;margin-bottom:9px}
+
+/* rampa */
+.rampa{display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid var(--border)}
+.rampa span{height:52px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:0.06em}
+
+/* aplicações */
+.aplic{display:grid;grid-template-columns:1.15fr 1fr;gap:1px;background:var(--border)}
+@media(max-width:860px){.aplic{grid-template-columns:1fr}}
+.pane{background:var(--bg);padding:26px}
+
+/* mock de peça */
+.peca{aspect-ratio:1080/1350;background:var(--bg-card);border:1px solid var(--border);padding:30px;display:flex;flex-direction:column;position:relative;overflow:hidden;max-width:340px}
+.peca .fio{position:absolute;left:0;top:0;width:3px;height:100%;background:var(--q)}
+.peca .eyebrow{color:var(--text-dim);margin-bottom:auto}
+.peca .eyebrow::before{background:var(--q)}
+.peca .tese{font-weight:500;font-size:23px;line-height:1.16;letter-spacing:-0.025em;color:var(--text)}
+.peca .tese em{font-style:normal;color:var(--accent)}
+.peca .sub{font-size:12.5px;color:var(--text-dim);margin-top:12px;padding-top:12px;border-top:1px solid var(--q)}
+.peca .sig{margin-top:22px;font-size:12px;color:var(--text);opacity:.20}
+
+/* micro-usos */
+.usos{display:flex;flex-direction:column;gap:18px}
+.uso{display:grid;grid-template-columns:88px 1fr;gap:16px;align-items:center}
+.uso > .rot{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-dim)}
+.pill{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:0.18em;text-transform:uppercase;padding:5px 11px;border-radius:2px;background:color-mix(in srgb,var(--q) 12%,transparent);border:1px solid color-mix(in srgb,var(--q) 34%,transparent);color:var(--q)}
+.cta{display:inline-flex;align-items:center;gap:9px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--q);border-bottom:1px solid var(--q);padding-bottom:4px}
+.barras{display:flex;align-items:flex-end;gap:5px;height:44px}
+.barras i{flex:1;background:var(--border-strong);border-radius:1px}
+.barras i.on{background:var(--q)}
+.underline{border-bottom:2px solid var(--q);padding-bottom:1px}
+.dotgrid{display:flex;gap:5px}
+.dotgrid i{width:7px;height:7px;border-radius:50%;background:var(--border-strong)}
+.dotgrid i.on{background:var(--q)}
+.linha-foto{height:44px;border-radius:2px;background:linear-gradient(90deg,#151515,color-mix(in srgb,var(--q) 62%,#241a10),#151515)}
+:root[data-tema="claro"] .linha-foto{background:linear-gradient(90deg,#cfcfcf,color-mix(in srgb,var(--q) 55%,#e4d6c2),#cfcfcf)}
+
+/* contraste */
+.tab{width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:11px;margin-top:20px}
+.tab th{text-align:left;font-weight:400;letter-spacing:0.14em;text-transform:uppercase;font-size:9px;color:var(--text-dim);padding:0 10px 9px 0;border-bottom:1px solid var(--border)}
+.tab td{padding:8px 10px 8px 0;border-bottom:1px solid var(--border);color:var(--text-muted)}
+.tab td:first-child{color:var(--text)}
+.ok{color:var(--q)}
+
+/* convivência com o lilás */
+.conviv{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-top:26px}
+@media(max-width:700px){.conviv{grid-template-columns:1fr}}
+.conviv > div{background:var(--bg);padding:24px}
+.par{display:flex;gap:10px;margin-top:16px;align-items:center}
+.par i{width:52px;height:52px;border-radius:2px;flex:none}
+
+/* veredito */
+.veredito{border:1px solid var(--border-strong);padding:34px;margin-top:30px;background:var(--bg-soft)}
+.veredito ol{margin:20px 0 0 0;padding:0;list-style:none;counter-reset:v}
+.veredito li{counter-increment:v;padding:14px 0 14px 42px;position:relative;border-top:1px solid var(--border);color:var(--text-muted);font-size:15px}
+.veredito li::before{content:counter(v);position:absolute;left:0;top:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim)}
+.veredito li b{font-weight:500;color:var(--text)}
+
+.regras{margin-top:26px;border:1px solid var(--border)}
+.regras div{padding:16px 20px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:78px 1fr;gap:18px;align-items:baseline}
+.regras div:last-child{border-bottom:0}
+.regras .k{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-dim)}
+.regras .v{font-size:14.5px;color:var(--text-muted)}
+.regras .v b{font-weight:500;color:var(--text)}
+
+footer{padding:60px 0 80px;margin-top:60px;border-top:1px solid var(--border);color:var(--text-dim);font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="topo">
+  <div class="topo-in">
+    <span class="marca">Estudo de cor · marca pessoal</span>
+    <button class="btn" id="tema">Tema claro</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">Seis quentes candidatos</div>
+  <h1>Um quente que não brigue com o lilás da Beza.</h1>
+  <p class="lead">O sistema pessoal fica em cinza neutro puro e a escala não muda: <span class="mono">#F5F5F5 · #E8E8E8 · #D4D4D4 · #A8A8A8 · #8C8C8C · #757575 · #4F4F4F · #333333 · #242424 · #1A1A1A · #0E0E0E</span>. O quente entra como uma única variável por cima dela, do mesmo jeito que o lilás entra na Beza.</p>
+
+  <div class="criterio">
+    <div><h4>Matiz longe do lilás</h4><p>O lilás está em 239°. Todo candidato fica entre 17° e 42°, de 138° a 163° de distância. Nenhum deles pode ser confundido com a agência, nem lado a lado.</p></div>
+    <div><h4>Já existe nas fotos dele</h4><p>O guia manda o quente da foto ficar entre 20° e 45°, cena de 2700K a 3400K. Puxar o accent de dentro dessa faixa faz a cor da interface e a cor da foto virarem a mesma cor.</p></div>
+    <div><h4>Passa em contraste</h4><p>Todos os seis passam de 4,5:1 contra o fundo e contra o card, nos dois temas. Os valores estão calculados na tabela de cada opção.</p></div>
+    <div><h4>Não vira estado</h4><p>A Beza usa <span class="mono">#F3AE4D</span> como warning e <span class="mono">#F34D4D</span> como erro. Quem chega perto demais de um dos dois leva ressalva.</p></div>
+  </div>
+
+  <div class="ref">
+    <span class="chip"></span>
+    <p><strong>Lilás Beza #9A9BE5</strong> — hsl(239, 59%, 75%). Fica aqui em cima só como régua: é dele que todo mundo abaixo precisa se afastar.</p>
+  </div>
+</header>
+
+<!-- ══════════ OPÇÕES ══════════ -->
+<section class="sec">
+  <div class="sec-hd"><span class="num">01 — 06</span><h2>As opções</h2></div>
+  <p>Cada uma aparece na peça de feed, nos micro-usos de interface e na tabela de contraste. Troque o tema no topo: o quente desce na rampa no claro, porque o tom do escuro apagaria no papel.</p>
+
+  <!-- 1 -->
+  <article class="opcao rec" data-cor="ambar">
+    <div class="op-hd">
+      <span class="op-dot"></span>
+      <div class="op-id">
+        <span class="tag">Recomendada</span>
+        <h3>Âmbar de cena</h3>
+        <div class="dim mono" style="font-size:11px">hsl(35, 72%, 60%) · 156° do lilás</div>
+        <div class="hexes">escuro #E2A44F · claro #8A5A15</div>
+      </div>
+      <p class="op-nota">É literalmente a luz prática que o guia já autoriza dentro da foto: abajur, poste, fim de tarde. Puxar o accent daí faz a interface e a fotografia falarem a mesma língua sem esforço de correção. <span class="dim">Ressalva: fica a 3° do warning da Beza (#F3AE4D), então em peça com sinal de alerta os dois não podem aparecer juntos.</span></p>
+    </div>
+    <div class="rampa">
+      <span style="background:#E8E2D9;color:#58390E">100</span><span style="background:#D7C1A2;color:#58390E">200</span><span style="background:#E2A550;color:#58390E">300</span><span style="background:#C58120;color:#fff">500</span><span style="background:#8B5913;color:#fff">700</span><span style="background:#58390E;color:#E8E2D9">900</span>
+    </div>
+    <div class="aplic">
+      <div class="pane"><div class="peca"><span class="fio"></span><div class="eyebrow">Tese · 04</div><div class="tese">Você não está sem tempo. Você está <em>sem prioridade</em>.</div><div class="sub">O calendário é honesto. A desculpa não.</div><div class="sig">@luansinezio</div></div></div>
+      <div class="pane"><div class="usos">
+        <div class="uso"><span class="rot">Dot</span><div class="eyebrow" style="color:var(--text-dim)">Eyebrow do slide</div></div>
+        <div class="uso"><span class="rot">Rótulo</span><div><span class="pill">Ao vivo</span></div></div>
+        <div class="uso"><span class="rot">Link</span><div><span class="cta">Ver o processo →</span></div></div>
+        <div class="uso"><span class="rot">Gráfico</span><div class="barras"><i style="height:38%"></i><i style="height:56%"></i><i style="height:44%"></i><i class="on" style="height:100%"></i><i style="height:62%"></i><i style="height:48%"></i></div></div>
+        <div class="uso"><span class="rot">Progresso</span><div class="dotgrid"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div></div>
+        <div class="uso"><span class="rot">Na foto</span><div class="linha-foto"></div></div>
+      </div>
+      <table class="tab"><tr><th>Par</th><th>Escuro</th><th>Claro</th></tr>
+        <tr><td>accent / bg</td><td class="ok">8,88:1</td><td class="ok">4,91:1</td></tr>
+        <tr><td>accent / card</td><td class="ok">7,14:1</td><td class="ok">5,42:1</td></tr></table>
+      </div>
+    </div>
+  </article>
+
+  <!-- 2 -->
+  <article class="opcao" data-cor="cobre">
+    <div class="op-hd">
+      <span class="op-dot"></span>
+      <div class="op-id"><h3>Cobre</h3>
+        <div class="dim mono" style="font-size:11px">hsl(24, 62%, 61%) · 145° do lilás</div>
+        <div class="hexes">escuro #D98F5F · claro #8F4E22</div></div>
+      <p class="op-nota">O meio-termo entre o âmbar e a terracota. Longe o bastante do warning pra nunca ler como alerta e ainda dentro da faixa de luz de cena. É o quente com cara de metal, não de sol: casa melhor com peça de foto subexposta do que com fundo chapado.</p>
+    </div>
+    <div class="rampa">
+      <span style="background:#E7DFDA;color:#532D13">100</span><span style="background:#D3B8A6;color:#532D13">200</span><span style="background:#D88C5A;color:#532D13">300</span><span style="background:#BA652C;color:#fff">500</span><span style="background:#83451C;color:#fff">700</span><span style="background:#532D13;color:#E7DFDA">900</span>
+    </div>
+    <div class="aplic">
+      <div class="pane"><div class="peca"><span class="fio"></span><div class="eyebrow">Tese · 04</div><div class="tese">Você não está sem tempo. Você está <em>sem prioridade</em>.</div><div class="sub">O calendário é honesto. A desculpa não.</div><div class="sig">@luansinezio</div></div></div>
+      <div class="pane"><div class="usos">
+        <div class="uso"><span class="rot">Dot</span><div class="eyebrow" style="color:var(--text-dim)">Eyebrow do slide</div></div>
+        <div class="uso"><span class="rot">Rótulo</span><div><span class="pill">Ao vivo</span></div></div>
+        <div class="uso"><span class="rot">Link</span><div><span class="cta">Ver o processo →</span></div></div>
+        <div class="uso"><span class="rot">Gráfico</span><div class="barras"><i style="height:38%"></i><i style="height:56%"></i><i style="height:44%"></i><i class="on" style="height:100%"></i><i style="height:62%"></i><i style="height:48%"></i></div></div>
+        <div class="uso"><span class="rot">Progresso</span><div class="dotgrid"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div></div>
+        <div class="uso"><span class="rot">Na foto</span><div class="linha-foto"></div></div>
+      </div>
+      <table class="tab"><tr><th>Par</th><th>Escuro</th><th>Claro</th></tr>
+        <tr><td>accent / bg</td><td class="ok">7,40:1</td><td class="ok">5,32:1</td></tr>
+        <tr><td>accent / card</td><td class="ok">5,95:1</td><td class="ok">5,87:1</td></tr></table>
+      </div>
+    </div>
+  </article>
+
+  <!-- 3 -->
+  <article class="opcao" data-cor="terracota">
+    <div class="op-hd">
+      <span class="op-dot"></span>
+      <div class="op-id"><h3>Terracota</h3>
+        <div class="dim mono" style="font-size:11px">hsl(17, 53%, 61%) · 138° do lilás</div>
+        <div class="hexes">escuro #D08466 · claro #8E4526</div></div>
+      <p class="op-nota">O mais baixo em saturação dos avermelhados e o mais próximo de pele, o que ajuda em peça com retrato. Em compensação é o que chega mais perto do vermelho de erro: em interface (Beza OS, painel, formulário) um leitor rápido pode ler alerta onde não tem.</p>
+    </div>
+    <div class="rampa">
+      <span style="background:#E6DEDB;color:#4E2718">100</span><span style="background:#D0B4A9;color:#4E2718">200</span><span style="background:#CF8263;color:#4E2718">300</span><span style="background:#B05836;color:#fff">500</span><span style="background:#7B3C23;color:#fff">700</span><span style="background:#4E2718;color:#E6DEDB">900</span>
+    </div>
+    <div class="aplic">
+      <div class="pane"><div class="peca"><span class="fio"></span><div class="eyebrow">Tese · 04</div><div class="tese">Você não está sem tempo. Você está <em>sem prioridade</em>.</div><div class="sub">O calendário é honesto. A desculpa não.</div><div class="sig">@luansinezio</div></div></div>
+      <div class="pane"><div class="usos">
+        <div class="uso"><span class="rot">Dot</span><div class="eyebrow" style="color:var(--text-dim)">Eyebrow do slide</div></div>
+        <div class="uso"><span class="rot">Rótulo</span><div><span class="pill">Ao vivo</span></div></div>
+        <div class="uso"><span class="rot">Link</span><div><span class="cta">Ver o processo →</span></div></div>
+        <div class="uso"><span class="rot">Gráfico</span><div class="barras"><i style="height:38%"></i><i style="height:56%"></i><i style="height:44%"></i><i class="on" style="height:100%"></i><i style="height:62%"></i><i style="height:48%"></i></div></div>
+        <div class="uso"><span class="rot">Progresso</span><div class="dotgrid"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div></div>
+        <div class="uso"><span class="rot">Na foto</span><div class="linha-foto"></div></div>
+      </div>
+      <table class="tab"><tr><th>Par</th><th>Escuro</th><th>Claro</th></tr>
+        <tr><td>accent / bg</td><td class="ok">6,60:1</td><td class="ok">5,76:1</td></tr>
+        <tr><td>accent / card</td><td class="ok">5,30:1</td><td class="ok">6,36:1</td></tr></table>
+      </div>
+    </div>
+  </article>
+
+  <!-- 4 -->
+  <article class="opcao rec" data-cor="ocre">
+    <div class="op-hd">
+      <span class="op-dot"></span>
+      <div class="op-id">
+        <span class="tag">Mais fiel ao guia</span>
+        <h3>Ocre areia</h3>
+        <div class="dim mono" style="font-size:11px">hsl(36, 42%, 63%) · 157° do lilás</div>
+        <div class="hexes">escuro #C9A97A · claro #7A5F32</div></div>
+      <p class="op-nota">Mesmo matiz do âmbar com 30 pontos a menos de saturação. É o único que respeita à risca a regra de que saturação quase não existe fora da foto: ao lado do <span class="mono">#D4D4D4</span> parece um cinza que aqueceu, não uma cor nova. O preço é que ele quase não grita: pra chamar atenção num gráfico ou num CTA, ele é fraco.</p>
+    </div>
+    <div class="rampa">
+      <span style="background:#E5E1DC;color:#48381E">100</span><span style="background:#CCC0AD;color:#48381E">200</span><span style="background:#C4A36E;color:#48381E">300</span><span style="background:#A37E43;color:#fff">500</span><span style="background:#72572C;color:#fff">700</span><span style="background:#48381E;color:#E5E1DC">900</span>
+    </div>
+    <div class="aplic">
+      <div class="pane"><div class="peca"><span class="fio"></span><div class="eyebrow">Tese · 04</div><div class="tese">Você não está sem tempo. Você está <em>sem prioridade</em>.</div><div class="sub">O calendário é honesto. A desculpa não.</div><div class="sig">@luansinezio</div></div></div>
+      <div class="pane"><div class="usos">
+        <div class="uso"><span class="rot">Dot</span><div class="eyebrow" style="color:var(--text-dim)">Eyebrow do slide</div></div>
+        <div class="uso"><span class="rot">Rótulo</span><div><span class="pill">Ao vivo</span></div></div>
+        <div class="uso"><span class="rot">Link</span><div><span class="cta">Ver o processo →</span></div></div>
+        <div class="uso"><span class="rot">Gráfico</span><div class="barras"><i style="height:38%"></i><i style="height:56%"></i><i style="height:44%"></i><i class="on" style="height:100%"></i><i style="height:62%"></i><i style="height:48%"></i></div></div>
+        <div class="uso"><span class="rot">Progresso</span><div class="dotgrid"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div></div>
+        <div class="uso"><span class="rot">Na foto</span><div class="linha-foto"></div></div>
+      </div>
+      <table class="tab"><tr><th>Par</th><th>Escuro</th><th>Claro</th></tr>
+        <tr><td>accent / bg</td><td class="ok">8,68:1</td><td class="ok">4,97:1</td></tr>
+        <tr><td>accent / card</td><td class="ok">6,98:1</td><td class="ok">5,49:1</td></tr></table>
+      </div>
+    </div>
+  </article>
+
+  <!-- 5 -->
+  <article class="opcao" data-cor="brasa">
+    <div class="op-hd">
+      <span class="op-dot"></span>
+      <div class="op-id"><h3>Brasa</h3>
+        <div class="dim mono" style="font-size:11px">hsl(21, 68%, 62%) · 142° do lilás</div>
+        <div class="hexes">escuro #E08A5A · claro #94441C</div></div>
+      <p class="op-nota">O mais alto em energia da lista. Funciona se a intenção for confronto: post de tese dura, headline de oferta, slide de virada. Mas 68% de saturação num sistema em que tudo tem desvio zero de croma é uma quebra grande, e ele carrega a peça inteira sozinho.</p>
+    </div>
+    <div class="rampa">
+      <span style="background:#E8DED9;color:#562910">100</span><span style="background:#D5B5A4;color:#562910">200</span><span style="background:#DE8454;color:#562910">300</span><span style="background:#C15B25;color:#fff">500</span><span style="background:#873E17;color:#fff">700</span><span style="background:#562910;color:#E8DED9">900</span>
+    </div>
+    <div class="aplic">
+      <div class="pane"><div class="peca"><span class="fio"></span><div class="eyebrow">Tese · 04</div><div class="tese">Você não está sem tempo. Você está <em>sem prioridade</em>.</div><div class="sub">O calendário é honesto. A desculpa não.</div><div class="sig">@luansinezio</div></div></div>
+      <div class="pane"><div class="usos">
+        <div class="uso"><span class="rot">Dot</span><div class="eyebrow" style="color:var(--text-dim)">Eyebrow do slide</div></div>
+        <div class="uso"><span class="rot">Rótulo</span><div><span class="pill">Ao vivo</span></div></div>
+        <div class="uso"><span class="rot">Link</span><div><span class="cta">Ver o processo →</span></div></div>
+        <div class="uso"><span class="rot">Gráfico</span><div class="barras"><i style="height:38%"></i><i style="height:56%"></i><i style="height:44%"></i><i class="on" style="height:100%"></i><i style="height:62%"></i><i style="height:48%"></i></div></div>
+        <div class="uso"><span class="rot">Progresso</span><div class="dotgrid"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div></div>
+        <div class="uso"><span class="rot">Na foto</span><div class="linha-foto"></div></div>
+      </div>
+      <table class="tab"><tr><th>Par</th><th>Escuro</th><th>Claro</th></tr>
+        <tr><td>accent / bg</td><td class="ok">7,31:1</td><td class="ok">5,63:1</td></tr>
+        <tr><td>accent / card</td><td class="ok">5,88:1</td><td class="ok">6,21:1</td></tr></table>
+      </div>
+    </div>
+  </article>
+
+  <!-- 6 -->
+  <article class="opcao" data-cor="palha">
+    <div class="op-hd">
+      <span class="op-dot"></span>
+      <div class="op-id"><h3>Palha quente</h3>
+        <div class="dim mono" style="font-size:11px">hsl(42, 47%, 70%) · 163° do lilás</div>
+        <div class="hexes">escuro #D6C08E · claro #6E5E36</div></div>
+      <p class="op-nota">O mais distante do lilás de todos e o de maior contraste no escuro (10,84:1). Puxa pra papel envelhecido e combina com o cinza papel <span class="mono">#EAEAEA</span> do tema claro. O risco é o oposto do brasa: com 70% de luminância ele quase encosta no <span class="mono">#D4D4D4</span> e some ao lado do texto de apoio.</p>
+    </div>
+    <div class="rampa">
+      <span style="background:#E5E2DC;color:#493C1D">100</span><span style="background:#CDC3AD;color:#493C1D">200</span><span style="background:#C6AB6C;color:#493C1D">300</span><span style="background:#A58740;color:#fff">500</span><span style="background:#745E2B;color:#fff">700</span><span style="background:#493C1D;color:#E5E2DC">900</span>
+    </div>
+    <div class="aplic">
+      <div class="pane"><div class="peca"><span class="fio"></span><div class="eyebrow">Tese · 04</div><div class="tese">Você não está sem tempo. Você está <em>sem prioridade</em>.</div><div class="sub">O calendário é honesto. A desculpa não.</div><div class="sig">@luansinezio</div></div></div>
+      <div class="pane"><div class="usos">
+        <div class="uso"><span class="rot">Dot</span><div class="eyebrow" style="color:var(--text-dim)">Eyebrow do slide</div></div>
+        <div class="uso"><span class="rot">Rótulo</span><div><span class="pill">Ao vivo</span></div></div>
+        <div class="uso"><span class="rot">Link</span><div><span class="cta">Ver o processo →</span></div></div>
+        <div class="uso"><span class="rot">Gráfico</span><div class="barras"><i style="height:38%"></i><i style="height:56%"></i><i style="height:44%"></i><i class="on" style="height:100%"></i><i style="height:62%"></i><i style="height:48%"></i></div></div>
+        <div class="uso"><span class="rot">Progresso</span><div class="dotgrid"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div></div>
+        <div class="uso"><span class="rot">Na foto</span><div class="linha-foto"></div></div>
+      </div>
+      <table class="tab"><tr><th>Par</th><th>Escuro</th><th>Claro</th></tr>
+        <tr><td>accent / bg</td><td class="ok">10,84:1</td><td class="ok">5,26:1</td></tr>
+        <tr><td>accent / card</td><td class="ok">8,71:1</td><td class="ok">5,81:1</td></tr></table>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- ══════════ CONVIVÊNCIA ══════════ -->
+<section class="sec">
+  <div class="sec-hd"><span class="num">07</span><h2>O teste de collab</h2></div>
+  <p>A hora em que os dois sistemas se encostam é a peça de collab, em que o lilás da Beza entra em até 2 elementos e 5% da área. O quente escolhido tem que aguentar ficar ao lado dele sem virar contraste de complementar de cartaz de circo.</p>
+
+  <div class="conviv">
+    <div>
+      <div class="eyebrow" style="margin-bottom:14px">Passa bem</div>
+      <p style="font-size:14px">Âmbar, ocre e palha ficam acima de 150° do lilás e têm luminância parecida com ele. Lado a lado leem como dois neutros de temperatura oposta, não como duas cores disputando.</p>
+      <div class="par">
+        <i style="background:#C9A97A"></i><i style="background:#E2A44F"></i><i style="background:#D6C08E"></i>
+        <span class="dim mono" style="font-size:16px">+</span>
+        <i style="background:#9A9BE5"></i>
+      </div>
+    </div>
+    <div>
+      <div class="eyebrow" style="margin-bottom:14px">Fica tenso</div>
+      <p style="font-size:14px">Brasa e terracota, abaixo de 145°, entram na zona em que o par laranja-violeta vira complementar direto. Numa peça em que o lilás já está limitado a 5% da área, o quente domina e a Beza vira detalhe.</p>
+      <div class="par">
+        <i style="background:#E08A5A"></i><i style="background:#D08466"></i>
+        <span class="dim mono" style="font-size:16px">+</span>
+        <i style="background:#9A9BE5"></i>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ VEREDITO ══════════ -->
+<section class="sec">
+  <div class="sec-hd"><span class="num">08</span><h2>O que eu faria</h2></div>
+
+  <div class="veredito">
+    <h3 style="margin-bottom:6px">Âmbar de cena <span class="dim mono" style="font-size:12px">#E2A44F / #8A5A15</span></h3>
+    <p style="font-size:15px">Porque não é uma cor nova inventada pro sistema: é a cor que já está dentro das fotos dele por regra escrita. O accent vira a extensão da luz prática pra fora do retângulo da foto, e é o argumento mais forte que qualquer opção aqui tem.</p>
+    <ol>
+      <li><b>Se o medo for perder a disciplina do cinza</b>, vai de ocre areia. Mesmo matiz, 30 pontos menos de saturação, lê como cinza aquecido. É o mais conservador e o mais fácil de aprovar contra o guia atual.</li>
+      <li><b>Se a intenção for confronto</b>, brasa. Só que aí o quente vira o assunto da peça, não o acento dela.</li>
+      <li><b>Terracota e palha ficam fora</b>: uma encosta no vermelho de erro, a outra encosta no <span class="mono">#D4D4D4</span> e some.</li>
+    </ol>
+  </div>
+
+  <h3 style="margin-top:48px">As regras que o quente teria que respeitar</h3>
+  <p style="margin-top:8px">Isso não é escolha de cor, é escolha de onde a cor pode entrar. Sem isso qualquer um dos seis destrói o sistema em duas semanas.</p>
+  <div class="regras">
+    <div><span class="k">Onde entra</span><span class="v">Dot do eyebrow, fio de bloco, régua sob rótulo, série destacada de gráfico, borda de foco, link mono, pill de rótulo.</span></div>
+    <div><span class="k">Onde não</span><span class="v"><b>Ênfase inline continua vindo de valor, não de cor.</b> A palavra que carrega a tese sobe pro <span class="mono">--accent</span> como já está no guia. O quente não substitui isso, senão a regra 3 do sistema cai.</span></div>
+    <div><span class="k">Dose</span><span class="v">Teto de <b>3% da área do quadro</b> em peça de feed. Metade do que o lilás pode em collab, porque aqui ele é acento e não assinatura.</span></div>
+    <div><span class="k">Fundo</span><span class="v">Nunca. Fundo chapado, scrim e grão seguem em cinza de croma zero. O quente não pinta superfície.</span></div>
+    <div><span class="k">Collab</span><span class="v">Peça com o lilás da Beza dentro <b>não recebe o quente</b>. Um acento por peça: ou a agência está no quadro, ou o sistema pessoal está.</span></div>
+    <div><span class="k">Foto</span><span class="v">A foto não muda em nada. A rota B já entrega esse quente nas três fontes autorizadas (luz prática, pele, madeira) e agora o accent bate com ela em vez de disputar.</span></div>
+  </div>
+</section>
+
+<footer>
+  <p>Contraste calculado em WCAG 2.1 sobre <span class="mono">#0E0E0E</span> / <span class="mono">#242424</span> no escuro e <span class="mono">#EAEAEA</span> / <span class="mono">#F5F5F5</span> no claro. Escala de cinza intacta em todas as opções.<br>Estudo de 27/ago/2026 · <span class="mono">marca/design-guide-luan.md</span></p>
+</footer>
+
+</div>
+
+<script>
+const b=document.getElementById('tema'),r=document.documentElement;
+b.onclick=()=>{const c=r.dataset.tema==='claro';r.dataset.tema=c?'escuro':'claro';b.textContent=c?'Tema claro':'Tema escuro';};
+</script>
+</body>
+</html>
