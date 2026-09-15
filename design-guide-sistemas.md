@@ -424,6 +424,60 @@ Login, onboarding e formulário conversacional são escuros mesmo pra quem usa o
 
 ---
 
+## Calendar (Pauta)
+
+Desenhado em 15/set/2026 pro Agency OS, a partir da regra 2 do backlog: Pauta é pessoas mais blocos de tempo. A unidade é o meio-dia, não a hora. Cada dia tem dois slots. Um bloco ocupa um, dois ou vários. Manual: blocos 19.1 a 19.4.
+
+**Mês por colaborador (19.1, 19.2).** Card do sistema com cabeçalho em duas linhas (`p-5 gap-3.5`): avatar de 36px, nome 16px 500, segmented Mês / Semana / Time e o seletor de mês à direita; embaixo, a barra de concluído contra planejado (trilha 6px, fill lilás, "12 de 20 meios-dias") e o filtro: select de cliente mais chips de status com dot na cor. Cabeçalho dos dias em overline mono. Grade de sete colunas.
+
+- Célula do dia: `min-h-[148px] p-2.5 flex flex-col gap-1.5`, borda 8% à direita e embaixo. Fim de semana `bg-foreground/2`. Dia de outro mês com número a 60%. Hoje: número em pill `bg-accent text-accent-foreground rounded-md px-1.5`.
+- Contador de capacidade no canto direito, `n/2` em 11px `--subtle`. Cheio vira `--fg`. Acima de 2 vira `--danger` 600 e a célula ganha `ring-1 ring-danger/50` interno. É o conflito de alocação (PAU-12): visível e permitido, quem decide é o Head.
+- Slot de meio dia: dois por dia, `flex-1 min-h-[56px] rounded-[10px]`, invisível quando vazio. Recebendo um arraste: borda tracejada `accent/40` no slot e `bg-accent/10` no dia, igual à drop zone do kanban.
+- Bloco: o cartão do kanban em miniatura. `bg-card border border-border rounded-[10px] p-2 shadow-card cursor-grab`, hover nível 03. Linha 1: cliente 12px 500 e duração em mono 10px à direita (½ dia, 1 dia, 2 dias). Linha 2: atividade 11px `--muted`. Linha 3: dot de 6px e o status em 10.5px na cor do status. Sem barra lateral, sem fundo tingido.
+- **Cor é status da demanda, nunca cliente.** Planejado lilás `#8b8ce0`, em produção azul `#0ea5e9`, em aprovação âmbar `#f59e0b`, em alteração laranja `#f97316`, aprovado verde `#10b981`, atrasado vermelho `#ef4444`. Tudo via `statusTone`, nos dois temas. Cliente se filtra pelo select e se lê no nome.
+- Bloco de 1 dia ocupa os dois slots (`min-h-[118px]`). Bloco maior ocupa os dias seguintes com fantasma tracejado e "continua" no lugar da duração.
+- Estados de execução: concluído (check verde, nome riscado, 60%), cancelado (sem fundo, borda tracejada, 70%), arrastando (40%).
+- Rodapé "A distribuir": faixa `bg-foreground/2` com os blocos sem data. Arrastar pra um dia agenda. Contagem à direita.
+
+**Semana do time (19.3).** Linhas são pessoas (coluna de 180px com avatar, nome e cadeira), colunas são os dias úteis, coluna de hoje em lilás no cabeçalho. O bloco vira uma linha: dot do status e cliente. Célula em conflito com o mesmo ring do mês. Mesmos filtros.
+
+**Seletor de data (19.4).** Popover `w-[280px] bg-raised rounded-xl shadow-lift p-3`, nível 03, alinhado à esquerda do campo. Célula `h-[34px] rounded-lg text-[13px]` tabular, número centrado; hover `bg-foreground/5`; hoje com anel interno lilás e número lilás; selecionado `bg-accent text-accent-foreground` 600; outro mês a 50%. Dia com bloco de Pauta ganha ponto de 4px lilás posicionado embaixo (absoluto, não desloca o número). Rodapé "Hoje" e "Limpar". Setas movem o dia, PageUp e PageDown o mês, Enter escolhe. O campo aceita `dd/mm/aaaa` digitado.
+
+Regras: sem hora. Concluído se deriva do estado da peça quando dá (regra 15). Arrastar reprograma só aquele bloco (PAU-14).
+
+---
+
+## MediaPreview (peça na aprovação)
+
+Desenhado em 15/set/2026 pro Agency OS, em cima da referência do Radar de setembro. O arquivo mora no Drive (regra 13), o sistema mostra o preview quando existe (DRV-08). Um componente em três lugares: Radar (CS confere), Revisão (Head aprova), Portal e link público (cliente decide). O visual é o mesmo, muda o par de ações. Manual: blocos 20.1 a 20.8.
+
+**Moldura (20.1).** `rounded-xl overflow-hidden bg-raised border border-border` com `aspect-ratio` pelo formato: 4:5 feed (1080 x 1350), 9:16 vertical, 1:1, 16:9. Nasce no tamanho final, a página não pula. Mídia em `object-cover`; vídeo mostra o frame de capa e só carrega o player no clique.
+
+- Etiqueta de formato: overline mono 10px em pill escuro translúcido `rgba(10,10,16,.55)` com blur, canto superior esquerdo, sempre `#ECEDF6` porque fica sobre a mídia, não sobre o tema.
+- Play: círculo de 48px no centro, mesmo pill escuro; hover vira lilás com ícone escuro e cresce 6%. Duração no canto inferior direito, mono tabular.
+- Carrossel: contador "1/5" no canto superior direito, dots de 6px (ativo vira barra de 14px), setas de 32px que aparecem no hover. Setas do teclado trocam.
+- Sem preview: ícone de arquivo num quadrado de 44px, nome 13px 500, tipo, tamanho e origem em 12px `--subtle`, botão outline "Abrir no Drive". Nunca miniatura genérica.
+- Estado da peça: badge no canto inferior esquerdo. Aprovada: badge success e anel de 1px success. Alteração pedida: badge warning. Pendente: sem badge.
+- Carregando: moldura `bg-foreground/4 animate-pulse`. É a exceção declarada à regra de skeleton.
+
+**Thumb (20.2).** 48px, raio 8, ícone do tipo num quadrado de 16px no canto. Sem mídia, ícone de arquivo em `--muted`. Primeira coluna da tabela; à esquerda do título no cartão do kanban. Versões usam thumb de 32px com anel lilás de 2px na atual.
+
+**Cartão na fila do Radar (20.3).** Raio 16, moldura no topo sem raio próprio, título 14px 500, meta (cliente, data, funil) em 12px `--muted` separada por ponto, última linha com status da peça e conferência do CS (RAD-05). Hover do card clicável. Grid `grid-cols-2 lg:grid-cols-4 gap-4`.
+
+**Palco de aprovação (20.4 a 20.8).** Portal e link público são **claros por padrão**, como o checkout da marca, e seguem a superfície pública: botão pill e o "Aprovar" no botão `brand` (gradient lilás, brilho interno, glow no hover, **texto branco**). O Radar interno mostra os mesmos blocos no tema do usuário com o accent chapado de 12px.
+
+- Cabeçalho: título 28px 500 com cliente e Radar; à direita overline "Status" e pill mono do mês (verde preenchida "Aprovado", âmbar tingida "Aguardando você"). Fio de progresso de 3px com overline "67% revisado · 8 de 12 peças".
+- Corpo: duas colunas `1fr / 1.15fr`, 40px de gap, mídia até 420px, empilha no celular. À direita: data 28px 500 tabular com chip mono do formato; bloco de legenda com fio à esquerda, overline "Legenda", parágrafos 15px, hashtags `--muted`, botão outline pill "Comentar sobre a legenda"; faixa de comentários entre dois fios.
+- Rodapé: "Anterior" outline, contador mono "conteúdo 3 de 12", "Ajustar" premium, "Aprovar" brand, "Próximo" outline (desabilitado na última).
+- Reels (20.5): capa e vídeo lado a lado em 9:16, etiquetas mono, tempo e barra de progresso na base do vídeo.
+- Carrossel (20.6): coverflow. Slide atual em 1080 x 1350 no centro (altura manda, largura deriva), anterior e próximo a 35% atrás na escala de 80%, inteiros dentro do palco, cantos de 12px. Setas redondas de 40px com "slide 2 de 9". Botão "Ver em tela cheia" em accent mono no canto inferior esquerdo do slide.
+- Tela cheia com comentários (20.7): scrim com blur de 14px, slide grande, painel `w-[360px] bg-raised rounded-2xl p-5 shadow-lift`. Comentário em cartão: avatar 24px, nome 14px 500, pill mono lilás com a origem ("Slide 2 · área marcada", "Legenda", "Geral"), texto 14px, ações "Responder" e "Resolver" em mono. Resposta do time aninhada com overline "Beza Media". Textarea "Comentário geral do conteúdo" e "Comentar" brand. Cliente vê só comentários `client` e respostas.
+- Pedido de ajuste (20.8): "Ajustar" entra no modo de marcação. Retângulo tracejado de 1.5px lilás, raio 6, fundo lilás a 6%, salvo em porcentagem do slide. Popover `w-[290px] bg-card rounded-xl shadow-lift p-3.5` com avatar, nome, input "Comente sobre esta área", "Cancelar" mono e "Comentar" brand pequeno. Comentário obrigatório. O primeiro pedido leva a peça pra "Em alteração" e devolve pro time. Em vídeo guarda o tempo junto com a área.
+
+O que o cliente nunca vê: responsável, cadeira, Pauta, comentários internos, arquivos internos e de backup. O componente recebe só o que pode mostrar.
+
+---
+
 ## O que mudou em relação ao CRM
 
 | Item | CRM (Geist, zinc) | Sistema Beza (este guia) |

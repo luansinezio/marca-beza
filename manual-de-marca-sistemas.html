@@ -27,6 +27,7 @@
   --scrim:rgba(10,10,16,0.65); --status-tint:#ECEDF6;
   --input-bg:rgba(255,255,255,0.04); --input-border:rgba(255,255,255,0.12); --input-border-hover:rgba(255,255,255,0.2); --input-focus-bg:rgba(255,255,255,0.06); --ring:rgba(154,155,229,0.18);
   --logo-on-accent:#1A1830;
+  --media-a:#2A2A44; --media-b:#3B3560; --media-c:#4E4A7A;
   --shadow-card:inset 0 1px 0 rgba(255,255,255,0.03),0 8px 24px rgba(0,0,0,0.35);
   --shadow-lift:inset 0 1px 0 rgba(255,255,255,0.04),0 12px 40px rgba(0,0,0,0.4);
   --glow-purple:radial-gradient(ellipse 130% 90% at 50% -40%,rgba(154,155,229,0.13),transparent 72%);
@@ -48,6 +49,7 @@
   --scrim:rgba(35,34,46,0.4); --status-tint:#23222E;
   --input-bg:#FFFFFF; --input-border:rgba(35,34,46,0.12); --input-border-hover:rgba(35,34,46,0.22); --input-focus-bg:#FFFFFF; --ring:rgba(110,108,190,0.18);
   --logo-on-accent:#FFFFFF;
+  --media-a:#D9D7EC; --media-b:#C4C2E3; --media-c:#ADAAD6;
   --shadow-card:0 1px 2px rgba(35,34,60,0.06),0 8px 24px rgba(35,34,60,0.06);
   --shadow-lift:inset 0 1px 0 rgba(255,255,255,0.7),0 10px 30px rgba(35,34,60,0.08);
   --glow-purple:radial-gradient(ellipse 130% 90% at 50% -40%,rgba(110,108,190,0.06),transparent 72%);
@@ -463,6 +465,284 @@ table.t td.empty{text-align:center;color:var(--subtle);padding:40px 16px}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 
 /* nunca / sempre */
+/* helpers vindos da proposta Calendar/MediaPreview */
+.tw{overflow-x:auto}
+.overline{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--subtle);font-weight:500}
+.av{width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-fg);display:grid;place-items:center;font-size:11px;font-weight:600;flex:none}
+.btn.pill{border-radius:999px;height:40px;padding:0 20px}
+.btn.premium{background:var(--raised);color:var(--fg)}
+.btn.premium:hover{background:color-mix(in srgb,var(--raised) 80%,var(--fg) 4%)}
+.badge.status{--c:#9A9BE5}
+textarea.input{height:auto;min-height:72px;padding:8px 12px;resize:vertical}
+.light-scope .btn.brand{color:#FFFFFF;text-shadow:0 1px 0 rgba(0,0,0,.12)}
+
+/* ===== CALENDAR ===== */
+.cal{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-card);overflow:hidden}
+
+.cal-hd{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:14px}
+.cal-hd .r1,.cal-hd .r2{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.cal-hd .who{display:flex;align-items:center;gap:12px}
+.cal-hd .who .av{width:36px;height:36px;font-size:13px}
+.cal-hd .who b{font-weight:500;font-size:16px;display:block;line-height:1.2;letter-spacing:-.01em}
+.cal-hd .who span{font-size:12px;color:var(--subtle)}
+.cal-hd .mes{display:flex;align-items:center;gap:4px;margin-left:auto}
+.cal-hd .mes span{min-width:150px;text-align:center;font-size:14px;font-weight:500;text-transform:capitalize}
+.cal-hd .cap{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
+.cal-hd .cap .bar{width:140px;height:6px;border-radius:999px;background:color-mix(in srgb,var(--fg) 8%,transparent);overflow:hidden}
+.cal-hd .cap .bar i{display:block;height:100%;width:60%;background:var(--accent);border-radius:999px}
+.cal-hd .cap b{font-weight:600;color:var(--fg);font-variant-numeric:tabular-nums}
+.cal-hd .filt{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-left:auto}
+.chip{--c:#9A9BE5;display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:999px;border:1px solid var(--border);background:transparent;font-size:12px;font-weight:500;color:var(--muted);transition:background .25s var(--ease-beza),color .25s var(--ease-beza),border-color .25s var(--ease-beza)}
+.chip i{width:7px;height:7px;border-radius:50%;background:color-mix(in srgb,var(--c) 72%,var(--status-tint))}
+.chip:hover{color:var(--fg);border-color:var(--border-strong)}
+.chip.on{background:color-mix(in srgb,var(--c) 14%,transparent);border-color:color-mix(in srgb,var(--c) 32%,transparent);color:color-mix(in srgb,var(--c) 55%,var(--status-tint))}
+.chip.all.on{background:var(--accent);color:var(--accent-fg);border-color:transparent}
+.sel{font-family:inherit;height:28px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;font-weight:500;padding:0 28px 0 10px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238B8DA1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+.cal-wd{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border)}
+.cal-wd div{padding:8px 12px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--subtle)}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr)}
+.day{min-height:148px;padding:10px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:6px;position:relative;transition:background .2s var(--ease-beza)}
+.day:nth-child(7n){border-right:none}
+.day.wk{background:color-mix(in srgb,var(--fg) 2%,transparent)}
+.day.out .n{color:var(--subtle);opacity:.6}
+.day .n{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums;margin-bottom:2px}
+.day .n em{font-style:normal;font-size:11px;color:var(--subtle)}
+.day .n em.full{color:var(--fg)}
+.day .n em.over{color:var(--danger);font-weight:600}
+.day.today .n span{background:var(--accent);color:var(--accent-fg);border-radius:6px;padding:0 6px;font-weight:600}
+.day.over{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--danger) 50%,transparent)}
+.day.drop{background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.day .slot{flex:1;min-height:56px;border-radius:10px;border:1px dashed transparent}
+.day.drop .slot.empty{border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+.blk{--c:#9A9BE5;display:flex;flex-direction:column;gap:2px;min-height:56px;padding:8px 10px;border-radius:10px;background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow-card);font-size:12px;line-height:1.3;cursor:grab;transition:box-shadow .2s var(--ease-beza),border-color .2s var(--ease-beza)}
+.blk:hover{box-shadow:var(--shadow-lift)}
+.blk .h{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.blk b{font-weight:500;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.blk .d{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--subtle);flex:none}
+.blk span{color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.blk .st{display:inline-flex;align-items:center;gap:5px;margin-top:auto;padding-top:4px;font-size:10.5px;font-weight:500;color:color-mix(in srgb,var(--c) 55%,var(--status-tint));white-space:nowrap}
+.blk .st i{width:6px;height:6px;border-radius:50%;background:color-mix(in srgb,var(--c) 72%,var(--status-tint));flex:none}
+.blk .st svg{width:12px;height:12px;flex:none}
+.blk.full{min-height:118px}
+.blk.done{opacity:.6}
+.blk.done b{text-decoration:line-through;text-decoration-color:var(--subtle)}
+.blk.cancel{background:transparent;box-shadow:none;border-style:dashed;opacity:.7}
+.blk.cancel b{text-decoration:line-through}
+.blk.drag{opacity:.4}
+.blk.ghost{background:transparent;box-shadow:none;border:1px dashed color-mix(in srgb,var(--fg) 14%,transparent)}
+.blk.ghost b,.blk.ghost span,.blk.ghost .st{color:var(--subtle)}
+.blk.ghost .st i{background:var(--subtle)}
+.blk.mini{min-height:0;padding:6px 8px;flex-direction:row;align-items:center;gap:6px}
+.blk.mini i{width:7px;height:7px;border-radius:50%;background:color-mix(in srgb,var(--c) 72%,var(--status-tint));flex:none}
+.blk.mini b{font-size:12px}
+.tray{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 20px;border-top:1px solid var(--border);background:color-mix(in srgb,var(--fg) 2%,transparent)}
+.tray .lb{font-size:12px;color:var(--muted);margin-right:4px}
+.tray .blk{min-width:190px}
+/* semana do time */
+.team{display:grid;grid-template-columns:180px repeat(5,1fr)}
+.team>div{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:10px;min-height:88px}
+.team>div:nth-child(6n){border-right:none}
+.team .hd{min-height:0;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--subtle)}
+.team .hd.today{color:var(--accent)}
+.team .p{display:flex;align-items:center;gap:8px;font-size:13px}
+.team .p small{display:block;font-size:11px;color:var(--subtle)}
+.team .cell{display:flex;flex-direction:column;gap:6px}
+/* date picker */
+.dp{width:280px;background:var(--raised);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lift);padding:12px}
+.dp .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.dp .hd b{font-weight:500;font-size:14px;text-transform:capitalize}
+.dp .wd,.dp .g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.dp .wd div{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--subtle);padding:4px 0}
+.dp .g button{position:relative;height:34px;padding:0;line-height:1;display:grid;place-items:center;border-radius:8px;border:none;background:transparent;font-size:13px;color:var(--fg);font-variant-numeric:tabular-nums}
+.dp .g button.out{color:var(--subtle);opacity:.5}
+.dp .g button:hover{background:color-mix(in srgb,var(--fg) 5%,transparent)}
+.dp .g button.today{box-shadow:inset 0 0 0 1px var(--accent);color:var(--accent)}
+.dp .g button.sel{background:var(--accent);color:var(--accent-fg);font-weight:600}
+.dp .g button.busy::after{content:'';position:absolute;left:50%;bottom:4px;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--accent)}
+.dp .g button.sel.busy::after{background:var(--accent-fg)}
+.dp .ft{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.dp .ft button{border:none;background:none;font-size:12px;color:var(--muted)}
+.dp .ft button:hover{color:var(--fg)}
+.fake-field{display:flex;flex-direction:column;gap:6px;max-width:280px}
+.fake-field>span{font-size:13px;font-weight:500}
+.fake-field .input{display:flex;align-items:center;justify-content:space-between;border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}
+.fake-field .input svg{width:16px;height:16px;color:var(--subtle)}
+
+/* ===== MEDIA PREVIEW ===== */
+.mp{position:relative;border-radius:12px;overflow:hidden;background:var(--raised);border:1px solid var(--border);isolation:isolate}
+.mp .art{position:absolute;inset:0;background:linear-gradient(135deg,var(--media-a),var(--media-b) 55%,var(--media-c))}
+.mp .art::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 30% 30%,rgba(255,255,255,.10),transparent 60%)}
+.mp .fmt{position:absolute;top:8px;left:8px;z-index:2;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#ECEDF6;background:rgba(10,10,16,.55);backdrop-filter:blur(6px);border-radius:6px;padding:3px 7px}
+.mp .dur{position:absolute;right:8px;bottom:8px;z-index:2;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ECEDF6;background:rgba(10,10,16,.55);backdrop-filter:blur(6px);border-radius:6px;padding:2px 6px;font-variant-numeric:tabular-nums}
+.mp .cnt{position:absolute;right:8px;top:8px;z-index:2;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ECEDF6;background:rgba(10,10,16,.55);backdrop-filter:blur(6px);border-radius:6px;padding:2px 6px;font-variant-numeric:tabular-nums}
+.mp .play{position:absolute;inset:0;z-index:2;display:grid;place-items:center}
+.mp .play i{width:48px;height:48px;border-radius:50%;background:rgba(10,10,16,.55);backdrop-filter:blur(6px);display:grid;place-items:center;color:#ECEDF6;transition:transform .25s var(--ease-beza),background .25s}
+.mp .play i svg{width:20px;height:20px;margin-left:2px}
+.mp:hover .play i{transform:scale(1.06);background:rgba(154,155,229,.85);color:#0D0D0D}
+.mp .dots{position:absolute;left:0;right:0;bottom:8px;z-index:2;display:flex;justify-content:center;gap:5px}
+.mp .dots i{width:6px;height:6px;border-radius:50%;background:rgba(236,237,246,.4)}
+.mp .dots i.on{background:#ECEDF6;width:14px;border-radius:3px}
+.mp .arr{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:32px;height:32px;border-radius:50%;border:none;background:rgba(10,10,16,.55);backdrop-filter:blur(6px);color:#ECEDF6;display:grid;place-items:center;opacity:0;transition:opacity .2s}
+.mp .arr svg{width:16px;height:16px}
+.mp .arr.l{left:8px}.mp .arr.r{right:8px}
+.mp:hover .arr{opacity:1}
+.mp .slide2{position:absolute;inset:0;background:linear-gradient(135deg,var(--media-c),var(--media-a));transform:translateX(100%)}
+.r45{aspect-ratio:4/5}.r916{aspect-ratio:9/16}.r11{aspect-ratio:1/1}.r169{aspect-ratio:16/9}
+.mp.fallback{display:grid;place-items:center;padding:24px;text-align:center}
+.mp.fallback .ic{width:44px;height:44px;border-radius:12px;background:color-mix(in srgb,var(--fg) 5%,transparent);display:grid;place-items:center;color:var(--muted);margin:0 auto 10px}
+.mp.fallback .ic svg{width:20px;height:20px}
+.mp.fallback b{font-weight:500;font-size:13px;display:block;word-break:break-all}
+.mp.fallback span{font-size:12px;color:var(--subtle);display:block;margin-bottom:12px}
+.mp.loading .art{background:color-mix(in srgb,var(--fg) 4%,transparent);animation:pulse 1.6s ease-in-out infinite}
+.mp.loading .art::after{display:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.mp.approved{box-shadow:0 0 0 1px var(--success)}
+.mp .state{position:absolute;left:8px;bottom:8px;z-index:2}
+/* thumb */
+.thumb{width:48px;height:48px;border-radius:8px;overflow:hidden;position:relative;background:var(--raised);border:1px solid var(--border);flex:none}
+.thumb .art{position:absolute;inset:0;background:linear-gradient(135deg,var(--media-a),var(--media-c))}
+.thumb .ty{position:absolute;right:3px;bottom:3px;width:16px;height:16px;border-radius:4px;background:rgba(10,10,16,.6);display:grid;place-items:center;color:#ECEDF6}
+.thumb .ty svg{width:10px;height:10px}
+.thumb.sm{width:32px;height:32px;border-radius:6px}
+.thumb.doc{display:grid;place-items:center;color:var(--muted)}
+.thumb.doc svg{width:18px;height:18px}
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+table.t th{text-align:left;font-size:12px;font-weight:500;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--border)}
+table.t td{padding:8px 12px;border-bottom:1px solid color-mix(in srgb,var(--border) 60%,transparent);vertical-align:middle}
+table.t tr:last-child td{border-bottom:none}
+table.t td b{font-weight:500;display:block}
+table.t td small{color:var(--muted);font-size:12px}
+/* card do radar */
+.mcard{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-card);overflow:hidden;transition:border-color .25s var(--ease-beza),box-shadow .25s var(--ease-beza)}
+.mcard:hover{border-color:var(--accent);box-shadow:var(--shadow-card),0 0 0 1px var(--accent)}
+.mcard .mp{border-radius:0;border:none}
+.mcard .bd{padding:12px 14px 14px}
+.mcard .bd b{font-weight:500;font-size:14px;display:block;line-height:1.3}
+.mcard .bd .meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px;font-size:12px;color:var(--muted)}
+.mcard .bd .meta .sep{color:var(--subtle)}
+.mcard .bd .row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px}
+.mcard .bd .row .ap{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.mcard .bd .row .ap svg{width:14px;height:14px}
+/* stage */
+.mstage{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);gap:0;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-card);overflow:hidden}
+.mstage .left{padding:20px;background:color-mix(in srgb,var(--fg) 2%,transparent);display:flex;flex-direction:column;gap:12px;border-right:1px solid var(--border)}
+.mstage .left .mp{max-width:360px;margin:0 auto;width:100%}
+.mstage .nav{display:flex;align-items:center;justify-content:center;gap:10px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.mstage .right{padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.mstage .right .ti{font-size:18px;font-weight:500;letter-spacing:-.01em;line-height:1.25}
+.mstage .right .cl{font-size:13px;color:var(--muted)}
+.mstage .badges{display:flex;gap:6px;flex-wrap:wrap}
+.mstage .copy{font-size:14px;color:var(--fg);line-height:1.6;max-height:9.6em;overflow:hidden;position:relative}
+.mstage .copy::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2.4em;background:linear-gradient(transparent,var(--card))}
+.mstage .more{font-size:12px;color:var(--muted);background:none;border:none;text-align:left;padding:0}
+.mstage .more:hover{color:var(--fg)}
+.mstage .files{display:flex;flex-direction:column;gap:4px}
+.mstage .files a{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--fg);padding:6px 8px;border-radius:8px;text-decoration:none}
+.mstage .files a:hover{background:color-mix(in srgb,var(--fg) 5%,transparent)}
+.mstage .files a svg{width:14px;height:14px;color:var(--muted);flex:none}
+.mstage .files a small{margin-left:auto;color:var(--subtle);font-size:11px}
+.mstage .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:12px;border-top:1px solid var(--border)}
+.mstage .ver{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.mstage .ver .badge{cursor:pointer}
+.vers{display:flex;gap:8px;align-items:center}
+.vers .thumb{cursor:pointer}
+.vers .thumb.on{box-shadow:0 0 0 2px var(--accent)}
+.vers small{font-size:11px;color:var(--subtle);display:block;text-align:center;margin-top:4px}
+
+/* ===== PORTAL (palco de aprovação) ===== */
+.light-scope{
+  --bg:#FAF9FC; --surface:#FFFFFF; --card:#FFFFFF; --raised:#F1F0F7;
+  --fg:#23222E; --muted:#61607A; --subtle:#9A99B0;
+  --border:rgba(35,34,46,0.10); --border-strong:rgba(35,34,46,0.18);
+  --accent:#6E6CBE; --accent-hover:#55539E; --accent-fg:#FFFFFF; --accent-deep:#55539E;
+  --success:#3F8F49; --danger:#C9342F; --warning:#B57A18; --info:#2E7BB8;
+  --scrim:rgba(35,34,46,0.4); --status-tint:#23222E;
+  --input-bg:#FFFFFF; --input-border:rgba(35,34,46,0.12); --ring:rgba(110,108,190,0.18);
+  --shadow-card:0 1px 2px rgba(35,34,60,0.06),0 8px 24px rgba(35,34,60,0.06);
+  --shadow-lift:inset 0 1px 0 rgba(255,255,255,0.7),0 10px 30px rgba(35,34,60,0.08);
+  --media-a:#D9D7EC; --media-b:#C4C2E3; --media-c:#ADAAD6;
+  color:var(--fg);
+}
+.light-scope ::selection{background:rgba(110,108,190,.2);color:#413F86}
+.portal{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:32px;box-shadow:var(--shadow-card);position:relative;overflow:hidden}
+.portal .hd{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.portal .hd h4{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:28px;font-weight:500;letter-spacing:-.02em;line-height:1.1;text-transform:none;color:var(--fg);margin:0}
+.portal .status{display:flex;align-items:center;gap:12px}
+.pill-st{display:inline-flex;align-items:center;height:36px;padding:0 18px;border-radius:999px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;background:var(--success);color:#FFFFFF}
+.pill-st.wait{background:color-mix(in srgb,var(--warning) 14%,transparent);color:var(--warning);border:1px solid color-mix(in srgb,var(--warning) 30%,transparent)}
+.portal .prog{margin-top:22px}
+.portal .prog .overline{margin-bottom:8px;display:block}
+.portal .prog .bar{height:3px;border-radius:999px;background:color-mix(in srgb,var(--fg) 8%,transparent);overflow:hidden}
+.portal .prog .bar i{display:block;height:100%;width:67%;background:var(--accent);border-radius:999px}
+.portal .body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:40px;margin-top:32px;align-items:start}
+.portal .mp{border-radius:12px;box-shadow:var(--shadow-card)}
+.portal .lb{position:absolute;top:12px;left:12px;z-index:2;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#ECEDF6;background:rgba(10,10,16,.45);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:8px 14px}
+.portal .date{display:flex;align-items:center;gap:12px;font-size:28px;font-weight:500;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
+.chip-fmt{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:8px;background:var(--raised);font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.legend{border-left:1px solid var(--border);padding-left:20px;margin-top:22px}
+.legend .overline{display:block;margin-bottom:10px}
+.legend p{font-size:15px;line-height:1.65;color:var(--fg)}
+.legend p+p{margin-top:14px}
+.legend .tags{color:var(--muted)}
+.btn.brand{background:linear-gradient(180deg,#A2A3EA,#7B79C9);color:#FFFFFF;font-weight:600;text-shadow:0 1px 0 rgba(0,0,0,.12);border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.25);transition:all .3s var(--ease-beza)}
+.btn.brand svg{transition:transform .3s}
+.btn.brand:hover{transform:translateY(-1px);box-shadow:0 0 60px 0 rgba(154,155,229,.5),inset 0 1px 0 rgba(255,255,255,.4)}
+.btn.brand:hover svg{transform:translateX(4px)}
+.light-scope .btn.brand:hover{box-shadow:0 10px 30px rgba(110,108,190,.35),inset 0 1px 0 rgba(255,255,255,.4)}
+.btn.pill{border-radius:999px;height:40px;padding:0 20px}
+.btn.premium{background:var(--raised);color:var(--fg)}
+.btn.premium:hover{background:color-mix(in srgb,var(--raised) 80%,var(--fg) 4%)}
+.btn.outline.pill[disabled]{opacity:.45;pointer-events:none}
+.portal .cmts{margin-top:22px;padding:18px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);font-size:14px;color:var(--subtle)}
+.portal .foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:32px}
+.portal .foot .acts{display:flex;gap:10px;flex-wrap:wrap}
+.portal .cnt{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--subtle)}
+.reels2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.reels2 .mp{max-width:none}
+.vbar{position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;align-items:center;gap:12px;padding:12px 14px;background:linear-gradient(transparent,rgba(10,10,16,.55))}
+.vbar span{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ECEDF6;font-variant-numeric:tabular-nums}
+.vbar i{flex:1;height:3px;border-radius:999px;background:rgba(236,237,246,.35);overflow:hidden}
+.vbar i::after{content:'';display:block;height:100%;width:2%;background:#ECEDF6}
+.cover{position:relative;height:320px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cover .sl{position:absolute;height:100%;aspect-ratio:1080/1350;width:auto;border-radius:12px;background:linear-gradient(135deg,var(--media-a),var(--media-b) 55%,var(--media-c));box-shadow:var(--shadow-lift);transition:transform .35s var(--ease-beza),opacity .35s}
+.cover .sl.prev{transform:translateX(-52%) scale(.8);opacity:.35}
+.cover .sl.next{transform:translateX(52%) scale(.8);opacity:.35}
+.cover .sl.cur{z-index:2;overflow:hidden}
+.cover .sl.cur .n{position:absolute;left:14%;top:12%;font-size:34px;font-weight:500;color:var(--accent);line-height:1}
+.cover .sl.cur .tt{position:absolute;left:14%;top:26%;right:14%;font-size:22px;font-weight:600;line-height:1.1;letter-spacing:-.02em;color:var(--fg)}
+.cover .sl.cur .tx{position:absolute;left:14%;top:52%;right:14%;font-size:13px;line-height:1.4;color:var(--muted)}
+.cover .sl.cur .fs-btn{position:absolute;left:14px;bottom:14px;z-index:3}
+.btn.accent.mono{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;height:34px;border-radius:8px}
+.snav{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:14px}
+.snav .rb{width:40px;height:40px;border-radius:50%;border:1px solid var(--border-strong);background:var(--surface);display:grid;place-items:center;color:var(--fg)}
+.snav .rb svg{width:16px;height:16px}
+.fs{position:relative;border-radius:16px;overflow:hidden;background:var(--scrim);backdrop-filter:blur(14px);padding:32px;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:28px;min-height:560px;align-items:center}
+.fs::before{content:'';position:absolute;inset:0;background:var(--bg);opacity:.4;z-index:0}
+.fs>*{position:relative;z-index:1}
+.fs .cover{height:420px}
+.fs .cover .sl{height:100%}
+.fs .snav .rb{background:transparent;border-color:rgba(236,237,246,.4);color:#ECEDF6}
+.fs .snav .cnt{color:#ECEDF6}
+.cpanel{background:var(--raised);border-radius:16px;padding:22px;box-shadow:var(--shadow-lift);align-self:stretch;display:flex;flex-direction:column;gap:14px}
+.cpanel h5{font-size:20px;font-weight:500;letter-spacing:-.01em;margin:0}
+.cmt{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+.cmt .who{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500}
+.cmt .who .av{width:24px;height:24px;font-size:10px}
+.cmt .tagp{display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);color:var(--accent);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin:10px 0 8px}
+.cmt p{font-size:14px;line-height:1.5}
+.cmt .ac{display:flex;gap:16px;margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--subtle)}
+.cmt .ac span:hover{color:var(--accent);cursor:pointer}
+.cmt .re{margin-top:10px;padding-left:14px;border-left:1px solid var(--border)}
+.cmt .re .overline{display:block;margin-bottom:4px;color:var(--fg)}
+.cpanel .btn{align-self:flex-start}
+.amark{position:absolute;left:10%;top:8%;width:80%;height:44%;border:1.5px dashed var(--accent);border-radius:6px;background:color-mix(in srgb,var(--accent) 6%,transparent);z-index:3}
+.popc{position:absolute;left:58%;top:14%;width:290px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lift);padding:14px;z-index:4}
+.popc .who{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;margin-bottom:10px}
+.popc .who .av{width:24px;height:24px;font-size:10px}
+.popc .ft{display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-top:10px}
+.popc .ft .cancel{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--subtle);background:none;border:none}
+@media (max-width:900px){.portal .body{grid-template-columns:1fr}.fs{grid-template-columns:1fr;padding:16px}.reels2{grid-template-columns:1fr 1fr}.portal{padding:20px}.cover{height:300px}}
+
 .lista{list-style:none;display:grid;gap:8px;max-width:820px}
 .lista li{padding:10px 14px;border:1px solid var(--border);border-radius:12px;font-size:14px;color:var(--muted);background:var(--card);display:flex;gap:10px}
 .lista li::before{content:'';width:6px;height:6px;border-radius:50%;flex:none;margin-top:9px}
@@ -540,6 +820,14 @@ table.t td.empty{text-align:center;color:var(--subtle);padding:40px 16px}
   <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></symbol>
   <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></symbol>
   <symbol id="i-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4.5v15l13-7.5z"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="3" y="3" rx="2"/><path d="M21 8v10a2 2 0 0 1-2 2H9"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></symbol>
+  <symbol id="i-msg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
   <symbol id="i-logout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></symbol>
 </svg>
 
@@ -581,6 +869,9 @@ table.t td.empty{text-align:center;color:var(--subtle);padding:40px 16px}
     <a href="#marca"><span class="n">17</span>Sistema vs. marca</a>
     <div class="side-group">Marca</div>
     <a href="#logo"><span class="n">18</span>Logo</a>
+    <div class="side-group">Agency OS</div>
+    <a href="#calendar"><span class="n">19</span>Calendar</a>
+    <a href="#media"><span class="n">20</span>MediaPreview</a>
   </nav>
   <div class="side-foot">Cada bloco tem um código (<span class="mono">06.2</span>). Cite o código pra pedir ajuste. Alteração aprovada aqui volta pro guia em texto, que é a fonte de verdade.</div>
 </aside>
@@ -1509,8 +1800,355 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
   <div class="rule" data-rot="regra">Tamanhos: rail 24px de largura, nav e login 22 a 24px de altura, rodapé 32px. O favicon do CRM (<span class="mono">app/icon.svg</span>, um "A" em <span class="mono">#8E8FDD</span>) não é o iso da marca e deve ser trocado por este, em <span class="mono">#9A9BE5</span> sobre <span class="mono">#0A0A10</span>.</div>
 </section>
 
+
+<!-- ============ 19 CALENDAR ============ -->
+<section class="sec" id="calendar">
+  <div class="sec-head"><span class="sec-num">19</span>
+    <h2>Calendar</h2>
+    <p class="intro">Um dia tem dois meios-dias. Um bloco de Pauta ocupa um, dois ou vários. O calendário mostra isso sem precisar de hora: a unidade é o meio-dia, não o minuto. Tudo que a regra 2 do backlog pede (calendário por colaborador, bloco de 0,5, 1 ou mais dias, arrastar, conflito, planejado contra concluído) está na anatomia abaixo.</p>
+  </div>
+
+    <h3><span class="id">19.1</span>Mês por colaborador</h3>
+    <div class="cal cal-wrap">
+      <div class="cal-hd">
+        <div class="r1">
+          <div class="who"><div class="av">R</div><div><b>Reinaldy</b><span>Design · Criação</span></div></div>
+          <div class="seg" style="height:32px;padding:2px;margin-left:8px"><button class="on" style="height:100%;font-size:13px">Mês</button><button style="height:100%;font-size:13px">Semana</button><button style="height:100%;font-size:13px">Time</button></div>
+          <div class="mes"><button class="x"><svg><use href="#i-chevl"/></svg></button><span>setembro 2026</span><button class="x"><svg><use href="#i-chevr"/></svg></button></div>
+        </div>
+        <div class="r2">
+          <div class="cap"><span>concluído</span><div class="bar"><i></i></div><b>12</b><span>de 20 meios-dias</span></div>
+          <div class="filt">
+            <select class="sel"><option>Cliente: todos</option></select>
+            <button class="chip all on">Todos</button>
+            <button class="chip" style="--c:#8b8ce0"><i></i>Planejado</button>
+            <button class="chip" style="--c:#0ea5e9"><i></i>Em produção</button>
+            <button class="chip" style="--c:#f59e0b"><i></i>Em aprovação</button>
+            <button class="chip" style="--c:#f97316"><i></i>Em alteração</button>
+            <button class="chip" style="--c:#10b981"><i></i>Aprovado</button>
+            <button class="chip" style="--c:#ef4444"><i></i>Atrasado</button>
+          </div>
+        </div>
+      </div>
+      <div class="cal-wd"><div>seg</div><div>ter</div><div>qua</div><div>qui</div><div>sex</div><div>sáb</div><div>dom</div></div>
+      <div class="cal-g" id="calg">
+        <div class="day out"><div class="n">31 </div></div>
+        <div class="day"><div class="n">1 <em class="full">2/2</em></div><div class="blk done" style="--c:#10b981"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Carrossel · 3 peças</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div><div class="blk done" style="--c:#10b981"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Estático</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div></div>
+        <div class="day"><div class="n">2 <em class="full">2/2</em></div><div class="blk full done" style="--c:#10b981"><div class="h"><b>Ruiz Odonto</b><span class="d">1 dia</span></div><span>Identidade visual</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div></div>
+        <div class="day"><div class="n">3 <em>1/2</em></div><div class="blk done" style="--c:#10b981"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Reels capa</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div><div class="slot empty"></div></div>
+        <div class="day"><div class="n">4 <em>1/2</em></div><div class="blk cancel" style="--c:#8b8ce0"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Reels</span><span class="st" style="color:var(--subtle)">Cancelado</span></div><div class="slot empty"></div></div>
+        <div class="day wk"><div class="n">5 </div></div>
+        <div class="day wk"><div class="n">6 </div></div>
+        <div class="day"><div class="n">7 <em class="full">2/2</em></div><div class="blk full done" style="--c:#10b981"><div class="h"><b>Solar Master</b><span class="d">1 dia</span></div><span>Landing page</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div></div>
+        <div class="day"><div class="n">8 <em class="full">2/2</em></div><div class="blk" style="--c:#10b981"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Stories</span><span class="st"><i></i>Aprovado</span></div><div class="blk" style="--c:#ef4444"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><svg style="color:var(--danger)"><use href="#i-alert"/></svg>Atrasado</span></div></div>
+        <div class="day"><div class="n">9 <em>1/2</em></div><div class="blk" style="--c:#10b981"><div class="h"><b>Ruiz Odonto</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><i></i>Aprovado</span></div><div class="slot empty"></div></div>
+        <div class="day"><div class="n">10 </div><div class="slot empty"></div><div class="slot empty"></div></div>
+        <div class="day"><div class="n">11 <em>1/2</em></div><div class="blk" style="--c:#f97316"><div class="h"><b>Solar Master</b><span class="d">½ dia</span></div><span>Ajustes do site</span><span class="st"><i></i>Em alteração</span></div><div class="slot empty"></div></div>
+        <div class="day wk"><div class="n">12 </div></div>
+        <div class="day wk"><div class="n">13 </div></div>
+        <div class="day"><div class="n">14 <em class="full">2/2</em></div><div class="blk full" style="--c:#0ea5e9"><div class="h"><b>Agroexata</b><span class="d">2 dias</span></div><span>Reels · 2 dias</span><span class="st"><i></i>Em produção</span></div></div>
+        <div class="day today"><div class="n"><span>15</span> <em class="full">2/2</em></div><div class="blk full ghost"><div class="h"><b>Agroexata</b><span class="d">continua</span></div><span>Reels</span><span class="st"><i></i>Planejado</span></div></div>
+        <div class="day over"><div class="n">16 <em class="over">3/2</em></div><div class="blk" style="--c:#f59e0b"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><i></i>Em aprovação</span></div><div class="blk" style="--c:#0ea5e9"><div class="h"><b>Ruiz Odonto</b><span class="d">½ dia</span></div><span>Stories</span><span class="st"><i></i>Em produção</span></div><div class="blk" style="--c:#8b8ce0"><div class="h"><b>Solar Master</b><span class="d">½ dia</span></div><span>Estático</span><span class="st"><i></i>Planejado</span></div></div>
+        <div class="day drop"><div class="n">17 <em>0/2</em></div><div class="slot empty"></div><div class="slot empty"></div></div>
+        <div class="day"><div class="n">18 <em>1/2</em></div><div class="blk drag" style="--c:#8b8ce0"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Capa YouTube</span><span class="st"><i></i>Planejado</span></div><div class="slot empty"></div></div>
+        <div class="day wk"><div class="n">19 </div></div>
+        <div class="day wk"><div class="n">20 </div></div>
+        <div class="day"><div class="n">21 <em>1/2</em></div><div class="blk" style="--c:#f97316"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Reels</span><span class="st"><i></i>Em alteração</span></div><div class="slot empty"></div></div>
+        <div class="day"><div class="n">22 </div><div class="slot empty"></div><div class="slot empty"></div></div>
+        <div class="day"><div class="n">23 <em class="full">2/2</em></div><div class="blk full" style="--c:#8b8ce0"><div class="h"><b>Ruiz Odonto</b><span class="d">1 dia</span></div><span>Site · 1 dia</span><span class="st"><i></i>Planejado</span></div></div>
+        <div class="day"><div class="n">24 </div><div class="slot empty"></div><div class="slot empty"></div></div>
+        <div class="day"><div class="n">25 <em>1/2</em></div><div class="blk" style="--c:#f59e0b"><div class="h"><b>Solar Master</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><i></i>Em aprovação</span></div><div class="slot empty"></div></div>
+        <div class="day wk"><div class="n">26 </div></div>
+        <div class="day wk"><div class="n">27 </div></div>
+        <div class="day"><div class="n">28 </div><div class="slot empty"></div><div class="slot empty"></div></div>
+        <div class="day"><div class="n">29 </div><div class="slot empty"></div><div class="slot empty"></div></div>
+        <div class="day"><div class="n">30 </div><div class="slot empty"></div><div class="slot empty"></div></div>
+        <div class="day out"><div class="n">1 </div></div>
+        <div class="day out"><div class="n">2 </div></div>
+        <div class="day out wk"><div class="n">3 </div></div>
+        <div class="day out wk"><div class="n">4 </div></div>
+      </div>
+      <div class="tray">
+        <span class="lb">A distribuir</span>
+        <div class="blk" style="--c:#8b8ce0"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Stories</span><span class="st"><i></i>Planejado</span></div>
+        <div class="blk" style="--c:#8b8ce0"><div class="h"><b>Dobashi</b><span class="d">1 dia</span></div><span>Reels</span><span class="st"><i></i>Planejado</span></div>
+        <span class="lb" style="margin-left:auto">2 blocos · 1,5 dia</span>
+      </div>
+    </div>
+    <div class="origem">19.1 · a cor é o status da demanda, não o cliente · o dia 16 está em conflito (3 de 2), o 15 é hoje, o 17 está recebendo um arraste, o bloco do 18 está sendo arrastado, o 14 e 15 são um bloco de 2 dias · cliente filtra pelo select</div>
+
+    <h3><span class="id">19.2</span>Anatomia do dia e do bloco</h3>
+    <div class="grid g4">
+      <div class="stage"><span class="tag">livre</span><div class="day" style="border:1px solid var(--border);border-radius:12px"><div class="n">10 <em>0/2</em></div><div class="slot empty"></div><div class="slot empty"></div></div></div>
+      <div class="stage"><span class="tag">cheio</span><div class="day" style="border:1px solid var(--border);border-radius:12px"><div class="n">1 <em class="full">2/2</em></div><div class="blk" style="--c:#f59e0b"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><i></i>Em aprovação</span></div><div class="blk" style="--c:#10b981"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Estático</span><span class="st"><i></i>Aprovado</span></div></div></div>
+      <div class="stage"><span class="tag">conflito</span><div class="day over" style="border:1px solid var(--border);border-radius:12px"><div class="n">16 <em class="over">3/2</em></div><div class="blk" style="--c:#f59e0b"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><i></i>Em aprovação</span></div><div class="blk" style="--c:#0ea5e9"><div class="h"><b>Ruiz Odonto</b><span class="d">½ dia</span></div><span>Stories</span><span class="st"><i></i>Em produção</span></div><div class="blk" style="--c:#8b8ce0"><div class="h"><b>Solar Master</b><span class="d">½ dia</span></div><span>Estático</span><span class="st"><i></i>Planejado</span></div></div></div>
+      <div class="stage"><span class="tag">hoje · recebendo</span><div class="day today drop" style="border:1px solid var(--border);border-radius:12px"><div class="n"><span>15</span> <em>1/2</em></div><div class="blk" style="--c:#0ea5e9"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Reels</span><span class="st"><i></i>Em produção</span></div><div class="slot empty"></div></div></div>
+    </div>
+    <div class="grid g4" style="margin-top:14px">
+      <div class="stage"><span class="tag">planejado</span><div class="blk" style="--c:#8b8ce0"><div class="h"><b>Solar Master</b><span class="d">½ dia</span></div><span>Estático</span><span class="st"><i></i>Planejado</span></div></div>
+      <div class="stage"><span class="tag">em aprovação · 1 dia</span><div class="blk full" style="--c:#f59e0b"><div class="h"><b>Ruiz Odonto</b><span class="d">1 dia</span></div><span>Site institucional</span><span class="st"><i></i>Em aprovação</span></div></div>
+      <div class="stage"><span class="tag">atrasado</span><div class="blk" style="--c:#ef4444"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><svg style="color:var(--danger)"><use href="#i-alert"/></svg>Atrasado</span></div></div>
+      <div class="stage"><span class="tag">concluído · cancelado</span><div class="blk done" style="--c:#10b981"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Stories</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div><div style="height:8px"></div><div class="blk cancel" style="--c:#8b8ce0"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Reels</span><span class="st" style="color:var(--subtle)">Cancelado</span></div></div>
+    </div>
+    <div class="tw"><table class="spec">
+      <thead><tr><th>Parte</th><th>Receita</th></tr></thead>
+      <tbody>
+        <tr><td>Célula do dia</td><td><code>min-h-[148px] p-2.5 flex flex-col gap-1.5</code>, borda 8% à direita e embaixo. Fim de semana com <code>bg-foreground/2</code>. Dia de outro mês com número a 60%.</td></tr>
+        <tr><td>Número</td><td>12px 500 em <code>--muted</code>, tabular. Hoje: pill <code>bg-accent text-accent-foreground rounded-md px-1.5</code>.</td></tr>
+        <tr><td>Contador de capacidade</td><td>11px em <code>--subtle</code> no canto direito, <code>n/2</code>. Cheio vira <code>--fg</code>. Acima de 2 vira <code>--danger</code> 600 e a célula ganha <code>ring-1 ring-danger/50</code> interno. É o conflito de alocação (PAU-12).</td></tr>
+        <tr><td>Slot de meio dia</td><td>dois por dia, <code>flex-1 min-h-[56px] rounded-[10px]</code>. Vazio é invisível. Quando um bloco passa por cima, o slot vazio mostra borda tracejada <code>accent/40</code> e o dia inteiro <code>bg-accent/10</code>, igual à drop zone do kanban.</td></tr>
+        <tr><td>Bloco</td><td>é o cartão do kanban em miniatura: <code>bg-card border border-border rounded-[10px] p-2 shadow-card cursor-grab</code>, hover sobe pra nível 03. Linha 1: cliente em 12px 500 e a duração em mono 10px à direita (½ dia, 1 dia, 2 dias). Linha 2: atividade em 11px <code>--muted</code>. Linha 3: dot de 6px e o status em 10.5px, na cor do status via <code>statusTone</code>. Sem barra lateral, sem fundo tingido: a cor mora no status, o resto é neutro.</td></tr>
+        <tr><td>Cor</td><td>é o <b>status da demanda</b>, nunca o cliente. Planejado lilás, em produção azul, em aprovação âmbar, em alteração laranja, aprovado verde, atrasado vermelho. As cores passam pelo <code>statusTone</code> e valem nos dois temas. Cliente se filtra pelo select e se lê no nome.</td></tr>
+        <tr><td>Bloco de 1 dia</td><td>ocupa os dois slots: <code>min-h-[118px]</code>. Bloco maior ocupa os dias seguintes com um fantasma tracejado e "continua" no lugar da duração.</td></tr>
+        <tr><td>Estados de execução</td><td>além do status: concluído (check verde, nome riscado, 60% de opacidade), cancelado (sem fundo, borda tracejada, 70%), arrastando (40%), continuação de bloco maior (fantasma tracejado).</td></tr>
+        <tr><td>Cabeçalho</td><td>duas linhas com <code>p-5 gap-3.5</code>. Linha 1: avatar de 36px, nome em 16px 500, segmented Mês / Semana / Time e o seletor de mês à direita. Linha 2: barra de concluído contra planejado (trilha 6px, fill lilás, "12 de 20 meios-dias") e, à direita, o filtro: select de cliente mais chips de status com dot na cor. Chip ativo ganha fundo e borda na cor do status, "Todos" ativo é lilás chapado.</td></tr>
+        <tr><td>A distribuir</td><td>faixa no rodapé com <code>bg-foreground/2</code> e os blocos sem data. Arrastar pra um dia agenda. Contagem à direita.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="rule" data-rot="regras">Sem hora. A unidade da Pauta é o meio-dia (regra 2). Cor é status, não cliente: o Head olha o mês e vê o que está travado em aprovação ou voltou pra alteração sem ler nome nenhum. Conflito é <b>visível e permitido</b>: o calendário mostra o 3/2 em vermelho, quem decide é o Head. Concluído se deriva do estado da peça quando dá (regra 15), o check manual fica pra bloco sem peça vinculada. Arrastar reprograma só aquele bloco, o resto não anda (PAU-14).</div>
+
+    <h3><span class="id">19.3</span>Semana do time</h3>
+    <p class="note">A mesma unidade vista de cima. Linhas são pessoas, colunas são os dias úteis. Serve pro Head ver quem está cheio e quem está livre antes de aceitar demanda. O bloco vira uma linha só: dot do status e cliente. Os mesmos filtros do mês valem aqui.</p>
+    <div class="cal team-wrap">
+      <div class="cal-hd" style="gap:0"><div class="r1"><div class="who"><b style="font-size:16px">Time · semana 38</b></div><div class="mes"><button class="x"><svg><use href="#i-chevl"/></svg></button><span>14 a 18 de set</span><button class="x"><svg><use href="#i-chevr"/></svg></button></div></div></div>
+      <div class="team">
+        <div class="hd">pessoa</div><div class="hd">seg 14</div><div class="hd today">ter 15</div><div class="hd">qua 16</div><div class="hd">qui 17</div><div class="hd">sex 18</div>
+        <div class="p"><div class="av">R</div><div>Reinaldy<small>Design</small></div></div>
+        <div class="cell"><div class="blk mini" style="--c:#0ea5e9" title="Em produção"><i></i><b>Agroexata</b></div><div class="blk mini" style="--c:#0ea5e9" title="Em produção"><i></i><b>Agroexata</b></div></div>
+        <div class="cell"><div class="blk mini ghost" style="--c:#0ea5e9" title="Em produção"><i></i><b>Agroexata</b></div><div class="blk mini ghost" style="--c:#0ea5e9" title="Em produção"><i></i><b>Agroexata</b></div></div>
+        <div class="cell" style="box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--danger) 50%,transparent)"><div class="blk mini" style="--c:#f59e0b" title="Em aprovação"><i></i><b>Dobashi</b></div><div class="blk mini" style="--c:#0ea5e9" title="Em produção"><i></i><b>Ruiz Odonto</b></div><div class="blk mini" style="--c:#8b8ce0" title="Planejado"><i></i><b>Solar Master</b></div></div>
+        <div class="cell"></div>
+        <div class="cell"><div class="blk mini" style="--c:#8b8ce0" title="Planejado"><i></i><b>Agroexata</b></div></div>
+        <div class="p"><div class="av" style="background:var(--raised);color:var(--fg)">L</div><div>Lucas<small>Edição</small></div></div>
+        <div class="cell"><div class="blk mini" style="--c:#10b981" title="Aprovado"><i></i><b>Agroexata</b></div></div>
+        <div class="cell"><div class="blk mini" style="--c:#f97316" title="Em alteração"><i></i><b>Dobashi</b></div><div class="blk mini" style="--c:#f97316" title="Em alteração"><i></i><b>Dobashi</b></div></div>
+        <div class="cell"><div class="blk mini done" style="--c:#10b981" title="Concluído"><svg style="width:12px;height:12px;color:var(--success);flex:none"><use href="#i-check"/></svg><b>Ruiz Odonto</b></div></div>
+        <div class="cell"><div class="blk mini" style="--c:#0ea5e9" title="Em produção"><i></i><b>Solar Master</b></div><div class="blk mini" style="--c:#0ea5e9" title="Em produção"><i></i><b>Solar Master</b></div></div>
+        <div class="cell"></div>
+        <div class="p"><div class="av" style="background:var(--raised);color:var(--fg)">M</div><div>Maria<small>CS</small></div></div>
+        <div class="cell"><div class="blk mini" style="--c:#f59e0b" title="Em aprovação"><i></i><b>Agroexata</b></div></div>
+        <div class="cell"></div>
+        <div class="cell"><div class="blk mini" style="--c:#ef4444" title="Atrasado"><i></i><b>Dobashi</b></div></div>
+        <div class="cell"><div class="blk mini" style="--c:#8b8ce0" title="Planejado"><i></i><b>Ruiz Odonto</b></div></div>
+        <div class="cell"><div class="blk mini" style="--c:#8b8ce0" title="Planejado"><i></i><b>Solar Master</b></div></div>
+      </div>
+    </div>
+    <div class="origem">19.3 · bloco mini: dot do status e cliente numa linha, mesmo cartão · coluna de hoje em lilás no cabeçalho · célula em conflito com o mesmo ring do mês · 180px pra pessoa, o resto divide igual</div>
+
+    <h3><span class="id">19.4</span>Seletor de data</h3>
+    <p class="note">O mesmo calendário em miniatura, pra campo de formulário: data de publicação da peça, prazo, captação. Abre em popover nível 03 embaixo do campo. Dia com bloco de Pauta ganha um ponto lilás, pra quem agenda ver o que já está ocupado.</p>
+    <div class="stage" style="display:flex;gap:32px;flex-wrap:wrap;align-items:flex-start">
+      <div class="fake-field"><span>Data de publicação</span><div class="input"><span>18 set 2026</span><svg><use href="#i-cal"/></svg></div></div>
+      <div class="dp">
+        <div class="hd"><button class="x"><svg><use href="#i-chevl"/></svg></button><b>setembro 2026</b><button class="x"><svg><use href="#i-chevr"/></svg></button></div>
+        <div class="wd"><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div><div>D</div></div>
+        <div class="g">
+          <button class="out">31</button><button class="busy">1</button><button class="busy">2</button><button class="busy">3</button><button>4</button><button>5</button><button>6</button>
+          <button class="busy">7</button><button class="busy">8</button><button class="busy">9</button><button>10</button><button class="busy">11</button><button>12</button><button>13</button>
+          <button class="busy">14</button><button class="today busy">15</button><button class="busy">16</button><button>17</button><button class="sel">18</button><button>19</button><button>20</button>
+          <button class="busy">21</button><button>22</button><button class="busy">23</button><button>24</button><button class="busy">25</button><button>26</button><button>27</button>
+          <button>28</button><button>29</button><button>30</button><button class="out">1</button><button class="out">2</button><button class="out">3</button><button class="out">4</button>
+        </div>
+        <div class="ft"><button>Hoje</button><button>Limpar</button></div>
+      </div>
+    </div>
+    <div class="tw"><table class="spec">
+      <tbody>
+        <tr><td>Popover</td><td><code>w-[280px] bg-raised rounded-xl border shadow-lift p-3</code>, nível 03. Abre alinhado à esquerda do campo, fecha com Esc, clique fora ou escolha.</td></tr>
+        <tr><td>Célula</td><td><code>h-[34px] rounded-lg text-[13px]</code> tabular. Hover <code>bg-foreground/5</code>. Hoje: anel interno de 1px lilás e número lilás. Selecionado: <code>bg-accent text-accent-foreground</code> 600. Outro mês a 50%.</td></tr>
+        <tr><td>Ocupado</td><td>ponto de 4px lilás sob o número. Só informa, não bloqueia.</td></tr>
+        <tr><td>Rodapé</td><td>"Hoje" e "Limpar" em 12px <code>--muted</code>, separados por borda.</td></tr>
+        <tr><td>Teclado</td><td>setas movem o dia, PageUp e PageDown movem o mês, Enter escolhe. Campo aceita digitação no formato <code>dd/mm/aaaa</code> sem abrir o popover.</td></tr>
+      </tbody>
+    </table></div>
+  
+</section>
+
+<!-- ============ 20 MEDIAPREVIEW ============ -->
+<section class="sec soft" id="media">
+  <div class="sec-head"><span class="sec-num">20</span>
+    <h2>MediaPreview</h2>
+    <p class="intro">A peça vista antes de ser aprovada. O arquivo mora no Drive (regra 13), o sistema mostra o preview quando existe (DRV-08) e um cartão de arquivo quando não existe. Mesmo componente no Radar, no Portal e no link público, resolvendo a tensão da regra 10: o cliente formal passa a aprovar vendo a peça.</p>
+  </div>
+
+    <h3><span class="id">20.1</span>Quadro por formato</h3>
+    <div class="grid g4" style="align-items:start">
+      <div class="stage" style="padding:16px"><span class="tag">imagem 4:5</span><div class="mp r45"><div class="art"></div><span class="fmt">Feed · 4:5</span></div><div class="origem">estático de feed</div></div>
+      <div class="stage" style="padding:16px"><span class="tag">vídeo 9:16</span><div class="mp r916" style="max-width:200px;margin:0 auto"><div class="art"></div><span class="fmt">Reels · 9:16</span><div class="play"><i><svg><use href="#i-play"/></svg></i></div><span class="dur">0:34</span></div><div class="origem">reels, stories, tiktok</div></div>
+      <div class="stage" style="padding:16px"><span class="tag">carrossel</span><div class="mp r45"><div class="art"></div><span class="fmt">Carrossel · 4:5</span><span class="cnt">1/5</span><button class="arr l"><svg><use href="#i-chevl"/></svg></button><button class="arr r"><svg><use href="#i-chevr"/></svg></button><div class="dots"><i class="on"></i><i></i><i></i><i></i><i></i></div></div><div class="origem">setas no hover, dots embaixo</div></div>
+      <div class="stage" style="padding:16px"><span class="tag">sem preview</span><div class="mp r45 fallback"><div><div class="ic"><svg><use href="#i-file"/></svg></div><b>agroexata-set-carrossel-v3.pdf</b><span>PDF · 4,2 MB · Drive</span><button class="btn outline sm"><svg><use href="#i-ext"/></svg> Abrir no Drive</button></div></div><div class="origem">arquivo sem miniatura</div></div>
+    </div>
+    <div class="grid g4" style="align-items:start;margin-top:14px">
+      <div class="stage" style="padding:16px"><span class="tag">carregando</span><div class="mp r45 loading"><div class="art"></div></div><div class="origem">a moldura já tem o tamanho final, nada pula</div></div>
+      <div class="stage" style="padding:16px"><span class="tag">aprovada</span><div class="mp r45 approved"><div class="art"></div><span class="fmt">Feed · 4:5</span><span class="state badge b-success"><svg style="width:12px;height:12px"><use href="#i-check"/></svg> Aprovada</span></div><div class="origem">anel success de 1px mais badge</div></div>
+      <div class="stage" style="padding:16px"><span class="tag">alteração pedida</span><div class="mp r45"><div class="art"></div><span class="fmt">Feed · 4:5</span><span class="state badge b-warning"><svg style="width:12px;height:12px"><use href="#i-msg"/></svg> Alteração</span></div><div class="origem">badge warning, sem anel</div></div>
+      <div class="stage" style="padding:16px"><span class="tag">16:9</span><div class="mp r169"><div class="art"></div><span class="fmt">YouTube · 16:9</span><div class="play"><i><svg><use href="#i-play"/></svg></i></div><span class="dur">12:08</span></div><div class="origem">capa de vídeo longo</div></div>
+    </div>
+    <div class="tw"><table class="spec">
+      <thead><tr><th>Parte</th><th>Receita</th></tr></thead>
+      <tbody>
+        <tr><td>Moldura</td><td><code>rounded-xl overflow-hidden bg-raised border border-border</code> com <code>aspect-ratio</code> pelo formato da peça: 4:5 feed, 9:16 vertical, 1:1, 16:9. A moldura nasce no tamanho final, então a página não pula quando a mídia chega.</td></tr>
+        <tr><td>Mídia</td><td><code>object-cover</code>. Imagem vem do preview do Drive. Vídeo mostra o frame de capa (regra do frame do Audiovisual) e só carrega o player no clique.</td></tr>
+        <tr><td>Etiqueta de formato</td><td>overline mono 10px em pill escuro translúcido <code>rgba(10,10,16,.55)</code> com blur, canto superior esquerdo, sempre em <code>#ECEDF6</code> porque fica sobre a mídia, não sobre o tema.</td></tr>
+        <tr><td>Play</td><td>círculo de 48px no centro, mesmo pill escuro. Hover vira lilás com ícone escuro e cresce 6%. Duração no canto inferior direito, mono tabular.</td></tr>
+        <tr><td>Carrossel</td><td>contador "1/5" no canto superior direito, dots de 6px embaixo (ativo vira barra de 14px), setas de 32px nas laterais que só aparecem no hover. Setas do teclado também trocam o slide.</td></tr>
+        <tr><td>Sem preview</td><td>ícone de arquivo num quadrado de 44px, nome do arquivo em 13px 500, tipo, tamanho e origem em 12px <code>--subtle</code>, botão outline "Abrir no Drive". Nunca uma miniatura genérica fingindo ser a peça.</td></tr>
+        <tr><td>Estado da peça</td><td>badge no canto inferior esquerdo. Aprovada: badge success e anel de 1px success na moldura. Alteração pedida: badge warning. Pendente: sem badge.</td></tr>
+        <tr><td>Carregando</td><td>moldura com <code>bg-foreground/4 animate-pulse</code>. É a exceção declarada à regra de skeleton, porque mídia sempre chega depois do resto.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3><span class="id">20.2</span>Thumb, na tabela e no cartão</h3>
+    <div class="grid g2" style="align-items:start">
+      <div class="stage" style="padding:0;overflow:hidden">
+        <table class="t">
+          <thead><tr><th style="width:64px"></th><th>Peça</th><th>Status</th><th style="text-align:right">Publica</th></tr></thead>
+          <tbody>
+            <tr><td><div class="thumb"><div class="art"></div><span class="ty"><svg><use href="#i-image"/></svg></span></div></td><td><b>Bastidores da colheita</b><small>Agroexata · Feed 4:5</small></td><td><span class="badge status" style="--c:#f59e0b">Em revisão</span></td><td style="text-align:right;font-variant-numeric:tabular-nums">18 set</td></tr>
+            <tr><td><div class="thumb"><div class="art" style="background:linear-gradient(135deg,var(--media-c),var(--media-a))"></div><span class="ty"><svg><use href="#i-video"/></svg></span></div></td><td><b>Antes e depois da clínica</b><small>Ruiz Odonto · Reels 9:16</small></td><td><span class="badge status" style="--c:#10b981">Radar</span></td><td style="text-align:right;font-variant-numeric:tabular-nums">20 set</td></tr>
+            <tr><td><div class="thumb"><div class="art" style="background:linear-gradient(135deg,var(--media-b),var(--media-c))"></div><span class="ty"><svg><use href="#i-layers"/></svg></span></div></td><td><b>5 erros na instalação solar</b><small>Solar Master · Carrossel</small></td><td><span class="badge status" style="--c:#8b5cf6">Para entregar</span></td><td style="text-align:right;font-variant-numeric:tabular-nums">22 set</td></tr>
+            <tr><td><div class="thumb doc"><svg><use href="#i-file"/></svg></div></td><td><b>Cardápio de setembro</b><small>Dobashi · PDF</small></td><td><span class="badge status" style="--c:#0ea5e9">Briefing</span></td><td style="text-align:right;color:var(--subtle)">sem data</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="stage"><span class="tag">no cartão do kanban</span>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:var(--shadow-card);max-width:288px">
+          <div style="display:flex;gap:10px;align-items:flex-start"><div class="thumb"><div class="art"></div><span class="ty"><svg><use href="#i-image"/></svg></span></div><div style="min-width:0"><b style="font-weight:500;font-size:14px;line-height:1.2;display:block">Bastidores da colheita</b><span style="font-size:12px;color:var(--muted)">Feed 4:5 · Instagram</span></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid color-mix(in srgb,var(--border) 70%,transparent);padding-top:8px;margin-top:10px;font-size:11px"><span class="badge status" style="--c:#0ea5e9;font-size:11px">Agroexata</span><span style="color:var(--subtle)">v3 · 18 set</span></div>
+        </div>
+        <p class="note">Thumb de 48px com raio 8, ícone do tipo (imagem, vídeo, carrossel) num quadrado de 16px no canto. Sem mídia, ícone de arquivo em <span class="mono">--muted</span> centralizado. Na tabela é a primeira coluna. No cartão fica à esquerda do título. O cartão não carrega responsável nem prazo (regra 5).</p>
+      </div>
+    </div>
+
+    <h3><span class="id">20.3</span>Cartão na fila do Radar</h3>
+    <div class="grid g4" style="align-items:start">
+      <div class="mcard"><div class="mp r45"><div class="art"></div><span class="fmt">Feed · 4:5</span></div><div class="bd"><b>Bastidores da colheita</b><div class="meta"><span>Agroexata</span><span class="sep">·</span><span>18 set</span><span class="sep">·</span><span>Topo</span></div><div class="row"><span class="badge status" style="--c:#f59e0b">Em revisão</span><span class="ap"><svg><use href="#i-check"/></svg> conferida</span></div></div></div>
+      <div class="mcard"><div class="mp r45"><div class="art" style="background:linear-gradient(135deg,var(--media-c),var(--media-a))"></div><span class="fmt">Reels · 9:16</span><div class="play"><i><svg><use href="#i-play"/></svg></i></div><span class="dur">0:34</span></div><div class="bd"><b>Antes e depois da clínica</b><div class="meta"><span>Ruiz Odonto</span><span class="sep">·</span><span>20 set</span><span class="sep">·</span><span>Meio</span></div><div class="row"><span class="badge status" style="--c:#10b981">Radar</span><span class="ap" style="color:var(--subtle)"><svg><use href="#i-clock"/></svg> conferir</span></div></div></div>
+      <div class="mcard"><div class="mp r45"><div class="art" style="background:linear-gradient(135deg,var(--media-b),var(--media-c))"></div><span class="fmt">Carrossel · 4:5</span><span class="cnt">1/5</span><div class="dots"><i class="on"></i><i></i><i></i><i></i><i></i></div></div><div class="bd"><b>5 erros na instalação solar</b><div class="meta"><span>Solar Master</span><span class="sep">·</span><span>22 set</span><span class="sep">·</span><span>Fundo</span></div><div class="row"><span class="badge status" style="--c:#8b5cf6">Para entregar</span><span class="ap"><svg><use href="#i-check"/></svg> conferida</span></div></div></div>
+      <div class="mcard"><div class="mp r45 fallback"><div><div class="ic"><svg><use href="#i-file"/></svg></div><b>cardapio-set.pdf</b><span>PDF · Drive</span></div></div><div class="bd"><b>Cardápio de setembro</b><div class="meta"><span>Dobashi</span><span class="sep">·</span><span style="color:var(--subtle)">sem data</span></div><div class="row"><span class="badge status" style="--c:#0ea5e9">Briefing</span><span class="ap" style="color:var(--subtle)"><svg><use href="#i-clock"/></svg> conferir</span></div></div></div>
+    </div>
+    <p class="note">Cartão de 16px de raio com a moldura no topo sem raio próprio, corpo com título 14px 500, linha de meta (cliente, data, funil) em 12px <span class="mono">--muted</span> separada por ponto, e a última linha com o status da peça e a conferência do CS (RAD-05). Hover é o do card clicável do guia: borda lilás e anel de 1px. Grid <span class="mono">grid-cols-2 lg:grid-cols-4 gap-4</span>.</p>
+
+    <h3><span class="id">20.4</span>Palco de aprovação, peça estática</h3>
+    <p class="note">A tela do cliente no Portal e no link público. Cabeçalho com o Radar e o status do mês, barra de quanto já foi revisado, mídia à esquerda no tamanho de leitura, data e legenda à direita, ações no rodapé. Uma peça por vez, com anterior e próximo.</p>
+    <div class="light-scope"><div class="portal">
+      <div class="hd"><h4>Solar Master · Radar de setembro</h4><div class="status"><span class="overline">Status</span><span class="pill-st">Aprovado</span></div></div>
+      <div class="prog"><span class="overline">67% revisado · 8 de 12 peças</span><div class="bar"><i></i></div></div>
+      <div class="body">
+        <div><div class="mp r45" style="max-width:420px"><div class="art"></div></div></div>
+        <div>
+          <div class="date">08/09<span class="chip-fmt">Feed</span></div>
+          <div class="legend"><span class="overline">Legenda</span><p>Instalação solar mal feita não aparece na conta de luz no primeiro mês. Aparece no terceiro, quando o inversor desliga no meio da tarde e ninguém sabe por quê.</p><p>Separei os cinco erros que mais vemos em vistoria, do dimensionamento errado ao cabo subdimensionado, e o que cada um custa em reais por ano.</p><p class="tags">#energiasolar #instalacaosolar #solarmaster</p><div style="margin-top:16px"><button class="btn outline pill">Comentar sobre a legenda</button></div></div>
+          <div class="cmts">Nenhum comentário ainda</div>
+        </div>
+      </div>
+      <div class="foot"><button class="btn outline pill"><svg><use href="#i-chevl"/></svg> Anterior</button><span class="cnt">conteúdo 3 de 12</span><div class="acts"><button class="btn premium pill">Ajustar</button><button class="btn brand pill">Aprovar <svg><use href="#i-check"/></svg></button><button class="btn outline pill">Próximo <svg><use href="#i-chevr"/></svg></button></div></div>
+    </div></div>
+    <div class="tw"><table class="spec">
+      <thead><tr><th>Parte</th><th>Receita</th></tr></thead>
+      <tbody>
+        <tr><td>Tema</td><td>o Portal e o link público são <b>claros por padrão</b>, como o checkout da marca: o cliente abre uma vez por mês, quase sempre no celular e de dia. O Radar interno mostra os mesmos blocos no tema do usuário.</td></tr>
+        <tr><td>Cabeçalho</td><td>título 28px 500 com cliente e Radar. À direita, overline "Status" e a pill do mês: verde preenchida "Aprovado" ou âmbar tingida "Aguardando você". Pill em mono caixa alta porque é etiqueta de estado, não botão.</td></tr>
+        <tr><td>Progresso</td><td>overline "67% revisado · 8 de 12 peças" e fio de 3px com fill lilás. É o mesmo fio do formulário conversacional, mais grosso.</td></tr>
+        <tr><td>Corpo</td><td>duas colunas <code>1fr / 1.25fr</code> com 40px de gap. Mídia até 420px de largura. Empilha no celular com a mídia em cima.</td></tr>
+        <tr><td>Data e formato</td><td>data em 28px 500 tabular ao lado de um chip mono em <code>bg-raised</code> com o formato (Feed, Reels, Carrossel, Stories).</td></tr>
+        <tr><td>Legenda</td><td>bloco com fio de 1px à esquerda e 20px de recuo, overline "Legenda", parágrafos em 15px, hashtags em <code>--muted</code>, botão outline pill "Comentar sobre a legenda". Legenda inteira, sem corte: o cliente precisa ler tudo pra aprovar.</td></tr>
+        <tr><td>Comentários</td><td>faixa entre dois fios com "Nenhum comentário ainda" ou a lista de comentários da peça (ver 20.7).</td></tr>
+        <tr><td>Rodapé</td><td>"Anterior" outline à esquerda, contador mono "conteúdo 3 de 12" no centro, à direita "Ajustar" (premium, fundo raised), "Aprovar" no botão <b>brand</b> da marca (gradient lilás, brilho interno, glow no hover, texto branco) e "Próximo" (outline, desabilitado na última). Todos pill: Portal segue a superfície pública, como o formulário conversacional. No Radar interno o mesmo rodapé usa o accent chapado com raio de 12px.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3><span class="id">20.5</span>Reels: capa e vídeo lado a lado</h3>
+    <p class="note">Vídeo aprova em dois quadros. A capa é o que aparece no feed e o Reels é o que toca. Os dois têm etiqueta mono no canto, e o vídeo traz tempo e barra de progresso na base. Só carrega o player no clique.</p>
+    <div class="light-scope"><div class="portal">
+      <div class="hd"><h4>Solar Master · Radar de setembro</h4><div class="status"><span class="overline">Status</span><span class="pill-st">Aprovado</span></div></div>
+      <div class="prog"><span class="overline">67% revisado · 8 de 12 peças</span><div class="bar"><i></i></div></div>
+      <div class="body">
+        <div><div class="reels2"><div class="mp r916"><div class="art"></div><span class="lb">Capa</span></div><div class="mp r916"><div class="art" style="background:linear-gradient(135deg,var(--media-c),var(--media-a))"></div><span class="lb">Reels</span><div class="play"><i><svg><use href="#i-play"/></svg></i></div><div class="vbar"><span>0:00 / 0:38</span><i></i></div></div></div></div>
+        <div>
+          <div class="date">08/09<span class="chip-fmt">Reels</span></div>
+          <div class="legend"><span class="overline">Legenda</span><p>Instalação solar mal feita não aparece na conta de luz no primeiro mês. Aparece no terceiro, quando o inversor desliga no meio da tarde e ninguém sabe por quê.</p><p>Separei os cinco erros que mais vemos em vistoria, do dimensionamento errado ao cabo subdimensionado, e o que cada um custa em reais por ano.</p><p class="tags">#energiasolar #instalacaosolar #solarmaster</p><div style="margin-top:16px"><button class="btn outline pill">Comentar sobre a legenda</button></div></div>
+          <div class="cmts">Nenhum comentário ainda</div>
+        </div>
+      </div>
+      <div class="foot"><button class="btn outline pill"><svg><use href="#i-chevl"/></svg> Anterior</button><span class="cnt">conteúdo 5 de 12</span><div class="acts"><button class="btn premium pill">Ajustar</button><button class="btn brand pill">Aprovar <svg><use href="#i-check"/></svg></button><button class="btn outline pill">Próximo <svg><use href="#i-chevr"/></svg></button></div></div>
+    </div></div>
+
+    <h3><span class="id">20.6</span>Carrossel: coverflow e tela cheia</h3>
+    <p class="note">Slide em 1080 x 1350 (4:5), o mesmo tamanho que sobe no Instagram. O atual no centro, o anterior e o próximo a 35% atrás, na escala de 80%, inteiros dentro do palco, com os mesmos cantos de 12px. Setas redondas de 40px embaixo com "slide 2 de 9" em mono. O botão "Ver em tela cheia" fica sobre o slide, no canto inferior esquerdo, em accent mono.</p>
+    <div class="light-scope"><div class="portal">
+      <div class="hd"><h4>Solar Master · Radar de setembro</h4><div class="status"><span class="overline">Status</span><span class="pill-st wait">Aguardando você</span></div></div>
+      <div class="prog"><span class="overline">67% revisado · 8 de 12 peças</span><div class="bar"><i></i></div></div>
+      <div class="body">
+        <div><div class="cover"><div class="sl prev"></div><div class="sl next"></div><div class="sl cur"><span class="n">1.</span><span class="tt">Dimensionar pela conta antiga</span><span class="tx">O consumo muda depois que a placa entra. Quem dimensiona pelo histórico paga por painel que não usa.</span><button class="btn accent mono fs-btn">Ver em tela cheia</button></div></div><div class="snav"><button class="rb"><svg><use href="#i-chevl"/></svg></button><span class="cnt">slide 2 de 9</span><button class="rb"><svg><use href="#i-chevr"/></svg></button></div></div>
+        <div>
+          <div class="date">12/09<span class="chip-fmt">Carrossel</span></div>
+          <div class="legend"><span class="overline">Legenda</span><p>Instalação solar mal feita não aparece na conta de luz no primeiro mês. Aparece no terceiro, quando o inversor desliga no meio da tarde e ninguém sabe por quê.</p><p>Separei os cinco erros que mais vemos em vistoria, do dimensionamento errado ao cabo subdimensionado, e o que cada um custa em reais por ano.</p><p class="tags">#energiasolar #instalacaosolar #solarmaster</p><div style="margin-top:16px"><button class="btn outline pill">Comentar sobre a legenda</button></div></div>
+          <div class="cmts">Nenhum comentário ainda</div>
+        </div>
+      </div>
+      <div class="foot"><button class="btn outline pill"><svg><use href="#i-chevl"/></svg> Anterior</button><span class="cnt">conteúdo 7 de 12</span><div class="acts"><button class="btn premium pill">Ajustar</button><button class="btn brand pill">Aprovar <svg><use href="#i-check"/></svg></button><button class="btn outline pill">Próximo <svg><use href="#i-chevr"/></svg></button></div></div>
+    </div></div>
+
+    <h3><span class="id">20.7</span>Tela cheia com comentários</h3>
+    <p class="note">Scrim com blur sobre a página, o slide no centro em tamanho grande, e o painel de comentários à direita. Cada comentário sabe de qual slide e área ele é. O time responde no mesmo cartão. "Resolver" fecha o comentário sem apagar.</p>
+    <div class="light-scope"><div class="fs">
+      <div>
+        <div class="cover"><div class="sl prev"></div><div class="sl next"></div><div class="sl cur"><span class="n">1.</span><span class="tt">Dimensionar pela conta antiga</span><span class="tx">O consumo muda depois que a placa entra. Quem dimensiona pelo histórico paga por painel que não usa.</span></div></div>
+        <div class="snav"><button class="rb"><svg><use href="#i-chevl"/></svg></button><span class="cnt">slide 2 de 9</span><button class="rb"><svg><use href="#i-chevr"/></svg></button></div>
+      </div>
+      <div class="cpanel">
+        <h5>Comentários</h5>
+        <div class="cmt">
+          <div class="who"><span class="av">C</span>Carlos Menezes</div>
+          <span class="tagp">Slide 2 · área marcada</span>
+          <p>Pode aumentar esse título? No feed do celular ele fica menor que o texto de apoio.</p>
+          <div class="ac"><span>Responder</span><span>Resolver</span></div>
+          <div class="re"><span class="overline">Beza Media</span><p>Subimos o corpo do título e refizemos a quebra em duas linhas.</p></div>
+        </div>
+        <div class="cmt">
+          <div class="who"><span class="av">C</span>Carlos Menezes</div>
+          <span class="tagp">Legenda</span>
+          <p>Troca "vistoria" por "visita técnica", é como o cliente fala.</p>
+          <div class="ac"><span>Responder</span><span>Resolver</span></div>
+        </div>
+        <textarea class="input" placeholder="Comentário geral do conteúdo"></textarea>
+        <button class="btn brand pill">Comentar</button>
+      </div>
+    </div></div>
+    <div class="tw"><table class="spec">
+      <tbody>
+        <tr><td>Overlay</td><td><code>--scrim</code> com <code>backdrop-blur</code> de 14px, a página some atrás. Esc e clique fora fecham. Setas do teclado trocam o slide.</td></tr>
+        <tr><td>Painel</td><td><code>w-[360px] bg-raised rounded-2xl p-5 shadow-lift</code>, título 20px 500. Na largura de celular vira folha embaixo do slide.</td></tr>
+        <tr><td>Comentário</td><td>cartão <code>bg-card border rounded-xl p-3.5</code>: avatar de 24px e nome em 14px 500, pill mono lilás com a origem ("Slide 2 · área marcada", "Legenda", "Geral"), texto 14px, ações "Responder" e "Resolver" em mono 10.5px <code>--subtle</code> que ficam lilás no hover.</td></tr>
+        <tr><td>Resposta do time</td><td>aninhada com fio à esquerda, overline "Beza Media" e o texto. O cliente vê só comentários <code>client</code> e as respostas; interno nunca aparece aqui.</td></tr>
+        <tr><td>Novo comentário</td><td>textarea "Comentário geral do conteúdo" e botão accent pill "Comentar". Comentário geral não tem área.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3><span class="id">20.8</span>Pedido de ajuste com área marcada</h3>
+    <p class="note">"Ajustar" entra no modo de marcação: o cursor vira mira, o cliente arrasta um retângulo sobre o slide e o comentário nasce preso àquela área. O resto da tela abaixa pra 45% pra dizer que só o slide está ativo.</p>
+    <div class="light-scope"><div class="fs" style="grid-template-columns:1fr;min-height:480px">
+      <div style="position:relative;max-width:640px;margin:0 auto;width:100%">
+        <div class="cover" style="height:400px"><div class="sl prev" style="opacity:.2"></div><div class="sl next" style="opacity:.2"></div><div class="sl cur" style="opacity:.75"><span class="n">1.</span><span class="tt">Dimensionar pela conta antiga</span><span class="tx">O consumo muda depois que a placa entra. Quem dimensiona pelo histórico paga por painel que não usa.</span><div class="amark"></div></div></div>
+        <div class="popc"><div class="who"><span class="av">C</span>Carlos Menezes</div><input class="input" placeholder="Comente sobre esta área"><div class="ft"><button class="cancel">Cancelar</button><button class="btn brand pill sm" style="height:32px">Comentar</button></div></div>
+        <div class="snav"><button class="rb"><svg><use href="#i-chevl"/></svg></button><span class="cnt">slide 2 de 9</span><button class="rb"><svg><use href="#i-chevr"/></svg></button></div>
+      </div>
+    </div></div>
+    <div class="tw"><table class="spec">
+      <tbody>
+        <tr><td>Marcação</td><td>retângulo com borda tracejada de 1.5px lilás, raio 6px e fundo lilás a 6%. Fica salvo em porcentagem do slide, então vale em qualquer tamanho de tela.</td></tr>
+        <tr><td>Popover</td><td><code>w-[290px] bg-card rounded-xl shadow-lift p-3.5</code> ancorado ao canto da área. Avatar e nome, input "Comente sobre esta área", "Cancelar" em mono <code>--subtle</code> e "Comentar" accent pill pequeno. Comentário obrigatório: sem texto o botão não ativa.</td></tr>
+        <tr><td>Efeito na peça</td><td>o primeiro pedido de ajuste leva a peça pra "Em alteração" (badge warning em 20.1, laranja na Pauta) e devolve pro time. O cliente pode marcar várias áreas antes de fechar.</td></tr>
+        <tr><td>Em imagem e vídeo</td><td>mesma mecânica sobre a imagem estática e sobre o frame pausado do vídeo, que guarda o tempo junto com a área ("0:12 · área marcada").</td></tr>
+      </tbody>
+    </table></div>
+    <div class="rule" data-rot="regra">Um componente, três lugares. Radar (CS confere), Revisão (Head aprova), Portal e link público (cliente decide). O que muda é o par de ações e o que chega nos dados. O visual é o mesmo, então a peça que o cliente aprova é <b>exatamente</b> a que o time conferiu.</div>
+  
+</section>
+
 <section class="sec" style="padding:56px 64px;border:none">
-  <p style="font-size:13px;color:var(--subtle)">Fonte de verdade em texto: <span class="mono">marca/design-guide-sistemas.md</span>. Marca: <span class="mono">marca/design-guide.md</span>. Estrutura: <span class="mono">github.com/luansinezio/crm</span>. Alinhado em 15/set/2026.</p>
+  <p style="font-size:13px;color:var(--subtle)">Fonte de verdade em texto: <span class="mono">marca/design-guide-sistemas.md</span>. Marca: <span class="mono">marca/design-guide.md</span>. Estrutura: <span class="mono">github.com/luansinezio/crm</span>. Alinhado em 15/set/2026. Calendar e MediaPreview desenhados pro Agency OS em 15/set/2026.</p>
 </section>
 </main>
 </div>
