@@ -10,6 +10,10 @@
       "destination": "/manual-de-marca-luan.html"
     },
     {
+      "source": "/sistemas",
+      "destination": "/manual-de-marca-sistemas.html"
+    },
+    {
       "source": "/v1",
       "destination": "/manual-de-marca-v1-jul2026.html"
     }

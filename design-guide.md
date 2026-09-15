@@ -4,6 +4,7 @@
 > As skills de carrossel, proposta e slide leem este arquivo antes de criar qualquer visual.
 > Fonte de verdade visual: tema WP em `projetos/site-beza/wp-theme/beza-theme/` (no ar em https://www.beza.media).
 > Versão visual desse guia (renderizada, com tema claro e escuro): `marca/manual-de-marca.html`, no ar em https://manual-marca-beza-v2.vercel.app
+> Este guia é da marca: conteúdo, site, landing, proposta, deck, página de venda. Sistema (área logada, painel, CRM, produto interno) usa o `marca/design-guide-sistemas.md`. Qual usar quando: `marca/qual-guia-usar.md`.
 
 ---
 
