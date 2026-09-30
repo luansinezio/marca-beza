@@ -24,7 +24,8 @@
   --chart-grid:rgba(199,201,214,0.06); --chart-cursor:rgba(199,201,214,0.25);
   --chart-prev:rgba(199,201,214,0.35); --chart-glow:rgba(154,155,229,0.45);
   --success:#6FC878; --danger:#F34D4D; --warning:#F3AE4D; --info:#77B8F1;
-  --scrim:rgba(10,10,16,0.65); --status-tint:#ECEDF6;
+  --scrim:rgba(10,10,16,0.65); --status-tint:#ECEDF6; --on-solid:#0D0D0D;
+  --st-plan:#9A9A9A; --st-capt:#C2C2C2; --st-edit:var(--info); --st-design:#5CC8DB; --st-ajust:#F79A4A; --st-rev:#E9CB3A; --st-ok:var(--success); --st-alt:var(--danger); --st-portal:#B9B9EE; --st-agend:#9CCBF5;
   --input-bg:rgba(255,255,255,0.04); --input-border:rgba(255,255,255,0.12); --input-border-hover:rgba(255,255,255,0.2); --input-focus-bg:rgba(255,255,255,0.06); --ring:rgba(154,155,229,0.18);
   --logo-on-accent:#1A1830;
   --media-a:#2A2A44; --media-b:#3B3560; --media-c:#4E4A7A;
@@ -46,7 +47,8 @@
   --chart-grid:rgba(35,34,46,0.06); --chart-cursor:rgba(35,34,46,0.2);
   --chart-prev:rgba(35,34,46,0.3); --chart-glow:rgba(110,108,190,0.22);
   --success:#3F8F49; --danger:#C9342F; --warning:#B57A18; --info:#2E7BB8;
-  --scrim:rgba(35,34,46,0.4); --status-tint:#23222E;
+  --scrim:rgba(35,34,46,0.4); --status-tint:#23222E; --on-solid:#FFFFFF;
+  --st-plan:#8A8A8A; --st-capt:#5F5F5F; --st-edit:var(--info); --st-design:#1F8FA3; --st-ajust:#D9731A; --st-rev:#806900; --st-ok:var(--success); --st-alt:var(--danger); --st-portal:#68669E; --st-agend:#6FA8DC;
   --input-bg:#FFFFFF; --input-border:rgba(35,34,46,0.12); --input-border-hover:rgba(35,34,46,0.22); --input-focus-bg:#FFFFFF; --ring:rgba(110,108,190,0.18);
   --logo-on-accent:#FFFFFF;
   --media-a:#D9D7EC; --media-b:#C4C2E3; --media-c:#ADAAD6;
@@ -226,8 +228,8 @@ table.spec code{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(-
 .delta.zero{background:color-mix(in srgb,var(--fg) 5%,transparent);color:var(--muted)}
 .delta.nobase{background:color-mix(in srgb,var(--fg) 5%,transparent);color:var(--subtle)}
 
-.seg{display:inline-flex;align-items:center;gap:2px;height:36px;padding:4px;background:var(--card);border:1px solid var(--border);border-radius:12px}
-.seg button{display:inline-flex;align-items:center;gap:6px;height:100%;padding:0 12px;border-radius:8px;border:none;background:transparent;font-size:14px;font-weight:500;color:var(--muted)}
+.seg{display:inline-flex;align-items:center;gap:2px;height:36px;padding:3px;background:var(--raised);border-radius:9px}
+.seg button{display:inline-flex;align-items:center;gap:6px;height:100%;padding:0 12px;border-radius:6px;border:none;background:transparent;font-size:13px;font-weight:500;color:var(--muted)}
 .seg button svg{width:16px;height:16px}
 .seg button.on{background:var(--accent);color:var(--accent-fg)}
 .seg button,.tabs button,.pill-toggle,.rail .it{transition:background .25s var(--ease-beza),color .25s var(--ease-beza),border-color .25s var(--ease-beza)}
@@ -277,7 +279,12 @@ select.input{appearance:none;padding-right:36px;cursor:pointer;background-image:
 .mock-app{display:flex;height:480px;border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--glow-bg)}
 .mock-app .content{flex:1;min-width:0;overflow:hidden;padding:0 24px}
 .ph{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:24px 0 16px}
-.ph h1{font-size:28px;font-weight:500;letter-spacing:-.02em;line-height:1.1}
+.ph h1{font-size:22px;font-weight:500;letter-spacing:-.02em;line-height:1.15}
+.ph .pt{display:flex;align-items:center;gap:14px}
+.ph .tile{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
+.ph .tile svg{width:20px;height:20px}
+.ph .sub{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.ph2{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;border-bottom:1px solid var(--border);padding-bottom:12px}
 .ph .acts{display:flex;align-items:center;gap:12px}
 
 /* overlays estáticos */
@@ -303,7 +310,7 @@ select.input{appearance:none;padding-right:36px;cursor:pointer;background-image:
 .cmdk .in svg{width:16px;height:16px;color:var(--subtle)}
 .cmdk .in span{flex:1;color:var(--subtle);font-size:14px}
 .cmdk kbd{border:1px solid var(--border);border-radius:4px;padding:2px 6px;font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted)}
-.cmdk .grp{padding:8px 16px 4px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--subtle);font-weight:500}
+.cmdk .grp{padding:8px 16px 4px;font-size:12px;color:var(--subtle);font-weight:500}
 .cmdk .row{display:flex;align-items:center;gap:10px;padding:8px 16px;font-size:14px}
 .cmdk .row:hover{background:color-mix(in srgb,var(--fg) 5%,transparent)}
 .cmdk .row svg{width:16px;height:16px;color:var(--muted)}
@@ -312,7 +319,7 @@ select.input{appearance:none;padding-right:36px;cursor:pointer;background-image:
 .pop .hd{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border);font-size:14px;font-weight:500}
 .pop .hd a{font-size:12px;color:var(--muted);display:flex;gap:4px;align-items:center}
 .pop .hd a svg{width:14px;height:14px}
-.pop .sec-t{padding:10px 16px 4px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--subtle);font-weight:500}
+.pop .sec-t{padding:10px 16px 4px;font-size:12px;color:var(--subtle);font-weight:500}
 .pop .it{display:flex;gap:10px;padding:8px 16px;align-items:flex-start;font-size:13px}
 .pop .it .d{width:6px;height:6px;border-radius:50%;background:var(--info);margin-top:7px;flex:none}
 .pop .it .d.off{background:transparent}
@@ -467,7 +474,7 @@ table.t td.empty{text-align:center;color:var(--subtle);padding:40px 16px}
 /* nunca / sempre */
 /* helpers vindos da proposta Calendar/MediaPreview */
 .tw{overflow-x:auto}
-.overline{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--subtle);font-weight:500}
+.overline{font-size:12px;color:var(--muted);font-weight:500}
 .av{width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-fg);display:grid;place-items:center;font-size:11px;font-weight:600;flex:none}
 .btn.pill{border-radius:999px;height:40px;padding:0 20px}
 .btn.premium{background:var(--raised);color:var(--fg)}
@@ -499,11 +506,11 @@ textarea.input{height:auto;min-height:72px;padding:8px 12px;resize:vertical}
 .chip.all.on{background:var(--accent);color:var(--accent-fg);border-color:transparent}
 .sel{font-family:inherit;height:28px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;font-weight:500;padding:0 28px 0 10px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238B8DA1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
 .cal-wd{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border)}
-.cal-wd div{padding:8px 12px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--subtle)}
-.cal-g{display:grid;grid-template-columns:repeat(7,1fr)}
-.day{min-height:148px;padding:10px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:6px;position:relative;transition:background .2s var(--ease-beza)}
-.day:nth-child(7n){border-right:none}
-.day.wk{background:color-mix(in srgb,var(--fg) 2%,transparent)}
+.cal-wd div{padding:8px 12px;font-size:12px;font-weight:500;color:var(--muted)}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;padding:12px}
+.day{min-height:120px;padding:10px;border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;gap:6px;position:relative;transition:background .2s var(--ease-beza)}
+.day.out{border-style:dashed}
+.day.wk{background:var(--raised)}
 .day.out .n{color:var(--subtle);opacity:.6}
 .day .n{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums;margin-bottom:2px}
 .day .n em{font-style:normal;font-size:11px;color:var(--subtle)}
@@ -514,18 +521,25 @@ textarea.input{height:auto;min-height:72px;padding:8px 12px;resize:vertical}
 .day.drop{background:color-mix(in srgb,var(--accent) 10%,transparent)}
 .day .slot{flex:1;min-height:56px;border-radius:10px;border:1px dashed transparent}
 .day.drop .slot.empty{border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
-.blk{--c:#9A9BE5;display:flex;flex-direction:column;gap:2px;min-height:56px;padding:8px 10px;border-radius:10px;background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow-card);font-size:12px;line-height:1.3;cursor:grab;transition:box-shadow .2s var(--ease-beza),border-color .2s var(--ease-beza)}
+.blk{--c:#9A9BE5;display:flex;flex-direction:column;gap:2px;min-height:56px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,var(--c) 10%,var(--card));border:1px solid color-mix(in srgb,var(--c) 28%,var(--border));box-shadow:var(--shadow-card);font-size:12px;line-height:1.3;cursor:grab;transition:box-shadow .2s var(--ease-beza),border-color .2s var(--ease-beza)}
 .blk:hover{box-shadow:var(--shadow-lift)}
 .blk .h{display:flex;align-items:center;justify-content:space-between;gap:6px}
 .blk b{font-weight:500;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.blk .d{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--subtle);flex:none}
+.blk .d{font-size:11px;color:var(--subtle);flex:none;font-variant-numeric:tabular-nums}
 .blk span{color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .blk .st{display:inline-flex;align-items:center;gap:5px;margin-top:auto;padding-top:4px;font-size:10.5px;font-weight:500;color:color-mix(in srgb,var(--c) 55%,var(--status-tint));white-space:nowrap}
 .blk .st i{width:6px;height:6px;border-radius:50%;background:color-mix(in srgb,var(--c) 72%,var(--status-tint));flex:none}
 .blk .st svg{width:12px;height:12px;flex:none}
 .blk.full{min-height:118px}
-.blk.done{opacity:.6}
-.blk.done b{text-decoration:line-through;text-decoration-color:var(--subtle)}
+.blk.done{--c:var(--success);background:color-mix(in srgb,var(--success) 24%,var(--card));border-color:color-mix(in srgb,var(--success) 55%,var(--border))}
+.blk.late{--c:var(--warning);background:color-mix(in srgb,var(--warning) 16%,var(--card));border-color:color-mix(in srgb,var(--warning) 50%,var(--border))}
+.blk.blocked{background:transparent;box-shadow:none;border:1px dashed color-mix(in srgb,var(--fg) 30%,transparent)}
+.blk.blocked.plan-late{border-color:color-mix(in srgb,var(--danger) 65%,transparent);background:color-mix(in srgb,var(--danger) 8%,transparent)}
+.blk.blocked.plan-late .st{color:var(--danger)}
+.etp{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:var(--c);color:var(--on-solid);font-size:12px;font-weight:500;white-space:nowrap}
+.etp code{font-size:11px;color:inherit;opacity:.8}
+.sk{border-radius:16px;background:color-mix(in srgb,var(--fg) 4%,transparent);animation:sk 1.6s ease-in-out infinite}
+@keyframes sk{50%{opacity:.5}}
 .blk.cancel{background:transparent;box-shadow:none;border-style:dashed;opacity:.7}
 .blk.cancel b{text-decoration:line-through}
 .blk.drag{opacity:.4}
@@ -542,7 +556,7 @@ textarea.input{height:auto;min-height:72px;padding:8px 12px;resize:vertical}
 .team{display:grid;grid-template-columns:180px repeat(5,1fr)}
 .team>div{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:10px;min-height:88px}
 .team>div:nth-child(6n){border-right:none}
-.team .hd{min-height:0;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--subtle)}
+.team .hd{min-height:0;padding:8px 10px;font-size:12px;font-weight:500;color:var(--muted)}
 .team .hd.today{color:var(--accent)}
 .team .p{display:flex;align-items:center;gap:8px;font-size:13px}
 .team .p small{display:block;font-size:11px;color:var(--subtle)}
@@ -552,7 +566,7 @@ textarea.input{height:auto;min-height:72px;padding:8px 12px;resize:vertical}
 .dp .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .dp .hd b{font-weight:500;font-size:14px;text-transform:capitalize}
 .dp .wd,.dp .g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.dp .wd div{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--subtle);padding:4px 0}
+.dp .wd div{text-align:center;font-size:11px;font-weight:500;color:var(--subtle);padding:4px 0}
 .dp .g button{position:relative;height:34px;padding:0;line-height:1;display:grid;place-items:center;border-radius:8px;border:none;background:transparent;font-size:13px;color:var(--fg);font-variant-numeric:tabular-nums}
 .dp .g button.out{color:var(--subtle);opacity:.5}
 .dp .g button:hover{background:color-mix(in srgb,var(--fg) 5%,transparent)}
@@ -572,9 +586,9 @@ textarea.input{height:auto;min-height:72px;padding:8px 12px;resize:vertical}
 .mp{position:relative;border-radius:12px;overflow:hidden;background:var(--raised);border:1px solid var(--border);isolation:isolate}
 .mp .art{position:absolute;inset:0;background:linear-gradient(135deg,var(--media-a),var(--media-b) 55%,var(--media-c))}
 .mp .art::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 30% 30%,rgba(255,255,255,.10),transparent 60%)}
-.mp .fmt{position:absolute;top:8px;left:8px;z-index:2;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#ECEDF6;background:rgba(10,10,16,.55);backdrop-filter:blur(6px);border-radius:6px;padding:3px 7px}
-.mp .dur{position:absolute;right:8px;bottom:8px;z-index:2;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ECEDF6;background:rgba(10,10,16,.55);backdrop-filter:blur(6px);border-radius:6px;padding:2px 6px;font-variant-numeric:tabular-nums}
-.mp .cnt{position:absolute;right:8px;top:8px;z-index:2;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ECEDF6;background:rgba(10,10,16,.55);backdrop-filter:blur(6px);border-radius:6px;padding:2px 6px;font-variant-numeric:tabular-nums}
+.mp .fmt{position:absolute;top:8px;left:8px;z-index:2;font-size:11px;font-weight:500;color:#ECEDF6;background:rgba(10,10,16,.55);backdrop-filter:blur(6px);border-radius:6px;padding:3px 7px}
+.mp .dur{position:absolute;right:8px;bottom:8px;z-index:2;font-size:11px;color:#ECEDF6;background:rgba(10,10,16,.55);backdrop-filter:blur(6px);border-radius:6px;padding:2px 6px;font-variant-numeric:tabular-nums}
+.mp .cnt{position:absolute;right:8px;top:8px;z-index:2;font-size:11px;color:#ECEDF6;background:rgba(10,10,16,.55);backdrop-filter:blur(6px);border-radius:6px;padding:2px 6px;font-variant-numeric:tabular-nums}
 .mp .play{position:absolute;inset:0;z-index:2;display:grid;place-items:center}
 .mp .play i{width:48px;height:48px;border-radius:50%;background:rgba(10,10,16,.55);backdrop-filter:blur(6px);display:grid;place-items:center;color:#ECEDF6;transition:transform .25s var(--ease-beza),background .25s}
 .mp .play i svg{width:20px;height:20px;margin-left:2px}
@@ -656,7 +670,8 @@ table.t td small{color:var(--muted);font-size:12px}
   --border:rgba(35,34,46,0.10); --border-strong:rgba(35,34,46,0.18);
   --accent:#6E6CBE; --accent-hover:#55539E; --accent-fg:#FFFFFF; --accent-deep:#55539E;
   --success:#3F8F49; --danger:#C9342F; --warning:#B57A18; --info:#2E7BB8;
-  --scrim:rgba(35,34,46,0.4); --status-tint:#23222E;
+  --scrim:rgba(35,34,46,0.4); --status-tint:#23222E; --on-solid:#FFFFFF;
+  --st-plan:#8A8A8A; --st-capt:#5F5F5F; --st-edit:var(--info); --st-design:#1F8FA3; --st-ajust:#D9731A; --st-rev:#806900; --st-ok:var(--success); --st-alt:var(--danger); --st-portal:#68669E; --st-agend:#6FA8DC;
   --input-bg:#FFFFFF; --input-border:rgba(35,34,46,0.12); --ring:rgba(110,108,190,0.18);
   --shadow-card:0 1px 2px rgba(35,34,60,0.06),0 8px 24px rgba(35,34,60,0.06);
   --shadow-lift:inset 0 1px 0 rgba(255,255,255,0.7),0 10px 30px rgba(35,34,60,0.08);
@@ -668,7 +683,7 @@ table.t td small{color:var(--muted);font-size:12px}
 .portal .hd{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
 .portal .hd h4{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:28px;font-weight:500;letter-spacing:-.02em;line-height:1.1;text-transform:none;color:var(--fg);margin:0}
 .portal .status{display:flex;align-items:center;gap:12px}
-.pill-st{display:inline-flex;align-items:center;height:36px;padding:0 18px;border-radius:999px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;background:var(--success);color:#FFFFFF}
+.pill-st{display:inline-flex;align-items:center;height:36px;padding:0 18px;border-radius:999px;font-size:13px;font-weight:500;background:var(--success);color:#FFFFFF}
 .pill-st.wait{background:color-mix(in srgb,var(--warning) 14%,transparent);color:var(--warning);border:1px solid color-mix(in srgb,var(--warning) 30%,transparent)}
 .portal .prog{margin-top:22px}
 .portal .prog .overline{margin-bottom:8px;display:block}
@@ -676,9 +691,9 @@ table.t td small{color:var(--muted);font-size:12px}
 .portal .prog .bar i{display:block;height:100%;width:67%;background:var(--accent);border-radius:999px}
 .portal .body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:40px;margin-top:32px;align-items:start}
 .portal .mp{border-radius:12px;box-shadow:var(--shadow-card)}
-.portal .lb{position:absolute;top:12px;left:12px;z-index:2;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#ECEDF6;background:rgba(10,10,16,.45);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:8px 14px}
+.portal .lb{position:absolute;top:12px;left:12px;z-index:2;font-size:12px;font-weight:500;color:#ECEDF6;background:rgba(10,10,16,.45);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:8px 14px}
 .portal .date{display:flex;align-items:center;gap:12px;font-size:28px;font-weight:500;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
-.chip-fmt{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:8px;background:var(--raised);font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.chip-fmt{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:8px;background:var(--raised);font-size:12px;font-variant-numeric:tabular-nums;color:var(--muted);font-weight:500}
 .legend{border-left:1px solid var(--border);padding-left:20px;margin-top:22px}
 .legend .overline{display:block;margin-bottom:10px}
 .legend p{font-size:15px;line-height:1.65;color:var(--fg)}
@@ -696,11 +711,11 @@ table.t td small{color:var(--muted);font-size:12px}
 .portal .cmts{margin-top:22px;padding:18px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);font-size:14px;color:var(--subtle)}
 .portal .foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:32px}
 .portal .foot .acts{display:flex;gap:10px;flex-wrap:wrap}
-.portal .cnt{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--subtle)}
+.portal .cnt{font-size:12px;font-weight:500;color:var(--subtle);font-variant-numeric:tabular-nums}
 .reels2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .reels2 .mp{max-width:none}
 .vbar{position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;align-items:center;gap:12px;padding:12px 14px;background:linear-gradient(transparent,rgba(10,10,16,.55))}
-.vbar span{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#ECEDF6;font-variant-numeric:tabular-nums}
+.vbar span{font-size:11px;color:#ECEDF6;font-variant-numeric:tabular-nums}
 .vbar i{flex:1;height:3px;border-radius:999px;background:rgba(236,237,246,.35);overflow:hidden}
 .vbar i::after{content:'';display:block;height:100%;width:2%;background:#ECEDF6}
 .cover{position:relative;height:320px;display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -712,7 +727,7 @@ table.t td small{color:var(--muted);font-size:12px}
 .cover .sl.cur .tt{position:absolute;left:14%;top:26%;right:14%;font-size:22px;font-weight:600;line-height:1.1;letter-spacing:-.02em;color:var(--fg)}
 .cover .sl.cur .tx{position:absolute;left:14%;top:52%;right:14%;font-size:13px;line-height:1.4;color:var(--muted)}
 .cover .sl.cur .fs-btn{position:absolute;left:14px;bottom:14px;z-index:3}
-.btn.accent.mono{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;height:34px;border-radius:8px}
+.btn.accent.mono{font-size:12px;font-weight:500;height:34px;border-radius:8px}
 .snav{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:14px}
 .snav .rb{width:40px;height:40px;border-radius:50%;border:1px solid var(--border-strong);background:var(--surface);display:grid;place-items:center;color:var(--fg)}
 .snav .rb svg{width:16px;height:16px}
@@ -728,9 +743,9 @@ table.t td small{color:var(--muted);font-size:12px}
 .cmt{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
 .cmt .who{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500}
 .cmt .who .av{width:24px;height:24px;font-size:10px}
-.cmt .tagp{display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);color:var(--accent);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin:10px 0 8px}
+.cmt .tagp{display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);color:var(--accent);font-size:12px;font-weight:500;margin:10px 0 8px}
 .cmt p{font-size:14px;line-height:1.5}
-.cmt .ac{display:flex;gap:16px;margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--subtle)}
+.cmt .ac{display:flex;gap:16px;margin-top:8px;font-size:12px;font-weight:500;color:var(--subtle)}
 .cmt .ac span:hover{color:var(--accent);cursor:pointer}
 .cmt .re{margin-top:10px;padding-left:14px;border-left:1px solid var(--border)}
 .cmt .re .overline{display:block;margin-bottom:4px;color:var(--fg)}
@@ -740,7 +755,7 @@ table.t td small{color:var(--muted);font-size:12px}
 .popc .who{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;margin-bottom:10px}
 .popc .who .av{width:24px;height:24px;font-size:10px}
 .popc .ft{display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-top:10px}
-.popc .ft .cancel{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--subtle);background:none;border:none}
+.popc .ft .cancel{font-size:12px;font-weight:500;color:var(--subtle);background:none;border:none}
 @media (max-width:900px){.portal .body{grid-template-columns:1fr}.fs{grid-template-columns:1fr;padding:16px}.reels2{grid-template-columns:1fr 1fr}.portal{padding:20px}.cover{height:300px}}
 
 .lista{list-style:none;display:grid;gap:8px;max-width:820px}
@@ -1009,30 +1024,50 @@ texto   color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 55%, var(--status-
 fundo   color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 16%, transparent)
 borda   color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 32%, transparent)
 sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status-tint))</pre>
+
+  <h3><span class="id">02.5</span>Cor por etapa</h3>
+  <p class="note">Etapa de produção tem paleta própria, dez tokens <span class="mono">--st-*</span> fixos por tema. É a cor do quadro de Criação e da Pauta: a mesma etapa, a mesma cor. Não passa pelo <span class="mono">statusTone</span>. Texto sobre a cor sólida usa <span class="mono">--on-solid</span> (<span class="mono">#0D0D0D</span> no escuro, <span class="mono">#FFFFFF</span> no claro), nunca <span class="mono">#fff</span> na mão.</p>
+  <div class="stage">
+    <span class="tag">02.5</span>
+    <div class="stage-row">
+      <span class="etp" style="--c:var(--st-plan)">Planejamento <code>--st-plan</code></span>
+      <span class="etp" style="--c:var(--st-capt)">Captação <code>--st-capt</code></span>
+      <span class="etp" style="--c:var(--st-edit)">Edição <code>--st-edit</code></span>
+      <span class="etp" style="--c:var(--st-design)">Design <code>--st-design</code></span>
+      <span class="etp" style="--c:var(--st-ajust)">Ajustes internos <code>--st-ajust</code></span>
+      <span class="etp" style="--c:var(--st-rev)">Revisão <code>--st-rev</code></span>
+      <span class="etp" style="--c:var(--st-ok)">Aprovado <code>--st-ok</code></span>
+      <span class="etp" style="--c:var(--st-alt)">Em alterações <code>--st-alt</code></span>
+      <span class="etp" style="--c:var(--st-portal)">Portal <code>--st-portal</code></span>
+      <span class="etp" style="--c:var(--st-agend)">Agendamento <code>--st-agend</code></span>
+    </div>
+  </div>
+  <p class="note">Estados do card por etapa (concluída, bloqueada, atrasada) estão em 19.5.</p>
 </section>
 
 <!-- ============ 03 TIPOGRAFIA ============ -->
 <section class="sec" id="tipografia">
   <div class="sec-head"><span class="sec-num">03</span>
     <h2>Tipografia</h2>
-    <p class="intro">IBM Plex Sans no texto, IBM Plex Mono em overline, código e número tabular. A escala é a do CRM, calibrada pra densidade. A regra de peso é a da marca: heading em Medium 500, Semibold 600 só em número e botão primário.</p>
+    <p class="intro">IBM Plex Sans no texto e no número, com algarismos tabulares em todo o sistema. Plex Mono e overline saíram (Calendar, MediaPreview, contadores, etiquetas). A escala é a do CRM, calibrada pra densidade. A regra de peso é a da marca: heading em Medium 500, Semibold 600 só em número e botão primário.</p>
   </div>
   <div class="stage">
     <span class="tag">03.1</span>
     <div class="stage-col" style="gap:18px">
       <div><div style="font-size:34px;font-weight:600;line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums">R$ 84.500</div><div class="origem">balance-card · 34px semibold tabular · o maior número do sistema</div></div>
-      <div><div style="font-size:28px;font-weight:500;letter-spacing:-.02em;line-height:1.1">Pipeline</div><div class="origem">page-header · 28px medium tracking -0.02em</div></div>
-      <div><div style="font-size:20px;font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums">R$ 12.300</div><div class="origem">stat · 20px semibold tabular</div></div>
+      <div><div style="font-size:22px;font-weight:500;letter-spacing:-.02em;line-height:1.15">Pipeline</div><div class="origem">page-header · 22px medium tracking -0.02em, com azulejo de ícone (05.2)</div></div>
+      <div><div style="font-size:20px;font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums">R$ 12.300</div><div class="origem">stat · 20px semibold tabular · stat de dashboard analítico sobe pra 34px (07.5)</div></div>
       <div><div style="font-size:18px;font-weight:500;letter-spacing:-.01em">Marcelo Andrade</div><div class="origem">lead-drawer · 18px medium</div></div>
       <div><div style="font-size:16px;font-weight:500;letter-spacing:-.01em">Marcar como perdido</div><div class="origem">modal · 16px medium</div></div>
       <div><div style="font-size:14px;font-weight:500;letter-spacing:-.01em">Funil do mês</div><div class="origem">card-title · 14px medium</div></div>
       <div><div style="font-size:14px">Texto corrente do sistema, quatorze pixels, peso regular, linha 1.6.</div><div class="origem">body · 14px regular</div></div>
       <div><div style="font-size:13px;font-weight:500">Nome do lead</div><div class="origem">label de campo · 13px medium, sentence case (regra do checkout da marca)</div></div>
       <div><div style="font-size:12px;font-weight:500;color:var(--muted)">Novos leads</div><div class="origem">label de stat · 12px medium</div></div>
-      <div><div class="mono" style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.18em;color:var(--subtle)">Financeiro</div><div class="origem">overline · IBM Plex Mono 11px caixa alta 0.18em · rótulo que encima algo, no máximo três por tela</div></div>
+      <div><div style="font-size:12px;font-weight:500;color:var(--subtle)">Financeiro</div><div class="origem">rótulo de grupo · 12px medium sans em --subtle, sentence case · sem overline e sem mono</div></div>
+      <div><div style="font-size:13px">Preciso do arquivo final até quinta, pode subir no Drive?</div><div class="origem">corpo de mensagem do Chat · 13px regular</div></div>
     </div>
   </div>
-  <div class="rule" data-rot="regras">Sentence case sempre, nunca Title Case. Caixa alta só em overline mono. Título grande com <b>tracking negativo</b>. Número comparado em coluna sempre <b>tabular-nums</b>. Bold (700) não existe no sistema. Gradient em texto, hierarquia inline e eyebrow em todo heading ficam na superfície pública.</div>
+  <div class="rule" data-rot="regras">Sentence case sempre, nunca Title Case. Sem caixa alta e sem overline no sistema. Título grande com <b>tracking negativo</b>. Número em Plex Sans com <b>tabular-nums</b> (global no <span class="mono">body</span>). Bold (700) não existe no sistema. Gradient em texto, hierarquia inline e eyebrow em todo heading ficam na superfície pública.</div>
 </section>
 
 <!-- ============ 04 SUPERFÍCIE ============ -->
@@ -1104,7 +1139,7 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
       </div>
     </div>
     <div class="content">
-      <div class="ph"><h1>Dashboard</h1><div class="acts"><button class="btn outline sm"><svg><use href="#i-target"/></svg> Definir metas</button><button class="btn outline sm"><svg><use href="#i-pencil"/></svg> Editar</button></div></div>
+      <div class="ph"><div class="pt"><span class="tile"><svg><use href="#i-dash"/></svg></span><div><h1>Dashboard</h1><p class="sub">Resultado do mês</p></div></div><div class="acts"><button class="btn outline sm"><svg><use href="#i-target"/></svg> Definir metas</button><button class="btn outline sm"><svg><use href="#i-pencil"/></svg> Editar</button></div></div>
       <div class="dgrid">
         <div class="stat third"><div class="lb"><svg><use href="#i-userplus"/></svg>Novos leads</div><div class="vl">38</div><div class="ht"><span class="delta good">▲ 12%</span> vs. mês ant.</div></div>
         <div class="stat third accent"><div class="lb"><svg><use href="#i-dollar"/></svg>Net-new MRR</div><div class="vl">R$ 6.400</div><div class="ht"><span class="delta good">▲ R$ 1.200</span></div></div>
@@ -1128,9 +1163,9 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
   <div class="rule" data-rot="regra">O item ativo é o mesmo quadrado lilás da marca. É o único lugar onde o acento aparece chapado fora de botão. Tudo que nasce da rail (sino, perfil) abre <b>à direita dela, alinhado embaixo</b>.</div>
 
   <h3><span class="id">05.2</span>Cabeçalho de página</h3>
-  <p class="note"><span class="mono">px-6 pt-6 pb-4</span>, título de 28px à esquerda, ações à direita com gap de 12px. Só título e ação. Sem subtítulo, sem abas embutidas. O dashboard adiciona o seletor de mês ao lado do título.</p>
+  <p class="note"><span class="mono">PageHeader</span>, <span class="mono">px-6 pt-6 pb-4</span>. Primeira linha: azulejo de ícone (40px, raio 12, fundo <span class="mono">accent</span> a 14%, ícone de 20px em <span class="mono">--accent</span>), título de 22px 500 e subtítulo de 13px em <span class="mono">--muted</span>; ações à direita. Segunda linha, só quando a tela filtra: segmented, select, navegação de mês e toggles, com fio embaixo. Substitui o título de 28px sem ícone do CRM.</p>
   <div class="stage flat" style="padding:0;border:none">
-    <div class="ph" style="padding:0"><div style="display:flex;align-items:center;gap:12px"><h1>Dashboard</h1><button class="x" style="background:color-mix(in srgb,var(--fg) 5%,transparent)"><svg><use href="#i-chevl"/></svg></button><span style="min-width:144px;text-align:center;font-size:14px;font-weight:600;text-transform:capitalize">setembro 2026</span><button class="x" style="background:color-mix(in srgb,var(--fg) 5%,transparent)"><svg><use href="#i-chevr"/></svg></button></div><div class="acts"><button class="btn outline sm"><svg><use href="#i-target"/></svg> Definir metas</button><button class="btn outline sm"><svg><use href="#i-pencil"/></svg> Editar</button></div></div>
+    <div class="ph" style="padding:0;flex-direction:column;align-items:stretch;gap:14px"><div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap"><div class="pt"><span class="tile"><svg><use href="#i-dash"/></svg></span><div><h1>Dashboard</h1><p class="sub">Resultado do mês e ritmo até a meta</p></div></div><div class="acts"><button class="btn outline sm"><svg><use href="#i-target"/></svg> Definir metas</button><button class="btn outline sm"><svg><use href="#i-pencil"/></svg> Editar</button></div></div><div class="ph2"><div class="seg" style="height:32px"><button class="on" style="font-size:13px">Mês</button><button style="font-size:13px">Trimestre</button></div><button class="x" style="background:color-mix(in srgb,var(--fg) 5%,transparent)"><svg><use href="#i-chevl"/></svg></button><span style="min-width:144px;text-align:center;font-size:14px;font-weight:600;text-transform:capitalize">setembro 2026</span><button class="x" style="background:color-mix(in srgb,var(--fg) 5%,transparent)"><svg><use href="#i-chevr"/></svg></button></div></div>
   </div>
 </section>
 
@@ -1218,7 +1253,14 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
     <div class="stat accent"><div class="lb"><svg><use href="#i-dollar"/></svg>Net-new MRR</div><div class="vl">R$ 6.400</div><div class="ht"><span class="delta good">▲ R$ 1.200</span></div></div>
     <div class="stat"><div class="lb"><svg><use href="#i-repeat"/></svg>Churn de MRR</div><div class="vl">R$ 900</div><div class="ht"><span class="delta bad">▲ R$ 400</span></div></div>
   </div>
-  <p class="note">Card compacto de 16px. Label de 12px medium com ícone opcional, valor de 20px semibold tabular, hint de 12px. A variante <b>accent</b> (<span class="mono">border-accent/25 bg-accent/10</span>) destaca um número entre vários. Um por faixa.</p>
+  <p class="note">Card compacto de 16px. Label de 12px medium com ícone opcional, valor de 20px semibold tabular, hint de 12px. A variante <b>accent</b> (<span class="mono">border-accent/25 bg-accent/10</span>) destaca um número entre vários. Um por faixa. Sem gradient e sem número em lilás.</p>
+
+  <h3><span class="id">07.5</span>Stat de dashboard analítico</h3>
+  <div class="grid g4">
+    <div class="stat"><div class="lb"><svg><use href="#i-dollar"/></svg>MRR ativo</div><div class="vl" style="font-size:34px;letter-spacing:-.02em">R$ 84.500</div><div class="ht"><span class="delta good">▲ 8%</span> vs. mês ant.</div></div>
+    <div class="stat"><div class="lb"><svg><use href="#i-users"/></svg>Clientes ativos</div><div class="vl" style="font-size:34px;letter-spacing:-.02em">27</div><div class="ht"><span class="delta good">▲ 2</span></div></div>
+  </div>
+  <p class="note">Nos Dashboards do Agency OS os números do topo fazem papel de herói da visão: valor em 34px 600 tabular (28px na ficha), tracking -0.02em, label 12px 500, resto igual ao stat. Vale só pra dashboard analítico. Stat de faixa comum fica em 20px.</p>
 </section>
 
 <!-- ============ 08 BADGES ============ -->
@@ -1291,6 +1333,7 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
         <div class="seg"><button class="on">30</button><button>60</button><button>90</button><button>Todos</button></div>
       </div>
       <div style="max-width:200px;margin-top:14px"><div class="seg compact"><button title="Claro"><svg><use href="#i-sun"/></svg></button><button class="on" title="Escuro"><svg><use href="#i-moon"/></svg></button><button title="Automático"><svg><use href="#i-monitor"/></svg></button></div><div class="origem">toggle de tema, h-8, só ícone</div></div>
+      <p class="note" style="margin-top:14px">Desenho do mockup do Agency OS: container <span class="mono">bg-raised rounded-[9px] p-[3px]</span>, opção <span class="mono">rounded-md px-3 text-[13px]</span>, ativa <span class="mono">bg-accent</span>. Substitui o container <span class="mono">bg-card rounded-xl</span> anterior.</p>
     </div>
     <div class="stage">
       <span class="tag">09.2 abas</span>
@@ -1371,6 +1414,16 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
         </div>
       </div>
       <div class="origem">10.4 popover de notificações · abre à direita da rail · w-[380px]</div>
+    </div>
+    <div>
+      <div class="mock-overlay" style="background:var(--bg);backdrop-filter:none;border:1px solid var(--border)">
+        <div class="pop" style="max-width:300px">
+          <div style="display:flex;align-items:center;gap:14px;padding:16px;border-bottom:1px solid var(--border)"><span style="width:56px;height:56px;border-radius:50%;background:var(--accent);color:var(--accent-fg);display:grid;place-items:center;font-size:20px;font-weight:600;flex:none">L</span><div style="min-width:0"><b style="font-size:14px;font-weight:500;display:block">Luan Sinézio</b><span style="font-size:12px;color:var(--muted)">luan@beza.media</span></div></div>
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border)"><div style="font-size:12px;font-weight:500;color:var(--subtle);margin-bottom:8px">Aparência</div><div class="seg compact"><button title="Claro"><svg><use href="#i-sun"/></svg></button><button class="on" title="Escuro"><svg><use href="#i-moon"/></svg></button><button title="Automático"><svg><use href="#i-monitor"/></svg></button></div></div>
+          <div class="ft" style="text-align:left;padding:10px 16px;color:var(--muted)">Sair</div>
+        </div>
+      </div>
+      <div class="origem">10.5 menu de perfil · w-[300px] · foto de 56px · herdado da área de membros · o perfil em si abre em pop-up</div>
     </div>
   </div>
 </section>
@@ -1460,6 +1513,9 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
     </div>
   </div>
 
+  <h3><span class="id">11.9</span>Como o gráfico é desenhado</h3>
+  <p class="note">Recharts ou SVG próprio, os dois valem. Recharts lê as CSS vars e re-tematiza sozinho. O SVG próprio (o <span class="mono">chart-kit</span> dos Dashboards do Agency OS) mede a largura real do container e redesenha nela, também lendo as CSS vars. O que vale nos dois: nunca um SVG com <span class="mono">preserveAspectRatio="none"</span> esticado, porque texto, tracejado e ponto deformam em tela larga.</p>
+
   <h3><span class="id">11.8</span>Modo edição</h3>
   <p class="note">Botão "Editar" troca as ações por "Adicionar / Cancelar / Concluir". Célula ganha <span class="mono">cursor-grab ring-1 ring-accent/40</span> e o conteúdo fica <span class="mono">pointer-events-none</span>. Item arrastando a 40%. Remover é um círculo <span class="mono">size-6 bg-danger</span> com sinal de menos no canto superior esquerdo. Slot de adicionar é card tracejado. Galeria de adicionar é modal com widgets ausentes agrupados por categoria. Drag com <span class="mono">@dnd-kit</span>, ativa com 6px de deslocamento.</p>
   <div class="grid g3">
@@ -1467,7 +1523,7 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
     <div class="stat" style="opacity:.4"><div class="lb">Perdidos</div><div class="vl">9</div></div>
     <div class="skel" style="min-height:80px"></div>
   </div>
-  <div class="origem">célula em edição · item arrastando · skeleton animate-pulse (o único skeleton de bloco do sistema, com o do pipeline)</div>
+  <div class="origem">célula em edição · item arrastando · skeleton animate-pulse (mesmo esqueleto de toda rota, 13.2)</div>
 </section>
 
 <!-- ============ 12 PIPELINE ============ -->
@@ -1541,10 +1597,10 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
 <section class="sec" id="paginas">
   <div class="sec-head"><span class="sec-num">13</span>
     <h2>Padrões de página</h2>
-    <p class="intro">Toda página interna segue cabeçalho, toolbar opcional, tabela em card e drawer ou modal. Gutter de 24px sempre.</p>
+    <p class="intro">Toda página interna segue cabeçalho (com a linha de filtros, quando filtra), tabela e drawer ou modal. Ficha de entidade grande é página própria com abas. Gutter de 24px sempre.</p>
   </div>
 
-  <h3><span class="id">13.1</span>Tabela em card</h3>
+  <h3><span class="id">13.1</span>Tabela em card (Configurações e painéis)</h3>
   <div class="tcard">
     <table class="t">
       <thead><tr><th class="on"><span class="s">Nome <svg><use href="#i-chevd"/></svg></span></th><th><span class="s">Status <svg><use href="#i-chevud"/></svg></span></th><th><span class="s">Temperatura</span></th><th style="text-align:right"><span class="s">Valor <svg><use href="#i-chevud"/></svg></span></th></tr></thead>
@@ -1560,10 +1616,10 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
   <h3><span class="id">13.2</span>Empty, loading, erro</h3>
   <div class="grid g3">
     <div class="tcard"><table class="t"><tbody><tr><td class="empty">Nenhum lead encontrado com os filtros atuais.</td></tr></tbody></table></div>
-    <div class="card" style="padding:40px;text-align:center;color:var(--subtle);font-size:14px">Carregando…</div>
+    <div class="card" style="padding:16px;display:flex;flex-direction:column;gap:10px"><div class="sk" style="height:18px;width:40%"></div><div class="sk" style="height:56px"></div><div class="sk" style="height:56px"></div></div>
     <div class="card" style="padding:24px"><div style="font-size:14px;font-weight:600;color:var(--danger)">Não foi possível carregar os dados</div><div style="font-size:14px;color:var(--muted);margin-top:2px">Tenta de novo em alguns segundos.</div></div>
   </div>
-  <div class="origem">empty em text-subtle centralizado · loading é texto (skeleton só no dashboard e no pipeline) · erro em card com título em danger</div>
+  <div class="origem">empty em text-subtle centralizado · loading é skeleton na medida da tela, em toda rota (<span class="mono">loading.tsx</span>) · erro em card com título em danger</div>
 
   <h3><span class="id">13.3</span>Toast</h3>
   <div class="stage">
@@ -1576,6 +1632,24 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
 
   <h3><span class="id">13.4</span>Painel vazio</h3>
   <div class="card" style="padding:40px;text-align:center"><p style="font-size:14px;color:var(--muted)">Seu painel está vazio.</p><button class="btn outline" style="margin-top:12px">Montar painel</button></div>
+
+  <h3><span class="id">13.5</span>Ficha de entidade em página</h3>
+  <div class="stage" style="flex-direction:column;align-items:stretch">
+    <span class="tag">13.5 ficha de cliente</span>
+    <div class="ph" style="padding:0 0 12px"><div class="pt"><span class="tile"><svg><use href="#i-building"/></svg></span><div><h1>Agroexata</h1><p class="sub">Cliente desde março de 2026</p></div></div><div class="acts"><button class="btn outline sm"><svg><use href="#i-pencil"/></svg> Editar ficha</button></div></div>
+    <div class="tabs"><button class="on">Geral</button><button>Contatos</button><button>Contrato e escopo</button><button>Equipe</button><button>Portal</button></div>
+  </div>
+  <p class="note">Entidade grande (cliente, com contrato, escopo, equipe e portal) tem página própria com abas underline, e o formulário de cadastro também é página. A aba mora na URL. Pessoa (Time) e item leve continuam em drawer (10.2).</p>
+
+  <h3><span class="id">13.6</span>Tabela solta com fio</h3>
+  <div class="stage" style="flex-direction:column;align-items:stretch">
+    <span class="tag">13.6 lista principal</span>
+    <table class="t"><thead><tr><th>Cliente</th><th>Status</th><th style="text-align:right">Fee</th></tr></thead><tbody>
+      <tr><td><b>Agroexata</b><small>Agro</small></td><td><span class="badge b-success">Ativo</span></td><td class="r">R$ 4.500</td></tr>
+      <tr><td><b>Dobashi</b><small>Varejo</small></td><td><span class="badge b-success">Ativo</span></td><td class="r">R$ 3.200</td></tr>
+    </tbody></table>
+  </div>
+  <p class="note">Lista principal (Clientes, Time e telas do mesmo tipo): sem card, direto sobre o fundo da página, fio no cabeçalho e entre as linhas. A tabela em card (13.1) fica em Configurações e em painéis dentro de uma tela.</p>
 </section>
 
 <!-- ============ 14 SUPERFÍCIE PÚBLICA ============ -->
@@ -1685,14 +1759,15 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
   <ul class="lista sempre">
     <li><b>Token, nunca hex.</b></li>
     <li><b>Cinza com temperatura lilás.</b> Nenhum cinza neutro.</li>
-    <li><b>Tabular-nums</b> em qualquer número que se compara em coluna.</li>
+    <li><b>Número em Plex Sans tabular.</b> Global no body, sem mono.</li>
     <li><b>Um accent por tela.</b> O resto é outline ou ghost.</li>
     <li><b>Estado é texto na cor mais 10% dela no fundo.</b> Neutro é muted sobre foreground/5.</li>
     <li><b>Cor do banco passa por statusTone.</b> Badge e fill de gráfico usam as quatro saídas.</li>
     <li><b>Delta por semântica.</b> Churn subindo é vermelho.</li>
     <li><b>Barra capa em 100%.</b> O texto mostra a superação.</li>
     <li><b>Meta e comparação entram como marca.</b> Tick, linha de referência, série tracejada. Nunca segundo eixo.</li>
-    <li><b>Detalhe abre em drawer, ação abre em modal.</b> Notificação é a única que navega.</li>
+    <li><b>Detalhe abre em drawer, ação abre em modal.</b> Notificação navega, e entidade grande (cliente) tem página com abas.</li>
+    <li><b>Skeleton na medida da tela</b> em toda rota.</li>
     <li><b>Feedback sai por toast</b> no canto superior direito.</li>
     <li><b>Popover que nasce da rail abre à direita dela,</b> alinhado embaixo.</li>
     <li><b>select-none</b> em cabeçalho, kanban e filtro.</li>
@@ -1710,11 +1785,12 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
     <li><b>Borda como hierarquia.</b> Hierarquia é tom de fundo.</li>
     <li><b>Bold (700).</b> Peso máximo é 600. Heading é 500.</li>
     <li><b>Title Case.</b> Sentence case em título, botão e coluna.</li>
-    <li><b>Mono em caixa alta embaixo de alguma coisa.</b> Não é overline.</li>
+    <li><b>Plex Mono e overline no sistema.</b> Calendar, MediaPreview, contador, etiqueta e cabeçalho de grupo usam sans, sentence case.</li>
     <li><b>Cinza do Tailwind</b> no lugar de muted, subtle, raised.</li>
     <li><b>Misturar os dois temas</b> no mesmo material.</li>
-    <li><b>Skeleton de bloco fora do dashboard e do pipeline.</b></li>
-    <li><b>Detalhe de entidade em página nova.</b></li>
+    <li><b>Tela sem skeleton na medida dela.</b> "Carregando…" solto não substitui o esqueleto.</li>
+    <li><b>Ficha de pessoa ou de item leve em página nova.</b> Só entidade grande tem página.</li>
+    <li><b>Degradê em Aprovar e Ajustar do portal.</b> Aprovar é lilás chapado, Ajustar é contorno.</li>
     <li><b>Scrollbar visível</b> na área de conteúdo.</li>
     <li><b>Animação sem prefers-reduced-motion.</b></li>
   </ul>
@@ -1745,7 +1821,7 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
   <table class="spec">
     <thead><tr><th>Item</th><th>CRM (Geist, zinc)</th><th>Este manual</th></tr></thead>
     <tbody>
-      <tr><td>Fonte</td><td>Geist</td><td>IBM Plex</td></tr>
+      <tr><td>Fonte</td><td>Geist</td><td>IBM Plex Sans (Mono só em código e segredo)</td></tr>
       <tr><td>Heading</td><td>600</td><td>500 (600 só em número e botão primário)</td></tr>
       <tr><td>Fundo escuro</td><td><code>#0a0a0f</code>, <code>#131318</code>, <code>#1c1c24</code></td><td><code>#0A0A10</code>, <code>#14141C</code>, <code>#1B1B26</code></td></tr>
       <tr><td>Texto escuro</td><td><code>#f4f4f6</code>, <code>#a1a1aa</code>, <code>#6b6b76</code></td><td><code>#ECEDF6</code>, <code>#8B8DA1</code>, <code>#606282</code></td></tr>
@@ -1755,7 +1831,10 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
       <tr><td>Gauge</td><td>lilás pra magenta</td><td>lilás profundo pra lilás</td></tr>
       <tr><td>Input escuro</td><td>fundo sólido, anel 2px a 30%</td><td>translúcido a 4%, anel 3px a 18%</td></tr>
       <tr><td>Outline no hover</td><td>fundo 5%</td><td>borda e texto lilás</td></tr>
-      <tr><td>Rótulo de grupo</td><td>sans caixa alta</td><td>IBM Plex Mono caixa alta 0.18em</td></tr>
+      <tr><td>Rótulo de grupo</td><td>sans caixa alta</td><td>sans 12px 500, sentence case (sem mono, sem overline)</td></tr>
+      <tr><td>Título de página</td><td>28px 600</td><td>22px 500 com azulejo de ícone, subtítulo e linha de filtros</td></tr>
+      <tr><td>Número</td><td>Geist tabular</td><td>IBM Plex Sans tabular, global</td></tr>
+      <tr><td>Loading</td><td>skeleton só em dashboard e pipeline</td><td>skeleton na medida da tela em toda rota</td></tr>
       <tr><td>Label de campo</td><td>12px</td><td>13px 500 sentence case</td></tr>
       <tr><td>Easing</td><td>padrão do Tailwind</td><td><code>cubic-bezier(.2,.7,.2,1)</code></td></tr>
     </tbody>
@@ -1821,43 +1900,43 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
           <div class="filt">
             <select class="sel"><option>Cliente: todos</option></select>
             <button class="chip all on">Todos</button>
-            <button class="chip" style="--c:#8b8ce0"><i></i>Planejado</button>
-            <button class="chip" style="--c:#0ea5e9"><i></i>Em produção</button>
-            <button class="chip" style="--c:#f59e0b"><i></i>Em aprovação</button>
-            <button class="chip" style="--c:#f97316"><i></i>Em alteração</button>
-            <button class="chip" style="--c:#10b981"><i></i>Aprovado</button>
-            <button class="chip" style="--c:#ef4444"><i></i>Atrasado</button>
+            <button class="chip" style="--c:var(--st-plan)"><i></i>Planejamento</button>
+            <button class="chip" style="--c:var(--st-edit)"><i></i>Edição</button>
+            <button class="chip" style="--c:var(--st-rev)"><i></i>Revisão</button>
+            <button class="chip" style="--c:var(--st-ajust)"><i></i>Ajustes internos</button>
+            <button class="chip" style="--c:var(--st-ok)"><i></i>Aprovado</button>
+            <button class="chip" style="--c:var(--warning)"><i></i>Atrasada</button>
           </div>
         </div>
       </div>
       <div class="cal-wd"><div>seg</div><div>ter</div><div>qua</div><div>qui</div><div>sex</div><div>sáb</div><div>dom</div></div>
       <div class="cal-g" id="calg">
         <div class="day out"><div class="n">31 </div></div>
-        <div class="day"><div class="n">1 <em class="full">2/2</em></div><div class="blk done" style="--c:#10b981"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Carrossel · 3 peças</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div><div class="blk done" style="--c:#10b981"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Estático</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div></div>
-        <div class="day"><div class="n">2 <em class="full">2/2</em></div><div class="blk full done" style="--c:#10b981"><div class="h"><b>Ruiz Odonto</b><span class="d">1 dia</span></div><span>Identidade visual</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div></div>
-        <div class="day"><div class="n">3 <em>1/2</em></div><div class="blk done" style="--c:#10b981"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Reels capa</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div><div class="slot empty"></div></div>
-        <div class="day"><div class="n">4 <em>1/2</em></div><div class="blk cancel" style="--c:#8b8ce0"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Reels</span><span class="st" style="color:var(--subtle)">Cancelado</span></div><div class="slot empty"></div></div>
+        <div class="day"><div class="n">1 <em class="full">2/2</em></div><div class="blk done"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Carrossel · 3 peças</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div><div class="blk done"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Estático</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div></div>
+        <div class="day"><div class="n">2 <em class="full">2/2</em></div><div class="blk full done"><div class="h"><b>Ruiz Odonto</b><span class="d">1 dia</span></div><span>Identidade visual</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div></div>
+        <div class="day"><div class="n">3 <em>1/2</em></div><div class="blk done"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Reels capa</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div><div class="slot empty"></div></div>
+        <div class="day"><div class="n">4 <em>1/2</em></div><div class="blk cancel" style="--c:var(--st-plan)"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Reels</span><span class="st" style="color:var(--subtle)">Cancelado</span></div><div class="slot empty"></div></div>
         <div class="day wk"><div class="n">5 </div></div>
         <div class="day wk"><div class="n">6 </div></div>
-        <div class="day"><div class="n">7 <em class="full">2/2</em></div><div class="blk full done" style="--c:#10b981"><div class="h"><b>Solar Master</b><span class="d">1 dia</span></div><span>Landing page</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div></div>
-        <div class="day"><div class="n">8 <em class="full">2/2</em></div><div class="blk" style="--c:#10b981"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Stories</span><span class="st"><i></i>Aprovado</span></div><div class="blk" style="--c:#ef4444"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><svg style="color:var(--danger)"><use href="#i-alert"/></svg>Atrasado</span></div></div>
-        <div class="day"><div class="n">9 <em>1/2</em></div><div class="blk" style="--c:#10b981"><div class="h"><b>Ruiz Odonto</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><i></i>Aprovado</span></div><div class="slot empty"></div></div>
+        <div class="day"><div class="n">7 <em class="full">2/2</em></div><div class="blk full done"><div class="h"><b>Solar Master</b><span class="d">1 dia</span></div><span>Landing page</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div></div>
+        <div class="day"><div class="n">8 <em class="full">2/2</em></div><div class="blk" style="--c:var(--st-ok)"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Stories</span><span class="st"><i></i>Aprovado</span></div><div class="blk late" style="--c:var(--warning)"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><svg><use href="#i-alert"/></svg>Atrasada</span></div></div>
+        <div class="day"><div class="n">9 <em>1/2</em></div><div class="blk" style="--c:var(--st-ok)"><div class="h"><b>Ruiz Odonto</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><i></i>Aprovado</span></div><div class="slot empty"></div></div>
         <div class="day"><div class="n">10 </div><div class="slot empty"></div><div class="slot empty"></div></div>
-        <div class="day"><div class="n">11 <em>1/2</em></div><div class="blk" style="--c:#f97316"><div class="h"><b>Solar Master</b><span class="d">½ dia</span></div><span>Ajustes do site</span><span class="st"><i></i>Em alteração</span></div><div class="slot empty"></div></div>
+        <div class="day"><div class="n">11 <em>1/2</em></div><div class="blk" style="--c:var(--st-ajust)"><div class="h"><b>Solar Master</b><span class="d">½ dia</span></div><span>Ajustes do site</span><span class="st"><i></i>Ajustes internos</span></div><div class="slot empty"></div></div>
         <div class="day wk"><div class="n">12 </div></div>
         <div class="day wk"><div class="n">13 </div></div>
-        <div class="day"><div class="n">14 <em class="full">2/2</em></div><div class="blk full" style="--c:#0ea5e9"><div class="h"><b>Agroexata</b><span class="d">2 dias</span></div><span>Reels · 2 dias</span><span class="st"><i></i>Em produção</span></div></div>
-        <div class="day today"><div class="n"><span>15</span> <em class="full">2/2</em></div><div class="blk full ghost"><div class="h"><b>Agroexata</b><span class="d">continua</span></div><span>Reels</span><span class="st"><i></i>Planejado</span></div></div>
-        <div class="day over"><div class="n">16 <em class="over">3/2</em></div><div class="blk" style="--c:#f59e0b"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><i></i>Em aprovação</span></div><div class="blk" style="--c:#0ea5e9"><div class="h"><b>Ruiz Odonto</b><span class="d">½ dia</span></div><span>Stories</span><span class="st"><i></i>Em produção</span></div><div class="blk" style="--c:#8b8ce0"><div class="h"><b>Solar Master</b><span class="d">½ dia</span></div><span>Estático</span><span class="st"><i></i>Planejado</span></div></div>
+        <div class="day"><div class="n">14 <em class="full">2/2</em></div><div class="blk full" style="--c:var(--st-edit)"><div class="h"><b>Agroexata</b><span class="d">2 dias</span></div><span>Reels · 2 dias</span><span class="st"><i></i>Edição</span></div></div>
+        <div class="day today"><div class="n"><span>15</span> <em class="full">2/2</em></div><div class="blk full ghost"><div class="h"><b>Agroexata</b><span class="d">continua</span></div><span>Reels</span><span class="st"><i></i>Planejamento</span></div></div>
+        <div class="day over"><div class="n">16 <em class="over">3/2</em></div><div class="blk" style="--c:var(--st-rev)"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><i></i>Revisão</span></div><div class="blk" style="--c:var(--st-edit)"><div class="h"><b>Ruiz Odonto</b><span class="d">½ dia</span></div><span>Stories</span><span class="st"><i></i>Edição</span></div><div class="blk" style="--c:var(--st-plan)"><div class="h"><b>Solar Master</b><span class="d">½ dia</span></div><span>Estático</span><span class="st"><i></i>Planejamento</span></div></div>
         <div class="day drop"><div class="n">17 <em>0/2</em></div><div class="slot empty"></div><div class="slot empty"></div></div>
-        <div class="day"><div class="n">18 <em>1/2</em></div><div class="blk drag" style="--c:#8b8ce0"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Capa YouTube</span><span class="st"><i></i>Planejado</span></div><div class="slot empty"></div></div>
+        <div class="day"><div class="n">18 <em>1/2</em></div><div class="blk drag" style="--c:var(--st-plan)"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Capa YouTube</span><span class="st"><i></i>Planejamento</span></div><div class="slot empty"></div></div>
         <div class="day wk"><div class="n">19 </div></div>
         <div class="day wk"><div class="n">20 </div></div>
-        <div class="day"><div class="n">21 <em>1/2</em></div><div class="blk" style="--c:#f97316"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Reels</span><span class="st"><i></i>Em alteração</span></div><div class="slot empty"></div></div>
+        <div class="day"><div class="n">21 <em>1/2</em></div><div class="blk" style="--c:var(--st-ajust)"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Reels</span><span class="st"><i></i>Ajustes internos</span></div><div class="slot empty"></div></div>
         <div class="day"><div class="n">22 </div><div class="slot empty"></div><div class="slot empty"></div></div>
-        <div class="day"><div class="n">23 <em class="full">2/2</em></div><div class="blk full" style="--c:#8b8ce0"><div class="h"><b>Ruiz Odonto</b><span class="d">1 dia</span></div><span>Site · 1 dia</span><span class="st"><i></i>Planejado</span></div></div>
+        <div class="day"><div class="n">23 <em class="full">2/2</em></div><div class="blk full" style="--c:var(--st-plan)"><div class="h"><b>Ruiz Odonto</b><span class="d">1 dia</span></div><span>Site · 1 dia</span><span class="st"><i></i>Planejamento</span></div></div>
         <div class="day"><div class="n">24 </div><div class="slot empty"></div><div class="slot empty"></div></div>
-        <div class="day"><div class="n">25 <em>1/2</em></div><div class="blk" style="--c:#f59e0b"><div class="h"><b>Solar Master</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><i></i>Em aprovação</span></div><div class="slot empty"></div></div>
+        <div class="day"><div class="n">25 <em>1/2</em></div><div class="blk" style="--c:var(--st-rev)"><div class="h"><b>Solar Master</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><i></i>Revisão</span></div><div class="slot empty"></div></div>
         <div class="day wk"><div class="n">26 </div></div>
         <div class="day wk"><div class="n">27 </div></div>
         <div class="day"><div class="n">28 </div><div class="slot empty"></div><div class="slot empty"></div></div>
@@ -1870,42 +1949,42 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
       </div>
       <div class="tray">
         <span class="lb">A distribuir</span>
-        <div class="blk" style="--c:#8b8ce0"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Stories</span><span class="st"><i></i>Planejado</span></div>
-        <div class="blk" style="--c:#8b8ce0"><div class="h"><b>Dobashi</b><span class="d">1 dia</span></div><span>Reels</span><span class="st"><i></i>Planejado</span></div>
+        <div class="blk" style="--c:var(--st-plan)"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Stories</span><span class="st"><i></i>Planejamento</span></div>
+        <div class="blk" style="--c:var(--st-plan)"><div class="h"><b>Dobashi</b><span class="d">1 dia</span></div><span>Reels</span><span class="st"><i></i>Planejamento</span></div>
         <span class="lb" style="margin-left:auto">2 blocos · 1,5 dia</span>
       </div>
     </div>
-    <div class="origem">19.1 · a cor é o status da demanda, não o cliente · o dia 16 está em conflito (3 de 2), o 15 é hoje, o 17 está recebendo um arraste, o bloco do 18 está sendo arrastado, o 14 e 15 são um bloco de 2 dias · cliente filtra pelo select</div>
+    <div class="origem">19.1 · a cor é a etapa, não o cliente · o dia 16 está em conflito (3 de 2), o 15 é hoje, o 17 está recebendo um arraste, o bloco do 18 está sendo arrastado, o 14 e 15 são um bloco de 2 dias · cliente filtra pelo select</div>
 
     <h3><span class="id">19.2</span>Anatomia do dia e do bloco</h3>
     <div class="grid g4">
       <div class="stage"><span class="tag">livre</span><div class="day" style="border:1px solid var(--border);border-radius:12px"><div class="n">10 <em>0/2</em></div><div class="slot empty"></div><div class="slot empty"></div></div></div>
-      <div class="stage"><span class="tag">cheio</span><div class="day" style="border:1px solid var(--border);border-radius:12px"><div class="n">1 <em class="full">2/2</em></div><div class="blk" style="--c:#f59e0b"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><i></i>Em aprovação</span></div><div class="blk" style="--c:#10b981"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Estático</span><span class="st"><i></i>Aprovado</span></div></div></div>
-      <div class="stage"><span class="tag">conflito</span><div class="day over" style="border:1px solid var(--border);border-radius:12px"><div class="n">16 <em class="over">3/2</em></div><div class="blk" style="--c:#f59e0b"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><i></i>Em aprovação</span></div><div class="blk" style="--c:#0ea5e9"><div class="h"><b>Ruiz Odonto</b><span class="d">½ dia</span></div><span>Stories</span><span class="st"><i></i>Em produção</span></div><div class="blk" style="--c:#8b8ce0"><div class="h"><b>Solar Master</b><span class="d">½ dia</span></div><span>Estático</span><span class="st"><i></i>Planejado</span></div></div></div>
-      <div class="stage"><span class="tag">hoje · recebendo</span><div class="day today drop" style="border:1px solid var(--border);border-radius:12px"><div class="n"><span>15</span> <em>1/2</em></div><div class="blk" style="--c:#0ea5e9"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Reels</span><span class="st"><i></i>Em produção</span></div><div class="slot empty"></div></div></div>
+      <div class="stage"><span class="tag">cheio</span><div class="day" style="border:1px solid var(--border);border-radius:12px"><div class="n">1 <em class="full">2/2</em></div><div class="blk" style="--c:var(--st-rev)"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><i></i>Revisão</span></div><div class="blk" style="--c:var(--st-ok)"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Estático</span><span class="st"><i></i>Aprovado</span></div></div></div>
+      <div class="stage"><span class="tag">conflito</span><div class="day over" style="border:1px solid var(--border);border-radius:12px"><div class="n">16 <em class="over">3/2</em></div><div class="blk" style="--c:var(--st-rev)"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><i></i>Revisão</span></div><div class="blk" style="--c:var(--st-edit)"><div class="h"><b>Ruiz Odonto</b><span class="d">½ dia</span></div><span>Stories</span><span class="st"><i></i>Edição</span></div><div class="blk" style="--c:var(--st-plan)"><div class="h"><b>Solar Master</b><span class="d">½ dia</span></div><span>Estático</span><span class="st"><i></i>Planejamento</span></div></div></div>
+      <div class="stage"><span class="tag">hoje · recebendo</span><div class="day today drop" style="border:1px solid var(--border);border-radius:12px"><div class="n"><span>15</span> <em>1/2</em></div><div class="blk" style="--c:var(--st-edit)"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Reels</span><span class="st"><i></i>Edição</span></div><div class="slot empty"></div></div></div>
     </div>
     <div class="grid g4" style="margin-top:14px">
-      <div class="stage"><span class="tag">planejado</span><div class="blk" style="--c:#8b8ce0"><div class="h"><b>Solar Master</b><span class="d">½ dia</span></div><span>Estático</span><span class="st"><i></i>Planejado</span></div></div>
-      <div class="stage"><span class="tag">em aprovação · 1 dia</span><div class="blk full" style="--c:#f59e0b"><div class="h"><b>Ruiz Odonto</b><span class="d">1 dia</span></div><span>Site institucional</span><span class="st"><i></i>Em aprovação</span></div></div>
-      <div class="stage"><span class="tag">atrasado</span><div class="blk" style="--c:#ef4444"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><svg style="color:var(--danger)"><use href="#i-alert"/></svg>Atrasado</span></div></div>
-      <div class="stage"><span class="tag">concluído · cancelado</span><div class="blk done" style="--c:#10b981"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Stories</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div><div style="height:8px"></div><div class="blk cancel" style="--c:#8b8ce0"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Reels</span><span class="st" style="color:var(--subtle)">Cancelado</span></div></div>
+      <div class="stage"><span class="tag">planejamento</span><div class="blk" style="--c:var(--st-plan)"><div class="h"><b>Solar Master</b><span class="d">½ dia</span></div><span>Estático</span><span class="st"><i></i>Planejamento</span></div></div>
+      <div class="stage"><span class="tag">revisão · 1 dia</span><div class="blk full" style="--c:var(--st-rev)"><div class="h"><b>Ruiz Odonto</b><span class="d">1 dia</span></div><span>Site institucional</span><span class="st"><i></i>Revisão</span></div></div>
+      <div class="stage"><span class="tag">atrasada</span><div class="blk late" style="--c:var(--warning)"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><svg><use href="#i-alert"/></svg>Atrasada</span></div></div>
+      <div class="stage"><span class="tag">concluído · cancelado</span><div class="blk done"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Stories</span><span class="st"><svg><use href="#i-check"/></svg>Concluído</span></div><div style="height:8px"></div><div class="blk cancel" style="--c:var(--st-plan)"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Reels</span><span class="st" style="color:var(--subtle)">Cancelado</span></div></div>
     </div>
     <div class="tw"><table class="spec">
       <thead><tr><th>Parte</th><th>Receita</th></tr></thead>
       <tbody>
-        <tr><td>Célula do dia</td><td><code>min-h-[148px] p-2.5 flex flex-col gap-1.5</code>, borda 8% à direita e embaixo. Fim de semana com <code>bg-foreground/2</code>. Dia de outro mês com número a 60%.</td></tr>
+        <tr><td>Célula do dia</td><td><code>min-h-[120px] p-2.5 flex flex-col gap-1.5 rounded-xl</code> (raio 12), borda 8%, uma célula separada por dia. Fim de semana em <code>--raised</code>. Dia de outro mês com borda tracejada e número a 60%.</td></tr>
         <tr><td>Número</td><td>12px 500 em <code>--muted</code>, tabular. Hoje: pill <code>bg-accent text-accent-foreground rounded-md px-1.5</code>.</td></tr>
-        <tr><td>Contador de capacidade</td><td>11px em <code>--subtle</code> no canto direito, <code>n/2</code>. Cheio vira <code>--fg</code>. Acima de 2 vira <code>--danger</code> 600 e a célula ganha <code>ring-1 ring-danger/50</code> interno. É o conflito de alocação (PAU-12).</td></tr>
+        <tr><td>Contador de capacidade</td><td>11px sans tabular em <code>--subtle</code> no canto direito, <code>n/2</code>. Cheio vira <code>--fg</code>. Acima de 2 vira <code>--danger</code> 600 e a célula ganha <code>ring-1 ring-danger/50</code> interno. É o conflito de alocação (PAU-12).</td></tr>
         <tr><td>Slot de meio dia</td><td>dois por dia, <code>flex-1 min-h-[56px] rounded-[10px]</code>. Vazio é invisível. Quando um bloco passa por cima, o slot vazio mostra borda tracejada <code>accent/40</code> e o dia inteiro <code>bg-accent/10</code>, igual à drop zone do kanban.</td></tr>
-        <tr><td>Bloco</td><td>é o cartão do kanban em miniatura: <code>bg-card border border-border rounded-[10px] p-2 shadow-card cursor-grab</code>, hover sobe pra nível 03. Linha 1: cliente em 12px 500 e a duração em mono 10px à direita (½ dia, 1 dia, 2 dias). Linha 2: atividade em 11px <code>--muted</code>. Linha 3: dot de 6px e o status em 10.5px, na cor do status via <code>statusTone</code>. Sem barra lateral, sem fundo tingido: a cor mora no status, o resto é neutro.</td></tr>
-        <tr><td>Cor</td><td>é o <b>status da demanda</b>, nunca o cliente. Planejado lilás, em produção azul, em aprovação âmbar, em alteração laranja, aprovado verde, atrasado vermelho. As cores passam pelo <code>statusTone</code> e valem nos dois temas. Cliente se filtra pelo select e se lê no nome.</td></tr>
+        <tr><td>Bloco</td><td>é o cartão do kanban em miniatura: <code>bg-card border border-border rounded-[10px] p-2 shadow-card cursor-grab</code>, hover sobe pra nível 03. Linha 1: cliente em 12px 500 e a duração em sans 11px tabular à direita (½ dia, 1 dia, 2 dias). Linha 2: atividade em 11px <code>--muted</code>. Linha 3: dot de 6px e a etapa em 11px, na cor da etapa. O fundo do bloco é tingido pela cor da etapa, sem barra lateral.</td></tr>
+        <tr><td>Cor</td><td>é a <b>etapa</b>, nunca o cliente. Dez tokens <code>--st-*</code> (02.5), a mesma cor do quadro de Criação. Cliente se filtra pelo select e se lê no nome. O toggle "Cor por etapa" desliga a cor e neutraliza tudo, estados incluídos. O card do mensal aparece na Pauta uma vez por etapa que tem dia.</td></tr>
         <tr><td>Bloco de 1 dia</td><td>ocupa os dois slots: <code>min-h-[118px]</code>. Bloco maior ocupa os dias seguintes com um fantasma tracejado e "continua" no lugar da duração.</td></tr>
-        <tr><td>Estados de execução</td><td>além do status: concluído (check verde, nome riscado, 60% de opacidade), cancelado (sem fundo, borda tracejada, 70%), arrastando (40%), continuação de bloco maior (fantasma tracejado).</td></tr>
-        <tr><td>Cabeçalho</td><td>duas linhas com <code>p-5 gap-3.5</code>. Linha 1: avatar de 36px, nome em 16px 500, segmented Mês / Semana / Time e o seletor de mês à direita. Linha 2: barra de concluído contra planejado (trilha 6px, fill lilás, "12 de 20 meios-dias") e, à direita, o filtro: select de cliente mais chips de status com dot na cor. Chip ativo ganha fundo e borda na cor do status, "Todos" ativo é lilás chapado.</td></tr>
+        <tr><td>Estados de execução</td><td>concluída, bloqueada e atrasada têm desenho próprio (19.5). Além deles: cancelado (sem fundo, borda tracejada, 70%), arrastando (40%), continuação de bloco maior (fantasma tracejado).</td></tr>
+        <tr><td>Cabeçalho</td><td>duas linhas com <code>p-5 gap-3.5</code>. Linha 1: avatar de 36px, nome em 16px 500, segmented Mês / Semana / Time e o seletor de mês à direita. Linha 2: barra de concluído contra planejado (trilha 6px, fill lilás, "12 de 20 meios-dias") e, à direita, o filtro: select de cliente mais chips de etapa com dot na cor. Chip ativo ganha fundo e borda na cor da etapa, "Todos" ativo é lilás chapado.</td></tr>
         <tr><td>A distribuir</td><td>faixa no rodapé com <code>bg-foreground/2</code> e os blocos sem data. Arrastar pra um dia agenda. Contagem à direita.</td></tr>
       </tbody>
     </table></div>
-    <div class="rule" data-rot="regras">Sem hora. A unidade da Pauta é o meio-dia (regra 2). Cor é status, não cliente: o Head olha o mês e vê o que está travado em aprovação ou voltou pra alteração sem ler nome nenhum. Conflito é <b>visível e permitido</b>: o calendário mostra o 3/2 em vermelho, quem decide é o Head. Concluído se deriva do estado da peça quando dá (regra 15), o check manual fica pra bloco sem peça vinculada. Arrastar reprograma só aquele bloco, o resto não anda (PAU-14).</div>
+    <div class="rule" data-rot="regras">Sem hora. A unidade da Pauta é o meio-dia (regra 2). Cor é etapa, não cliente: o Head olha o mês e vê o que está em revisão, o que foi bloqueado e o que atrasou sem ler nome nenhum. Conflito é <b>visível e permitido</b>: o calendário mostra o 3/2 em vermelho, quem decide é o Head. Concluído se deriva do estado da peça quando dá (regra 15), o check manual fica pra bloco sem peça vinculada. Arrastar reprograma só aquele bloco, o resto não anda (PAU-14).</div>
 
     <h3><span class="id">19.3</span>Semana do time</h3>
     <p class="note">A mesma unidade vista de cima. Linhas são pessoas, colunas são os dias úteis. Serve pro Head ver quem está cheio e quem está livre antes de aceitar demanda. O bloco vira uma linha só: dot do status e cliente. Os mesmos filtros do mês valem aqui.</p>
@@ -1914,23 +1993,23 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
       <div class="team">
         <div class="hd">pessoa</div><div class="hd">seg 14</div><div class="hd today">ter 15</div><div class="hd">qua 16</div><div class="hd">qui 17</div><div class="hd">sex 18</div>
         <div class="p"><div class="av">R</div><div>Reinaldy<small>Design</small></div></div>
-        <div class="cell"><div class="blk mini" style="--c:#0ea5e9" title="Em produção"><i></i><b>Agroexata</b></div><div class="blk mini" style="--c:#0ea5e9" title="Em produção"><i></i><b>Agroexata</b></div></div>
-        <div class="cell"><div class="blk mini ghost" style="--c:#0ea5e9" title="Em produção"><i></i><b>Agroexata</b></div><div class="blk mini ghost" style="--c:#0ea5e9" title="Em produção"><i></i><b>Agroexata</b></div></div>
-        <div class="cell" style="box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--danger) 50%,transparent)"><div class="blk mini" style="--c:#f59e0b" title="Em aprovação"><i></i><b>Dobashi</b></div><div class="blk mini" style="--c:#0ea5e9" title="Em produção"><i></i><b>Ruiz Odonto</b></div><div class="blk mini" style="--c:#8b8ce0" title="Planejado"><i></i><b>Solar Master</b></div></div>
+        <div class="cell"><div class="blk mini" style="--c:var(--st-edit)" title="Edição"><i></i><b>Agroexata</b></div><div class="blk mini" style="--c:var(--st-edit)" title="Edição"><i></i><b>Agroexata</b></div></div>
+        <div class="cell"><div class="blk mini ghost" style="--c:var(--st-edit)" title="Edição"><i></i><b>Agroexata</b></div><div class="blk mini ghost" style="--c:var(--st-edit)" title="Edição"><i></i><b>Agroexata</b></div></div>
+        <div class="cell" style="box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--danger) 50%,transparent)"><div class="blk mini" style="--c:var(--st-rev)" title="Revisão"><i></i><b>Dobashi</b></div><div class="blk mini" style="--c:var(--st-edit)" title="Edição"><i></i><b>Ruiz Odonto</b></div><div class="blk mini" style="--c:var(--st-plan)" title="Planejamento"><i></i><b>Solar Master</b></div></div>
         <div class="cell"></div>
-        <div class="cell"><div class="blk mini" style="--c:#8b8ce0" title="Planejado"><i></i><b>Agroexata</b></div></div>
+        <div class="cell"><div class="blk mini" style="--c:var(--st-plan)" title="Planejamento"><i></i><b>Agroexata</b></div></div>
         <div class="p"><div class="av" style="background:var(--raised);color:var(--fg)">L</div><div>Lucas<small>Edição</small></div></div>
-        <div class="cell"><div class="blk mini" style="--c:#10b981" title="Aprovado"><i></i><b>Agroexata</b></div></div>
-        <div class="cell"><div class="blk mini" style="--c:#f97316" title="Em alteração"><i></i><b>Dobashi</b></div><div class="blk mini" style="--c:#f97316" title="Em alteração"><i></i><b>Dobashi</b></div></div>
-        <div class="cell"><div class="blk mini done" style="--c:#10b981" title="Concluído"><svg style="width:12px;height:12px;color:var(--success);flex:none"><use href="#i-check"/></svg><b>Ruiz Odonto</b></div></div>
-        <div class="cell"><div class="blk mini" style="--c:#0ea5e9" title="Em produção"><i></i><b>Solar Master</b></div><div class="blk mini" style="--c:#0ea5e9" title="Em produção"><i></i><b>Solar Master</b></div></div>
+        <div class="cell"><div class="blk mini" style="--c:var(--st-ok)" title="Aprovado"><i></i><b>Agroexata</b></div></div>
+        <div class="cell"><div class="blk mini" style="--c:var(--st-ajust)" title="Ajustes internos"><i></i><b>Dobashi</b></div><div class="blk mini" style="--c:var(--st-ajust)" title="Ajustes internos"><i></i><b>Dobashi</b></div></div>
+        <div class="cell"><div class="blk mini done" title="Concluído"><svg style="width:12px;height:12px;color:var(--success);flex:none"><use href="#i-check"/></svg><b>Ruiz Odonto</b></div></div>
+        <div class="cell"><div class="blk mini" style="--c:var(--st-edit)" title="Edição"><i></i><b>Solar Master</b></div><div class="blk mini" style="--c:var(--st-edit)" title="Edição"><i></i><b>Solar Master</b></div></div>
         <div class="cell"></div>
         <div class="p"><div class="av" style="background:var(--raised);color:var(--fg)">M</div><div>Maria<small>CS</small></div></div>
-        <div class="cell"><div class="blk mini" style="--c:#f59e0b" title="Em aprovação"><i></i><b>Agroexata</b></div></div>
+        <div class="cell"><div class="blk mini" style="--c:var(--st-rev)" title="Revisão"><i></i><b>Agroexata</b></div></div>
         <div class="cell"></div>
-        <div class="cell"><div class="blk mini" style="--c:#ef4444" title="Atrasado"><i></i><b>Dobashi</b></div></div>
-        <div class="cell"><div class="blk mini" style="--c:#8b8ce0" title="Planejado"><i></i><b>Ruiz Odonto</b></div></div>
-        <div class="cell"><div class="blk mini" style="--c:#8b8ce0" title="Planejado"><i></i><b>Solar Master</b></div></div>
+        <div class="cell"><div class="blk mini late" style="--c:var(--warning)" title="Atrasada"><i></i><b>Dobashi</b></div></div>
+        <div class="cell"><div class="blk mini" style="--c:var(--st-plan)" title="Planejamento"><i></i><b>Ruiz Odonto</b></div></div>
+        <div class="cell"><div class="blk mini" style="--c:var(--st-plan)" title="Planejamento"><i></i><b>Solar Master</b></div></div>
       </div>
     </div>
     <div class="origem">19.3 · bloco mini: dot do status e cliente numa linha, mesmo cartão · coluna de hoje em lilás no cabeçalho · célula em conflito com o mesmo ring do mês · 180px pra pessoa, o resto divide igual</div>
@@ -1962,6 +2041,18 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
       </tbody>
     </table></div>
   
+
+    <h3><span class="id">19.5</span>Cor por etapa e estados do card</h3>
+    <p class="note">Estados valem igual no quadro de Criação e na Pauta. Com o toggle "Cor por etapa" desligado, quadro e Pauta ficam neutros, estados incluídos.</p>
+    <div class="grid g4">
+      <div class="stage"><span class="tag">normal · revisão</span><div class="blk" style="--c:var(--st-rev)"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><i></i>Revisão</span></div></div>
+      <div class="stage"><span class="tag">concluída · verde forte</span><div class="blk done"><div class="h"><b>Agroexata</b><span class="d">½ dia</span></div><span>Stories</span><span class="st"><svg><use href="#i-check"/></svg>Concluída</span></div></div>
+      <div class="stage"><span class="tag">bloqueada · tracejada</span><div class="blk blocked" style="--c:var(--st-design)"><div class="h"><b>Ruiz Odonto</b><span class="d">½ dia</span></div><span>Identidade visual</span><span class="st"><i></i>Aguarda a etapa anterior</span></div></div>
+      <div class="stage"><span class="tag">bloqueada · planejamento atrasou</span><div class="blk blocked plan-late" style="--c:var(--st-design)"><div class="h"><b>Ruiz Odonto</b><span class="d">½ dia</span></div><span>Identidade visual</span><span class="st"><svg><use href="#i-alert"/></svg>Bloqueada e atrasada</span></div></div>
+      <div class="stage"><span class="tag">atrasada · âmbar</span><div class="blk late"><div class="h"><b>Dobashi</b><span class="d">½ dia</span></div><span>Carrossel</span><span class="st"><svg><use href="#i-alert"/></svg>Atrasada</span></div></div>
+    </div>
+    <div class="rule" data-rot="regra">Etapa é status, não sessão. O bloco da Pauta é tingido pela cor da etapa, o mesmo tom do quadro. Um responsável por vez: mudar o status passa o bastão, e a etapa seguinte fica bloqueada até lá. Se o planejamento atrasou, o bloqueio vira vermelho.</div>
+
 </section>
 
 <!-- ============ 20 MEDIAPREVIEW ============ -->
@@ -1989,12 +2080,12 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
       <tbody>
         <tr><td>Moldura</td><td><code>rounded-xl overflow-hidden bg-raised border border-border</code> com <code>aspect-ratio</code> pelo formato da peça: 4:5 feed, 9:16 vertical, 1:1, 16:9. A moldura nasce no tamanho final, então a página não pula quando a mídia chega.</td></tr>
         <tr><td>Mídia</td><td><code>object-cover</code>. Imagem vem do preview do Drive. Vídeo mostra o frame de capa (regra do frame do Audiovisual) e só carrega o player no clique.</td></tr>
-        <tr><td>Etiqueta de formato</td><td>overline mono 10px em pill escuro translúcido <code>rgba(10,10,16,.55)</code> com blur, canto superior esquerdo, sempre em <code>#ECEDF6</code> porque fica sobre a mídia, não sobre o tema.</td></tr>
-        <tr><td>Play</td><td>círculo de 48px no centro, mesmo pill escuro. Hover vira lilás com ícone escuro e cresce 6%. Duração no canto inferior direito, mono tabular.</td></tr>
+        <tr><td>Etiqueta de formato</td><td>11px 500 sans, sentence case, em pill escuro translúcido <code>rgba(10,10,16,.55)</code> com blur, canto superior esquerdo, sempre em <code>#ECEDF6</code> porque fica sobre a mídia, não sobre o tema.</td></tr>
+        <tr><td>Play</td><td>círculo de 48px no centro, mesmo pill escuro. Hover vira lilás com ícone escuro e cresce 6%. Duração no canto inferior direito, sans tabular.</td></tr>
         <tr><td>Carrossel</td><td>contador "1/5" no canto superior direito, dots de 6px embaixo (ativo vira barra de 14px), setas de 32px nas laterais que só aparecem no hover. Setas do teclado também trocam o slide.</td></tr>
         <tr><td>Sem preview</td><td>ícone de arquivo num quadrado de 44px, nome do arquivo em 13px 500, tipo, tamanho e origem em 12px <code>--subtle</code>, botão outline "Abrir no Drive". Nunca uma miniatura genérica fingindo ser a peça.</td></tr>
         <tr><td>Estado da peça</td><td>badge no canto inferior esquerdo. Aprovada: badge success e anel de 1px success na moldura. Alteração pedida: badge warning. Pendente: sem badge.</td></tr>
-        <tr><td>Carregando</td><td>moldura com <code>bg-foreground/4 animate-pulse</code>. É a exceção declarada à regra de skeleton, porque mídia sempre chega depois do resto.</td></tr>
+        <tr><td>Carregando</td><td>moldura com <code>bg-foreground/4 animate-pulse</code>. É o skeleton da mídia, no mesmo padrão de toda rota (13.2): a moldura já nasce no tamanho final.</td></tr>
       </tbody>
     </table></div>
 
@@ -2042,24 +2133,24 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
           <div class="cmts">Nenhum comentário ainda</div>
         </div>
       </div>
-      <div class="foot"><button class="btn outline pill"><svg><use href="#i-chevl"/></svg> Anterior</button><span class="cnt">conteúdo 3 de 12</span><div class="acts"><button class="btn premium pill">Ajustar</button><button class="btn brand pill">Aprovar <svg><use href="#i-check"/></svg></button><button class="btn outline pill">Próximo <svg><use href="#i-chevr"/></svg></button></div></div>
+      <div class="foot"><button class="btn outline pill"><svg><use href="#i-chevl"/></svg> Anterior</button><span class="cnt">conteúdo 3 de 12</span><div class="acts"><button class="btn outline pill">Ajustar</button><button class="btn accent pill">Aprovar <svg><use href="#i-check"/></svg></button><button class="btn outline pill">Próximo <svg><use href="#i-chevr"/></svg></button></div></div>
     </div></div>
     <div class="tw"><table class="spec">
       <thead><tr><th>Parte</th><th>Receita</th></tr></thead>
       <tbody>
         <tr><td>Tema</td><td>o Portal e o link público são <b>claros por padrão</b>, como o checkout da marca: o cliente abre uma vez por mês, quase sempre no celular e de dia. O Radar interno mostra os mesmos blocos no tema do usuário.</td></tr>
-        <tr><td>Cabeçalho</td><td>título 28px 500 com cliente e Radar. À direita, overline "Status" e a pill do mês: verde preenchida "Aprovado" ou âmbar tingida "Aguardando você". Pill em mono caixa alta porque é etiqueta de estado, não botão.</td></tr>
-        <tr><td>Progresso</td><td>overline "67% revisado · 8 de 12 peças" e fio de 3px com fill lilás. É o mesmo fio do formulário conversacional, mais grosso.</td></tr>
+        <tr><td>Cabeçalho</td><td>título 28px 500 com cliente e Radar. À direita, o rótulo "Status" em 12px e a pill do mês em sans: verde preenchida "Aprovado" ou âmbar tingida "Aguardando você".</td></tr>
+        <tr><td>Progresso</td><td>a frase "67% revisado · 8 de 12 peças" em 12px tabular e fio de 3px com fill lilás. É o mesmo fio do formulário conversacional, mais grosso.</td></tr>
         <tr><td>Corpo</td><td>duas colunas <code>1fr / 1.25fr</code> com 40px de gap. Mídia até 420px de largura. Empilha no celular com a mídia em cima.</td></tr>
-        <tr><td>Data e formato</td><td>data em 28px 500 tabular ao lado de um chip mono em <code>bg-raised</code> com o formato (Feed, Reels, Carrossel, Stories).</td></tr>
-        <tr><td>Legenda</td><td>bloco com fio de 1px à esquerda e 20px de recuo, overline "Legenda", parágrafos em 15px, hashtags em <code>--muted</code>, botão outline pill "Comentar sobre a legenda". Legenda inteira, sem corte: o cliente precisa ler tudo pra aprovar.</td></tr>
+        <tr><td>Data e formato</td><td>data em 28px 500 tabular ao lado de um chip em sans em <code>bg-raised</code> com o formato (Feed, Reels, Carrossel, Stories).</td></tr>
+        <tr><td>Legenda</td><td>bloco com fio de 1px à esquerda e 20px de recuo, rótulo "Legenda" em 12px, parágrafos em 15px, hashtags em <code>--muted</code>, botão outline pill "Comentar sobre a legenda". Legenda inteira, sem corte: o cliente precisa ler tudo pra aprovar.</td></tr>
         <tr><td>Comentários</td><td>faixa entre dois fios com "Nenhum comentário ainda" ou a lista de comentários da peça (ver 20.7).</td></tr>
-        <tr><td>Rodapé</td><td>"Anterior" outline à esquerda, contador mono "conteúdo 3 de 12" no centro, à direita "Ajustar" (premium, fundo raised), "Aprovar" no botão <b>brand</b> da marca (gradient lilás, brilho interno, glow no hover, texto branco) e "Próximo" (outline, desabilitado na última). Todos pill: Portal segue a superfície pública, como o formulário conversacional. No Radar interno o mesmo rodapé usa o accent chapado com raio de 12px.</td></tr>
+        <tr><td>Rodapé</td><td>"Anterior" outline à esquerda, contador sans tabular "conteúdo 3 de 12" no centro, à direita "Ajustar" (outline), "Aprovar" em <b>lilás chapado</b> (accent, texto <code>--accent-fg</code>, sem degradê) e "Próximo" (outline, desabilitado na última). Todos pill: Portal segue a superfície pública. No Radar interno o mesmo rodapé usa o accent chapado com raio de 12px.</td></tr>
       </tbody>
     </table></div>
 
     <h3><span class="id">20.5</span>Reels: capa e vídeo lado a lado</h3>
-    <p class="note">Vídeo aprova em dois quadros. A capa é o que aparece no feed e o Reels é o que toca. Os dois têm etiqueta mono no canto, e o vídeo traz tempo e barra de progresso na base. Só carrega o player no clique.</p>
+    <p class="note">Vídeo aprova em dois quadros. A capa é o que aparece no feed e o Reels é o que toca. Os dois têm etiqueta no canto, e o vídeo traz tempo e barra de progresso na base. Só carrega o player no clique.</p>
     <div class="light-scope"><div class="portal">
       <div class="hd"><h4>Solar Master · Radar de setembro</h4><div class="status"><span class="overline">Status</span><span class="pill-st">Aprovado</span></div></div>
       <div class="prog"><span class="overline">67% revisado · 8 de 12 peças</span><div class="bar"><i></i></div></div>
@@ -2071,11 +2162,11 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
           <div class="cmts">Nenhum comentário ainda</div>
         </div>
       </div>
-      <div class="foot"><button class="btn outline pill"><svg><use href="#i-chevl"/></svg> Anterior</button><span class="cnt">conteúdo 5 de 12</span><div class="acts"><button class="btn premium pill">Ajustar</button><button class="btn brand pill">Aprovar <svg><use href="#i-check"/></svg></button><button class="btn outline pill">Próximo <svg><use href="#i-chevr"/></svg></button></div></div>
+      <div class="foot"><button class="btn outline pill"><svg><use href="#i-chevl"/></svg> Anterior</button><span class="cnt">conteúdo 5 de 12</span><div class="acts"><button class="btn outline pill">Ajustar</button><button class="btn accent pill">Aprovar <svg><use href="#i-check"/></svg></button><button class="btn outline pill">Próximo <svg><use href="#i-chevr"/></svg></button></div></div>
     </div></div>
 
     <h3><span class="id">20.6</span>Carrossel: coverflow e tela cheia</h3>
-    <p class="note">Slide em 1080 x 1350 (4:5), o mesmo tamanho que sobe no Instagram. O atual no centro, o anterior e o próximo a 35% atrás, na escala de 80%, inteiros dentro do palco, com os mesmos cantos de 12px. Setas redondas de 40px embaixo com "slide 2 de 9" em mono. O botão "Ver em tela cheia" fica sobre o slide, no canto inferior esquerdo, em accent mono.</p>
+    <p class="note">Slide em 1080 x 1350 (4:5), o mesmo tamanho que sobe no Instagram. O atual no centro, o anterior e o próximo a 35% atrás, na escala de 80%, inteiros dentro do palco, com os mesmos cantos de 12px. Setas redondas de 40px embaixo com "slide 2 de 9" em sans. O botão "Ver em tela cheia" fica sobre o slide, no canto inferior esquerdo, em accent.</p>
     <div class="light-scope"><div class="portal">
       <div class="hd"><h4>Solar Master · Radar de setembro</h4><div class="status"><span class="overline">Status</span><span class="pill-st wait">Aguardando você</span></div></div>
       <div class="prog"><span class="overline">67% revisado · 8 de 12 peças</span><div class="bar"><i></i></div></div>
@@ -2087,7 +2178,7 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
           <div class="cmts">Nenhum comentário ainda</div>
         </div>
       </div>
-      <div class="foot"><button class="btn outline pill"><svg><use href="#i-chevl"/></svg> Anterior</button><span class="cnt">conteúdo 7 de 12</span><div class="acts"><button class="btn premium pill">Ajustar</button><button class="btn brand pill">Aprovar <svg><use href="#i-check"/></svg></button><button class="btn outline pill">Próximo <svg><use href="#i-chevr"/></svg></button></div></div>
+      <div class="foot"><button class="btn outline pill"><svg><use href="#i-chevl"/></svg> Anterior</button><span class="cnt">conteúdo 7 de 12</span><div class="acts"><button class="btn outline pill">Ajustar</button><button class="btn accent pill">Aprovar <svg><use href="#i-check"/></svg></button><button class="btn outline pill">Próximo <svg><use href="#i-chevr"/></svg></button></div></div>
     </div></div>
 
     <h3><span class="id">20.7</span>Tela cheia com comentários</h3>
@@ -2120,8 +2211,8 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
       <tbody>
         <tr><td>Overlay</td><td><code>--scrim</code> com <code>backdrop-blur</code> de 14px, a página some atrás. Esc e clique fora fecham. Setas do teclado trocam o slide.</td></tr>
         <tr><td>Painel</td><td><code>w-[360px] bg-raised rounded-2xl p-5 shadow-lift</code>, título 20px 500. Na largura de celular vira folha embaixo do slide.</td></tr>
-        <tr><td>Comentário</td><td>cartão <code>bg-card border rounded-xl p-3.5</code>: avatar de 24px e nome em 14px 500, pill mono lilás com a origem ("Slide 2 · área marcada", "Legenda", "Geral"), texto 14px, ações "Responder" e "Resolver" em mono 10.5px <code>--subtle</code> que ficam lilás no hover.</td></tr>
-        <tr><td>Resposta do time</td><td>aninhada com fio à esquerda, overline "Beza Media" e o texto. O cliente vê só comentários <code>client</code> e as respostas; interno nunca aparece aqui.</td></tr>
+        <tr><td>Comentário</td><td>cartão <code>bg-card border rounded-xl p-3.5</code>: avatar de 24px e nome em 14px 500, pill lilás em sans com a origem ("Slide 2 · área marcada", "Legenda", "Geral"), texto 14px, ações "Responder" e "Resolver" em sans 12px 500 <code>--subtle</code> que ficam lilás no hover.</td></tr>
+        <tr><td>Resposta do time</td><td>aninhada com fio à esquerda, o rótulo "Beza Media" em 12px e o texto. O cliente vê só comentários <code>client</code> e as respostas; interno nunca aparece aqui.</td></tr>
         <tr><td>Novo comentário</td><td>textarea "Comentário geral do conteúdo" e botão accent pill "Comentar". Comentário geral não tem área.</td></tr>
       </tbody>
     </table></div>
@@ -2138,7 +2229,7 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
     <div class="tw"><table class="spec">
       <tbody>
         <tr><td>Marcação</td><td>retângulo com borda tracejada de 1.5px lilás, raio 6px e fundo lilás a 6%. Fica salvo em porcentagem do slide, então vale em qualquer tamanho de tela.</td></tr>
-        <tr><td>Popover</td><td><code>w-[290px] bg-card rounded-xl shadow-lift p-3.5</code> ancorado ao canto da área. Avatar e nome, input "Comente sobre esta área", "Cancelar" em mono <code>--subtle</code> e "Comentar" accent pill pequeno. Comentário obrigatório: sem texto o botão não ativa.</td></tr>
+        <tr><td>Popover</td><td><code>w-[290px] bg-card rounded-xl shadow-lift p-3.5</code> ancorado ao canto da área. Avatar e nome, input "Comente sobre esta área", "Cancelar" em sans <code>--subtle</code> e "Comentar" accent pill pequeno. Comentário obrigatório: sem texto o botão não ativa.</td></tr>
         <tr><td>Efeito na peça</td><td>o primeiro pedido de ajuste leva a peça pra "Em alteração" (badge warning em 20.1, laranja na Pauta) e devolve pro time. O cliente pode marcar várias áreas antes de fechar.</td></tr>
         <tr><td>Em imagem e vídeo</td><td>mesma mecânica sobre a imagem estática e sobre o frame pausado do vídeo, que guarda o tempo junto com a área ("0:12 · área marcada").</td></tr>
       </tbody>
@@ -2148,7 +2239,7 @@ sólido  color-mix(in srgb, <span class="p">&lt;hex&gt;</span> 72%, var(--status
 </section>
 
 <section class="sec" style="padding:56px 64px;border:none">
-  <p style="font-size:13px;color:var(--subtle)">Fonte de verdade em texto: <span class="mono">marca/design-guide-sistemas.md</span>. Marca: <span class="mono">marca/design-guide.md</span>. Estrutura: <span class="mono">github.com/luansinezio/crm</span>. Alinhado em 15/set/2026. Calendar e MediaPreview desenhados pro Agency OS em 15/set/2026.</p>
+  <p style="font-size:13px;color:var(--subtle)">Fonte de verdade em texto: <span class="mono">marca/design-guide-sistemas.md</span>. Marca: <span class="mono">marca/design-guide.md</span>. Estrutura: <span class="mono">github.com/luansinezio/crm</span>. Alinhado em 15/set/2026. Calendar e MediaPreview desenhados pro Agency OS em 15/set/2026. Atualizado em 29/set/2026 com as decisões do Agency OS (blocos 02.5, 05.2, 07.5, 10.5, 11.9, 13.2, 13.5, 13.6 e 19.5).</p>
 </section>
 </main>
 </div>

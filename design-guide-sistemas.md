@@ -4,6 +4,7 @@
 > Qual guia usar: este vale pra sistema (área logada, painel, CRM, produto interno). Conteúdo, site, landing, proposta, deck e página de venda usam o `marca/design-guide.md`. A regra completa está em `marca/qual-guia-usar.md`.
 > Versão renderizada: `marca/manual-de-marca-sistemas.html`, publicada em https://manual-marca-beza-v2.vercel.app/sistemas (e no Artifact https://claude.ai/artifact/MqeRpEbNjigjXNArRhHuST)
 > Alinhado à marca em 15/set/2026. Onde o valor do CRM original mudou, está dito na seção "O que mudou em relação ao CRM".
+> Atualizado em 29/set/2026 com as decisões do Agency OS aprovadas pelo Luan: número em Plex Sans tabular sem mono e sem overline, cabeçalho de página com azulejo, cor por etapa, skeleton em toda rota, ficha de cliente em página, tabela solta em lista principal, stat analítico de 34px, gráfico em SVG próprio, portal com Aprovar chapado, perfil de 300px. Onde a decisão trocou um valor antigo, o texto diz qual.
 
 ---
 
@@ -178,19 +179,39 @@ Em fundo escuro a marca usa cor de estado como texto colorido, sem box. No siste
 | problema (em atraso) | `text-danger bg-danger/10` |
 | encerrado (inativo, cancelado, reembolsado) | `text-muted bg-foreground/5` |
 
+### Cor por etapa (`--st-*`)
+
+Etapa de produção tem paleta própria, com dez tokens fixos por tema. É a cor do quadro de Criação e da Pauta: a mesma etapa tem a mesma cor nos dois lugares. Cor de etapa não é cor de cliente nem cor de estado, e não passa pelo `statusTone`.
+
+| Token | Etapa | Escuro | Claro |
+|---|---|---|---|
+| `--st-plan` | Planejamento | `#9A9A9A` | `#8A8A8A` |
+| `--st-capt` | Captação | `#C2C2C2` | `#5F5F5F` |
+| `--st-edit` | Edição | `--info` | `--info` |
+| `--st-design` | Design | `#5CC8DB` | `#1F8FA3` |
+| `--st-ajust` | Ajustes internos | `#F79A4A` | `#D9731A` |
+| `--st-rev` | Revisão | `#E9CB3A` | `#806900` |
+| `--st-ok` | Aprovado | `--success` | `--success` |
+| `--st-alt` | Em alterações | `--danger` | `--danger` |
+| `--st-portal` | Portal | `#B9B9EE` | `#68669E` |
+| `--st-agend` | Agendamento | `#9CCBF5` | `#6FA8DC` |
+
+O texto sobre a cor sólida da etapa usa `--on-solid` (escuro `#0D0D0D`, claro `#FFFFFF`), nunca `#fff` escrito na mão. Um toggle "Cor por etapa" liga e desliga a cor; desligado, quadro e Pauta ficam neutros, estados incluídos. Estados do card e do bloco: ver "Estados do card por etapa" em Calendar.
+
 ---
 
 ## Tipografia
 
-**Fonte da marca em todo o sistema:** IBM Plex Sans no texto e IBM Plex Mono em rótulo de grupo, código e número tabular. Pesos carregados: 400, 500, 600. Geist sai.
+**Fonte da marca em todo o sistema:** IBM Plex Sans no texto e no número, com algarismos tabulares (`font-variant-numeric: tabular-nums` no `body`, então toda tela já sai tabular sem repetir a classe). IBM Plex Mono e o overline saem do sistema: Calendar, MediaPreview, contadores, etiquetas e cabeçalho de grupo usam Plex Sans. Mono só em código e segredo de integração. Pesos carregados: 400, 500, 600. Geist sai.
 
 A escala e os tamanhos são os do CRM, porque foram calibrados pra tabela, número e densidade. O que muda é a fonte e a regra de peso da marca: heading em Medium 500, Semibold 600 só em número, valor e botão primário.
 
 | Uso | Tamanho e peso | Origem |
 |---|---|---|
 | Valor herói (MRR ativo) | 34px 600, tracking -0.02em, tabular | balance-card |
-| Título de página | 28px 500, tracking -0.02em | page-header |
+| Título de página | 22px 500, tracking -0.02em, com azulejo de ícone (ver PageHeader) | page-header |
 | Valor de stat | 20px 600, tracking -0.01em, tabular | stat |
+| Valor de stat de dashboard analítico | 34px 600, tracking -0.02em, tabular | stat de dashboard |
 | Título de drawer | 18px 500, tracking -0.01em | lead-drawer |
 | Título de modal | 16px 500, tracking -0.01em | modal |
 | Título de card | 14px 500, tracking -0.01em | card-title |
@@ -198,15 +219,16 @@ A escala e os tamanhos são os do CRM, porque foram calibrados pra tabela, núme
 | Botão | 14px 500; 600 no `accent` | button |
 | Label de campo | 13px 500, sentence case (regra do checkout da marca) | field |
 | Label de stat, hint | 12px 500 e 12px 400 | stat |
-| Rótulo de grupo (overline) | 11px 500 mono, caixa alta, tracking 0.18em | cabeçalho de seção em popover, drawer, busca |
+| Rótulo de grupo | 12px 500 sans em `--subtle`, sentence case | cabeçalho de seção em popover, drawer, busca, menu de Configurações |
+| Corpo de mensagem do Chat | 13px 400 | chat |
 | Tick de gráfico | 11px 400, `--muted` | chart-theme |
 
 Regras da marca que valem aqui:
 
 - **Sentence case sempre.** Título, botão, título de card e coluna de tabela. Nunca Title Case.
-- **Caixa alta só em overline mono.** Rótulo que encima algo (cabeçalho de grupo, categoria acima de lista). Label de campo, hint e legenda vão em sentence case. Teste: se dá pra apagar e o bloco continua se explicando, é caption, não overline.
-- **Dose de mono:** no máximo três rótulos mono visíveis ao mesmo tempo na tela.
-- **Número comparado em coluna leva `tabular-nums`.**
+- **Sem caixa alta e sem overline.** Cabeçalho de grupo, contador, etiqueta de formato, duração e cabeçalho de dia vão em sans, sentence case. O overline mono é linguagem da superfície pública e do formulário conversacional, não do sistema.
+- **Número em Plex Sans tabular.** Vale pra contador, duração, capacidade, valor e data. O `tabular-nums` é global no `body`.
+- **Piso de tamanho:** 11px. Texto corrido de apoio em 12px.
 - **`text-wrap: pretty`** em título e parágrafo.
 - **Seleção de texto:** escuro `rgba(154,155,229,.32)` com texto `#ECEDF6`; claro `rgba(110,108,190,.20)` com texto `#413F86`.
 - Seta em botão é SVG de linha fina, nunca o caractere `→`. Triângulos de delta (▲ ▼) continuam em texto porque são glifo de dado, não seta.
@@ -221,8 +243,10 @@ O que fica de fora de propósito: gradient em texto, hierarquia inline com lilá
 
 | Valor | Onde |
 |---|---|
-| 8px | segmento ativo dentro do segmented, botão de toggle |
-| 12px | botão, input, select, textarea, segmented, tooltip |
+| 6px | opção do segmented |
+| 8px | botão de toggle |
+| 9px | container do segmented |
+| 12px | botão, input, select, textarea, tooltip |
 | 14px | item de navegação e marca na sidebar |
 | 16px | card, modal, drawer |
 | 20px | container da nav lateral |
@@ -249,23 +273,23 @@ Densidade: no máximo um elemento em nível 02 por tela. Elemento parado no flux
 
 ## App shell
 
-Origem: `app/(app)/layout.tsx`, `app-shell/sidebar.tsx`, `app-shell/page-header.tsx`. Mantido como está no CRM.
+Origem: `app/(app)/layout.tsx`, `app-shell/sidebar.tsx`, `app-shell/page-header.tsx`. O rail e o menu de perfil são herdados da área de membros; o cabeçalho de página é o `PageHeader` do Agency OS.
 
 ```
 ┌──────┬──────────────────────────────────────┐
-│ [A]  │  Título da página        [ação] [ação]│
-│ nav  │                                       │
-│ rail │  conteúdo (scroll próprio)            │
-│ 🔔   │                                       │
+│ [A]  │  [▣] Título da página    [ação] [ação]│
+│ nav  │      subtítulo                        │
+│ rail │  filtros · filtros · filtros          │
+│ 🔔   │  conteúdo (scroll próprio)            │                                       │
 │ (eu) │                                       │
 └──────┴──────────────────────────────────────┘
 ```
 
 Shell `flex h-screen overflow-hidden`: sidebar fixa, `main` com scroll próprio e scrollbar escondida. Só o conteúdo rola.
 
-**Rail.** Marca no topo: quadrado de 44px, raio 14, `bg-accent`, iso oficial da Beza (`marca/logo-beza-iso.svg`) com 24px de largura em `#1A1830` (cor do logo sobre lilás chapado, regra da marca). O "A" do favicon do CRM não é a marca e sai. Nav em container `bg-surface shadow-card rounded-[20px] p-2`, item de 44px com ícone Lucide de 18px: inativo `text-subtle`, hover `bg-foreground/5 text-foreground`, ativo `bg-accent text-accent-foreground`. Rodapé com sino e perfil. Some abaixo de 768px. Itens filtrados por papel.
+**Rail.** Marca no topo: quadrado de 44px, raio 14, `bg-accent`, iso oficial da Beza (`marca/logo-beza-iso.svg`) com 24px de largura em `#1A1830` (cor do logo sobre lilás chapado, regra da marca). O "A" do favicon do CRM não é a marca e sai. Nav em container `bg-surface shadow-card rounded-[20px] p-2`, item de 44px com ícone Lucide de 18px: inativo `text-subtle`, hover `bg-foreground/5 text-foreground`, ativo `bg-accent text-accent-foreground`. Rodapé com sino e perfil. Menu de perfil de 300px com foto de 56px (ver "Busca global, notificações, perfil"). Some abaixo de 768px. Itens filtrados por papel.
 
-**Cabeçalho de página.** `px-6 pt-6 pb-4`, título 28px medium à esquerda, ações à direita com gap de 12px. Só título e ação.
+**Cabeçalho de página (`PageHeader`).** `px-6 pt-6 pb-4`. Primeira linha: azulejo de ícone (quadrado de 40px, raio 12, fundo `accent` a 14%, ícone Lucide de 20px em `--accent`, tinta e não chapado), título de 22px medium com tracking -0.02em e, embaixo, subtítulo de 13px em `--muted`; ações à direita com gap de 8px. Segunda linha, só quando a tela filtra: segmented, select, navegação de mês e toggles, com fio de 1px embaixo (`border-b pb-3`); sem filtro, sem fio. A decisão de 29/set trocou o título de 28px sem ícone do CRM por este desenho.
 
 **Gutter.** 24px em todo conteúdo interno. Card `p-5`, stat `p-4`, gap entre controles 12px.
 
@@ -296,7 +320,9 @@ Tamanhos: `sm` 32px, `md` 36px, `lg` 44px, `icon` 36 x 36.
 
 ### Stat
 
-Card compacto `p-4`: label 12px 500 em `--muted` com ícone opcional em `--subtle`, valor 20px 600 tabular, hint 12px em `--subtle`. Variante `accent` (`border-accent/25 bg-accent/10`) destaca um número por faixa.
+Card compacto `p-4`: label 12px 500 em `--muted` com ícone opcional em `--subtle`, valor 20px 600 tabular, hint 12px em `--subtle`. Variante `accent` (`border-accent/25 bg-accent/10`) destaca um número por faixa, sem gradient e sem número em lilás.
+
+**Stat de dashboard analítico.** Nos Dashboards do Agency OS os quatro números do topo fazem papel de herói da visão: valor em 34px 600 tabular (28px na ficha), label 12px 500, resto igual. Vale só para dashboard analítico. Stat de faixa comum continua em 20px.
 
 ### Badge
 
@@ -308,7 +334,7 @@ Pill 12px 500, `px-2 py-0.5`. Estado fixo (tabela acima), temperatura com dot de
 
 ### Segmented
 
-Container `bg-card border rounded-xl h-9 p-1`, opção `rounded-lg px-3 text-sm font-medium`, ativa `bg-accent text-accent-foreground`. Troca visão ou filtro.
+Desenho do mockup do Agency OS: container `bg-raised rounded-[9px] p-[3px]`, opção `rounded-md` (6px) `px-3 text-[13px] font-medium`, ativa `bg-accent text-accent-foreground`. Troca visão ou filtro. Foi a decisão de 29/set: o `bg-card rounded-xl h-9 p-1` do guia anterior cede.
 
 ### Abas
 
@@ -320,7 +346,7 @@ Label 13px 500 sentence case, controle, erro 12px em danger. Input segue a marca
 
 ### Modal e drawer
 
-Scrim `--scrim` com `backdrop-blur-sm`, fecham com Esc e clique fora, travam o scroll. Modal `max-w-lg rounded-2xl shadow-lift`, header `p-5 border-b` com título 16px medium. Drawer à direita, `max-w-[620px] border-l shadow-lift`, entra em 200ms. Detalhe abre em drawer, ação abre em modal.
+Scrim `--scrim` com `backdrop-blur-sm`, fecham com Esc e clique fora, travam o scroll. Modal `max-w-lg rounded-2xl shadow-lift`, header `p-5 border-b` com título 16px medium. Drawer à direita, `max-w-[620px] border-l shadow-lift`, entra em 200ms. Detalhe abre em drawer, ação abre em modal. Exceção: entidade grande tem página própria (ver "Ficha de entidade" em Padrões de página). O `Dialog` aceita `size="lg"` (720px), corpo com rolagem e foco inicial configurável.
 
 ---
 
@@ -350,7 +376,7 @@ Reduced motion é global, como na marca:
 
 ## Gráficos
 
-Recharts lê CSS vars, então re-tematiza sozinho. Tick 11px em `--muted`, grid a 6% de cinza lilás só horizontal, eixos sem linha, tooltip `rounded-xl border-strong bg-raised text-12 shadow-card`. Nunca caixa de foco.
+Recharts ou SVG próprio, os dois valem. Recharts lê CSS vars, então re-tematiza sozinho. O SVG próprio (como o `chart-kit` dos Dashboards do Agency OS) mede a largura real do container e desenha nela, também lendo as CSS vars. Tick 11px em `--muted`, grid a 6% de cinza lilás só horizontal, eixos sem linha, tooltip `rounded-xl border-strong bg-raised text-12 shadow-card`. Nunca caixa de foco.
 
 Série principal `#9A9BE5` (claro `#6E6CBE`). Período anterior em `--chart-prev`. Meta e comparação entram como marca (linha de referência tracejada, bullet tick, série tracejada), nunca como segundo eixo.
 
@@ -358,7 +384,9 @@ Série principal `#9A9BE5` (claro `#6E6CBE`). Período anterior em `--chart-prev
 
 Gauge: arco em gradiente do lilás profundo ao lilás (`#7B79C9 → #9A9BE5`), trilha em `--border-strong`, traço de 14px, `drop-shadow(0 0 6px var(--chart-glow))`, preenche em 1s.
 
-Gráfico se desenha na largura real do container (Recharts faz isso com `ResponsiveContainer`). Nunca um SVG com `preserveAspectRatio="none"` esticado: texto, tracejado e ponto deformam em tela larga. Receitas por tipo (área acumulada, barras com meta, donut, funil CSS, barra de ranking, barra de progresso) seguem o CRM sem mudança: ver `dashboard/hero-chart.tsx`, `closing-trend.tsx`, `distribution-donut.tsx`, `funnel-chart.tsx`, `hbar-row.tsx`. O manual renderizado mostra cada uma.
+Gráfico se desenha na largura real do container (Recharts faz isso com `ResponsiveContainer`; o SVG próprio mede o container e redesenha). Nunca um SVG com `preserveAspectRatio="none"` esticado: texto, tracejado e ponto deformam em tela larga. Receitas por tipo (área acumulada, barras com meta, donut, funil CSS, barra de ranking, barra de progresso) seguem o CRM sem mudança: ver `dashboard/hero-chart.tsx`, `closing-trend.tsx`, `distribution-donut.tsx`, `funnel-chart.tsx`, `hbar-row.tsx`. O manual renderizado mostra cada uma.
+
+**Funil de fases (conteúdo, atração, jornada) sai sempre com as duas visões, vertical e horizontal, trocadas por um segmented.** Vertical em ECharts (`type: 'funnel'`, Apache 2.0), com o conteúdo de cada fase ao lado, alinhado à faixa. Horizontal em funnel-graph-js (MIT), com borda curva e o conteúdo em colunas embaixo de cada fase. Os dois vêm por CDN, se redesenham ao trocar o tema e guardam a última visão escolhida. Nunca montar o funil do zero em trapézio de CSS. Referência: `clientes/nina/painel.html`, aba "Funil de conteúdo" (28/set/2026).
 
 ---
 
@@ -382,16 +410,18 @@ O favicon do CRM (`app/icon.svg`) é um "A" em `#8E8FDD` que não é o iso da ma
 
 ## Padrões de página
 
-Esqueleto: `PageHeader` + toolbar opcional + tabela em card + drawer ou modal. Gutter 24px.
+Esqueleto: `PageHeader` (com a linha de filtros, quando a tela filtra) + tabela + drawer ou modal. Gutter 24px.
 
 - **Toolbar canônica:** `border-b border-border px-6 py-3 flex flex-wrap gap-2`. Segmented, `Select h-9`, busca com ícone de 16px à esquerda, toggle pílula, "Limpar" em 12px muted, contador `ml-auto`.
-- **Tabela em card:** `bg-card border rounded-2xl shadow-card overflow-hidden`, cabeçalho 12px 500 em `--muted` (sentence case), coluna ordenável com chevron de 14px, linha `hover:bg-foreground/5` quando abre detalhe, célula título 500 com subtítulo 12px, valor à direita tabular.
-- **Tabela de baixa densidade (widget):** cabeçalho overline mono 11px, corpo `divide-y`, categoria em chip pill.
+- **Tabela solta com fio** (lista principal: Clientes, Time e telas do mesmo tipo): sem card, direto sobre o fundo da página, cabeçalho com fio embaixo e linhas separadas por fio de 1px. É o desenho dos mockups, decisão de 29/set.
+- **Tabela em card** (Configurações e painéis dentro de uma tela): `bg-card border rounded-2xl shadow-card overflow-hidden`, cabeçalho 12px 500 em `--muted` (sentence case), coluna ordenável com chevron de 14px, linha `hover:bg-foreground/5` quando abre detalhe, célula título 500 com subtítulo 12px, valor à direita tabular.
+- **Tabela de baixa densidade (widget):** cabeçalho 12px 500 em `--muted`, corpo `divide-y`, categoria em chip pill.
 - **Stats no topo:** `grid grid-cols-2 xl:grid-cols-4 gap-3`, um `accent` por faixa.
-- **Rótulo de grupo** em drawer, popover e busca: overline mono 11px caixa alta 0.18em em `--subtle`.
+- **Rótulo de grupo** em drawer, popover, busca e menu de Configurações: 12px 500 sans em `--subtle`, sentence case.
 - **Empty state:** texto 14px em `--subtle` centralizado, `py-10`. Painel vazio: `Card p-10` com botão outline.
-- **Loading:** skeleton `animate-pulse rounded-2xl bg-foreground/[0.04]` só no dashboard e no pipeline. Página interna mostra "Carregando…" em `--subtle`.
+- **Loading:** skeleton `animate-pulse rounded-2xl bg-foreground/[0.04]` na medida da tela em toda rota (`loading.tsx` de cada página), não só no dashboard e no pipeline. O esqueleto repete o desenho da tela (cabeçalho, filtros, cards, linhas), então nada pula quando o dado chega. Onde não há esqueleto, como célula de tabela, vale "Carregando…" em `--subtle`.
 - **Erro:** `Card p-6`, título 14px 500 em danger, explicação em `--muted`.
+- **Ficha de entidade:** entidade grande (cliente, com contrato, escopo, equipe e portal) tem página própria, com abas underline, e o formulário de cadastro também é página. Pessoa (Time) e item leve continuam em drawer. A aba mora na URL.
 - **Toast:** sonner `richColors`, canto superior direito, nível 03 de sombra, tema acompanha. Todo feedback de ação sai por toast.
 
 ### Dashboard
@@ -404,7 +434,7 @@ Board `overflow-x-auto p-6 cursor-grab select-none`, colunas `w-72 gap-4`, fades
 
 ### Busca global, notificações, perfil
 
-`Cmd+K`: overlay `pt-[12vh]`, caixa `bg-raised rounded-2xl shadow-lift max-w-xl`, campo de 48px, `kbd` ESC, grupos com overline mono, debounce 250ms. Sino: badge `danger` de 16px, popover `w-[380px] bg-raised rounded-xl shadow-lift` à direita da rail. Perfil: avatar lilás de 44px, menu `w-52` com toggle de tema (três ícones, segmented compacto) e "Sair".
+`Cmd+K`: overlay `pt-[12vh]`, caixa `bg-raised rounded-2xl shadow-lift max-w-xl`, campo de 48px, `kbd` ESC, grupos com rótulo de 12px sans, debounce 250ms. Sino: badge `danger` de 16px, popover `w-[380px] bg-raised rounded-xl shadow-lift` à direita da rail. Perfil (herdado da área de membros): avatar lilás de 44px no rail; o menu é um popover de 300px com a foto de 56px, toggle de tema (três ícones, segmented compacto) e "Sair". O perfil em si abre em pop-up (`Dialog`), não em página. Substitui o `w-52` do CRM.
 
 ---
 
@@ -426,17 +456,23 @@ Login, onboarding e formulário conversacional são escuros mesmo pra quem usa o
 
 ## Calendar (Pauta)
 
-Desenhado em 15/set/2026 pro Agency OS, a partir da regra 2 do backlog: Pauta é pessoas mais blocos de tempo. A unidade é o meio-dia, não a hora. Cada dia tem dois slots. Um bloco ocupa um, dois ou vários. Manual: blocos 19.1 a 19.4.
+Desenhado em 15/set/2026 pro Agency OS, a partir da regra 2 do backlog: Pauta é pessoas mais blocos de tempo. A unidade é o meio-dia, não a hora. Atualizado em 29/set/2026: cor por etapa no lugar de cor por status da demanda, grade em células separadas, sem mono e sem overline. Cada dia tem dois slots. Um bloco ocupa um, dois ou vários. Manual: blocos 19.1 a 19.4.
 
-**Mês por colaborador (19.1, 19.2).** Card do sistema com cabeçalho em duas linhas (`p-5 gap-3.5`): avatar de 36px, nome 16px 500, segmented Mês / Semana / Time e o seletor de mês à direita; embaixo, a barra de concluído contra planejado (trilha 6px, fill lilás, "12 de 20 meios-dias") e o filtro: select de cliente mais chips de status com dot na cor. Cabeçalho dos dias em overline mono. Grade de sete colunas.
+**Mês por colaborador (19.1, 19.2).** Card do sistema com cabeçalho em duas linhas (`p-5 gap-3.5`): avatar de 36px, nome 16px 500, segmented Mês / Semana / Time e o seletor de mês à direita; embaixo, a barra de concluído contra planejado (trilha 6px, fill lilás, "12 de 20 meios-dias") e o filtro: select de cliente mais chips de status com dot na cor. Cabeçalho dos dias em sans 12px 500 `--muted`, sentence case. Grade de sete colunas.
 
-- Célula do dia: `min-h-[148px] p-2.5 flex flex-col gap-1.5`, borda 8% à direita e embaixo. Fim de semana `bg-foreground/2`. Dia de outro mês com número a 60%. Hoje: número em pill `bg-accent text-accent-foreground rounded-md px-1.5`.
-- Contador de capacidade no canto direito, `n/2` em 11px `--subtle`. Cheio vira `--fg`. Acima de 2 vira `--danger` 600 e a célula ganha `ring-1 ring-danger/50` interno. É o conflito de alocação (PAU-12): visível e permitido, quem decide é o Head.
+- **Grade do mês em células separadas.** Cada dia é uma célula própria: `min-h-[120px] p-2.5 flex flex-col gap-1.5 rounded-xl` (raio 12), com borda de 8%, e não uma grade contínua com fio compartilhado. Fim de semana em `--raised`. Dia de outro mês com borda tracejada e número a 60%. Hoje: número em pill `bg-accent text-accent-foreground rounded-md px-1.5`. Foi a decisão de 29/set: o desenho do mockup aprovado troca a grade contínua de `min-h-[148px]` e fim de semana `foreground/2`.
+- Contador de capacidade no canto direito, `n/2` em 11px sans tabular `--subtle`. Cheio vira `--fg`. Acima de 2 vira `--danger` 600 e a célula ganha `ring-1 ring-danger/50` interno. É o conflito de alocação (PAU-12): visível e permitido, quem decide é o Head.
 - Slot de meio dia: dois por dia, `flex-1 min-h-[56px] rounded-[10px]`, invisível quando vazio. Recebendo um arraste: borda tracejada `accent/40` no slot e `bg-accent/10` no dia, igual à drop zone do kanban.
-- Bloco: o cartão do kanban em miniatura. `bg-card border border-border rounded-[10px] p-2 shadow-card cursor-grab`, hover nível 03. Linha 1: cliente 12px 500 e duração em mono 10px à direita (½ dia, 1 dia, 2 dias). Linha 2: atividade 11px `--muted`. Linha 3: dot de 6px e o status em 10.5px na cor do status. Sem barra lateral, sem fundo tingido.
-- **Cor é status da demanda, nunca cliente.** Planejado lilás `#8b8ce0`, em produção azul `#0ea5e9`, em aprovação âmbar `#f59e0b`, em alteração laranja `#f97316`, aprovado verde `#10b981`, atrasado vermelho `#ef4444`. Tudo via `statusTone`, nos dois temas. Cliente se filtra pelo select e se lê no nome.
+- Bloco: o cartão do kanban em miniatura. `bg-card border border-border rounded-[10px] p-2 shadow-card cursor-grab`, hover nível 03. Linha 1: cliente 12px 500 e duração em sans 11px tabular à direita (½ dia, 1 dia, 2 dias). Linha 2: atividade 11px `--muted`. Linha 3: dot de 6px e a etapa em 11px na cor da etapa. O fundo do bloco é tingido pela cor da etapa (`--st-*`, tinta de baixa opacidade sobre `--card`); sem barra lateral.
+- **Cor é etapa, nunca cliente.** A cor do bloco vem dos dez tokens `--st-*` (ver "Cor por etapa" em Cores), a mesma do quadro de Criação: Planejamento, Captação, Edição, Design, Ajustes internos, Revisão, Aprovado, Em alterações, Portal, Agendamento. Isso substitui as seis cores de status da demanda (lilás, azul, âmbar, laranja, verde, vermelho) do desenho de 15/set. Cliente se filtra pelo select e se lê no nome. O toggle "Cor por etapa" desliga a cor e neutraliza tudo, estados incluídos.
+- **Card por etapa.** O mensal do cliente por frente (vídeo, design) aparece na Pauta uma vez por etapa que tem dia, com a pessoa, o dia e as horas daquela etapa.
 - Bloco de 1 dia ocupa os dois slots (`min-h-[118px]`). Bloco maior ocupa os dias seguintes com fantasma tracejado e "continua" no lugar da duração.
-- Estados de execução: concluído (check verde, nome riscado, 60%), cancelado (sem fundo, borda tracejada, 70%), arrastando (40%).
+- **Estados do card por etapa.** Valem igual no quadro de Criação e na Pauta:
+  - concluída: verde forte (`--success`), com check;
+  - bloqueada (a etapa anterior ainda não passou o bastão): borda tracejada, em vermelho (`--danger`) quando o planejamento atrasou;
+  - atrasada: âmbar (`--warning`);
+  - arrastando: 40%.
+  Cancelado segue sem fundo, borda tracejada, 70%.
 - Rodapé "A distribuir": faixa `bg-foreground/2` com os blocos sem data. Arrastar pra um dia agenda. Contagem à direita.
 
 **Semana do time (19.3).** Linhas são pessoas (coluna de 180px com avatar, nome e cadeira), colunas são os dias úteis, coluna de hoje em lilás no cabeçalho. O bloco vira uma linha: dot do status e cliente. Célula em conflito com o mesmo ring do mês. Mesmos filtros.
@@ -449,30 +485,30 @@ Regras: sem hora. Concluído se deriva do estado da peça quando dá (regra 15).
 
 ## MediaPreview (peça na aprovação)
 
-Desenhado em 15/set/2026 pro Agency OS, em cima da referência do Radar de setembro. O arquivo mora no Drive (regra 13), o sistema mostra o preview quando existe (DRV-08). Um componente em três lugares: Radar (CS confere), Revisão (Head aprova), Portal e link público (cliente decide). O visual é o mesmo, muda o par de ações. Manual: blocos 20.1 a 20.8.
+Desenhado em 15/set/2026 pro Agency OS, em cima da referência do Radar de setembro. O arquivo mora no Drive (regra 13), o sistema mostra o preview quando existe (DRV-08). Um componente em três lugares: Radar (CS confere), Revisão (Head aprova), Portal e link público (cliente decide). O visual é o mesmo, muda o par de ações. Manual: blocos 20.1 a 20.8. Atualizado em 29/set/2026: sem mono e sem overline (número em Plex Sans tabular) e Aprovar em lilás chapado, sem degradê.
 
 **Moldura (20.1).** `rounded-xl overflow-hidden bg-raised border border-border` com `aspect-ratio` pelo formato: 4:5 feed (1080 x 1350), 9:16 vertical, 1:1, 16:9. Nasce no tamanho final, a página não pula. Mídia em `object-cover`; vídeo mostra o frame de capa e só carrega o player no clique.
 
-- Etiqueta de formato: overline mono 10px em pill escuro translúcido `rgba(10,10,16,.55)` com blur, canto superior esquerdo, sempre `#ECEDF6` porque fica sobre a mídia, não sobre o tema.
-- Play: círculo de 48px no centro, mesmo pill escuro; hover vira lilás com ícone escuro e cresce 6%. Duração no canto inferior direito, mono tabular.
+- Etiqueta de formato: 11px 500 sans, sentence case, em pill escuro translúcido `rgba(10,10,16,.55)` com blur, canto superior esquerdo, sempre `#ECEDF6` porque fica sobre a mídia, não sobre o tema.
+- Play: círculo de 48px no centro, mesmo pill escuro; hover vira lilás com ícone escuro e cresce 6%. Duração no canto inferior direito, sans tabular.
 - Carrossel: contador "1/5" no canto superior direito, dots de 6px (ativo vira barra de 14px), setas de 32px que aparecem no hover. Setas do teclado trocam.
 - Sem preview: ícone de arquivo num quadrado de 44px, nome 13px 500, tipo, tamanho e origem em 12px `--subtle`, botão outline "Abrir no Drive". Nunca miniatura genérica.
 - Estado da peça: badge no canto inferior esquerdo. Aprovada: badge success e anel de 1px success. Alteração pedida: badge warning. Pendente: sem badge.
-- Carregando: moldura `bg-foreground/4 animate-pulse`. É a exceção declarada à regra de skeleton.
+- Carregando: moldura `bg-foreground/4 animate-pulse`. É o skeleton da mídia, no mesmo padrão de toda rota.
 
 **Thumb (20.2).** 48px, raio 8, ícone do tipo num quadrado de 16px no canto. Sem mídia, ícone de arquivo em `--muted`. Primeira coluna da tabela; à esquerda do título no cartão do kanban. Versões usam thumb de 32px com anel lilás de 2px na atual.
 
 **Cartão na fila do Radar (20.3).** Raio 16, moldura no topo sem raio próprio, título 14px 500, meta (cliente, data, funil) em 12px `--muted` separada por ponto, última linha com status da peça e conferência do CS (RAD-05). Hover do card clicável. Grid `grid-cols-2 lg:grid-cols-4 gap-4`.
 
-**Palco de aprovação (20.4 a 20.8).** Portal e link público são **claros por padrão**, como o checkout da marca, e seguem a superfície pública: botão pill e o "Aprovar" no botão `brand` (gradient lilás, brilho interno, glow no hover, **texto branco**). O Radar interno mostra os mesmos blocos no tema do usuário com o accent chapado de 12px.
+**Palco de aprovação (20.4 a 20.8).** Portal e link público são **claros por padrão**, como o checkout da marca, e seguem a superfície pública: botão pill. **"Aprovar" é lilás chapado (`accent`, texto `--accent-fg`) e "Ajustar" é outline; sem degradê nesses botões** (decisão de 29/set, que substitui o `brand` com gradient e o `premium`). O `brand` fica só na superfície pública que usar gradiente, como o formulário conversacional. O Radar interno mostra os mesmos blocos no tema do usuário com o accent chapado de 12px.
 
-- Cabeçalho: título 28px 500 com cliente e Radar; à direita overline "Status" e pill mono do mês (verde preenchida "Aprovado", âmbar tingida "Aguardando você"). Fio de progresso de 3px com overline "67% revisado · 8 de 12 peças".
-- Corpo: duas colunas `1fr / 1.15fr`, 40px de gap, mídia até 420px, empilha no celular. À direita: data 28px 500 tabular com chip mono do formato; bloco de legenda com fio à esquerda, overline "Legenda", parágrafos 15px, hashtags `--muted`, botão outline pill "Comentar sobre a legenda"; faixa de comentários entre dois fios.
-- Rodapé: "Anterior" outline, contador mono "conteúdo 3 de 12", "Ajustar" premium, "Aprovar" brand, "Próximo" outline (desabilitado na última).
-- Reels (20.5): capa e vídeo lado a lado em 9:16, etiquetas mono, tempo e barra de progresso na base do vídeo.
-- Carrossel (20.6): coverflow. Slide atual em 1080 x 1350 no centro (altura manda, largura deriva), anterior e próximo a 35% atrás na escala de 80%, inteiros dentro do palco, cantos de 12px. Setas redondas de 40px com "slide 2 de 9". Botão "Ver em tela cheia" em accent mono no canto inferior esquerdo do slide.
-- Tela cheia com comentários (20.7): scrim com blur de 14px, slide grande, painel `w-[360px] bg-raised rounded-2xl p-5 shadow-lift`. Comentário em cartão: avatar 24px, nome 14px 500, pill mono lilás com a origem ("Slide 2 · área marcada", "Legenda", "Geral"), texto 14px, ações "Responder" e "Resolver" em mono. Resposta do time aninhada com overline "Beza Media". Textarea "Comentário geral do conteúdo" e "Comentar" brand. Cliente vê só comentários `client` e respostas.
-- Pedido de ajuste (20.8): "Ajustar" entra no modo de marcação. Retângulo tracejado de 1.5px lilás, raio 6, fundo lilás a 6%, salvo em porcentagem do slide. Popover `w-[290px] bg-card rounded-xl shadow-lift p-3.5` com avatar, nome, input "Comente sobre esta área", "Cancelar" mono e "Comentar" brand pequeno. Comentário obrigatório. O primeiro pedido leva a peça pra "Em alteração" e devolve pro time. Em vídeo guarda o tempo junto com a área.
+- Cabeçalho: título 28px 500 com cliente e Radar; à direita o rótulo "Status" em 12px `--muted` e a pill do mês em sans (verde preenchida "Aprovado", âmbar tingida "Aguardando você"). Fio de progresso de 3px com a frase "67% revisado · 8 de 12 peças" em 12px tabular.
+- Corpo: duas colunas `1fr / 1.15fr`, 40px de gap, mídia até 420px, empilha no celular. À direita: data 28px 500 tabular com chip do formato em sans; bloco de legenda com fio à esquerda, rótulo "Legenda" em 12px `--muted`, parágrafos 15px, hashtags `--muted`, botão outline pill "Comentar sobre a legenda"; faixa de comentários entre dois fios.
+- Rodapé: "Anterior" outline, contador sans tabular "conteúdo 3 de 12", "Ajustar" outline, "Aprovar" accent, "Próximo" outline (desabilitado na última).
+- Reels (20.5): capa e vídeo lado a lado em 9:16, etiquetas em sans, tempo e barra de progresso na base do vídeo.
+- Carrossel (20.6): coverflow. Slide atual em 1080 x 1350 no centro (altura manda, largura deriva), anterior e próximo a 35% atrás na escala de 80%, inteiros dentro do palco, cantos de 12px. Setas redondas de 40px com "slide 2 de 9". Botão "Ver em tela cheia" em accent, sans, no canto inferior esquerdo do slide.
+- Tela cheia com comentários (20.7): scrim com blur de 14px, slide grande, painel `w-[360px] bg-raised rounded-2xl p-5 shadow-lift`. Comentário em cartão: avatar 24px, nome 14px 500, pill lilás em sans com a origem ("Slide 2 · área marcada", "Legenda", "Geral"), texto 14px, ações "Responder" e "Resolver" em sans 12px 500. Resposta do time aninhada com o rótulo "Beza Media" em 12px `--muted`. Textarea "Comentário geral do conteúdo" e "Comentar" brand. Cliente vê só comentários `client` e respostas.
+- Pedido de ajuste (20.8): "Ajustar" entra no modo de marcação. Retângulo tracejado de 1.5px lilás, raio 6, fundo lilás a 6%, salvo em porcentagem do slide. Popover `w-[290px] bg-card rounded-xl shadow-lift p-3.5` com avatar, nome, input "Comente sobre esta área", "Cancelar" em sans e "Comentar" brand pequeno. Comentário obrigatório. O primeiro pedido leva a peça pra "Em alteração" e devolve pro time. Em vídeo guarda o tempo junto com a área.
 
 O que o cliente nunca vê: responsável, cadeira, Pauta, comentários internos, arquivos internos e de backup. O componente recebe só o que pode mostrar.
 
@@ -482,7 +518,7 @@ O que o cliente nunca vê: responsável, cadeira, Pauta, comentários internos, 
 
 | Item | CRM (Geist, zinc) | Sistema Beza (este guia) |
 |---|---|---|
-| Fonte | Geist Sans e Mono | IBM Plex Sans e Mono |
+| Fonte | Geist Sans e Mono | IBM Plex Sans (Mono só em código e segredo) |
 | Peso de heading | 600 | 500 (600 só em número e botão primário) |
 | Fundo escuro | `#0a0a0f`, `#131318`, `#1c1c24` | `#0A0A10`, `#14141C`, `#1B1B26` |
 | Texto escuro | `#f4f4f6`, `#a1a1aa`, `#6b6b76` (neutro) | `#ECEDF6`, `#8B8DA1`, `#606282` (temperatura lilás) |
@@ -497,7 +533,10 @@ O que o cliente nunca vê: responsável, cadeira, Pauta, comentários internos, 
 | Input escuro | fundo `surface` sólido, anel 2px a 30% | fundo translúcido 4%, anel 3px a 18% |
 | Outline hover | fundo 5% | borda e texto lilás (ghost da marca) |
 | Label de campo | 12px | 13px 500 sentence case |
-| Rótulo de grupo | sans uppercase | mono uppercase 0.18em |
+| Rótulo de grupo | sans uppercase | sans 12px 500, sentence case (sem mono e sem overline) |
+| Título de página | 28px 600 | 22px 500 com azulejo de ícone, subtítulo e linha de filtros |
+| Número | Geist tabular | IBM Plex Sans com algarismos tabulares, global |
+| Loading | skeleton só em dashboard e pipeline | skeleton na medida da tela em toda rota |
 | Sombra flutuante | `0 16px 40px` preto 50% | nível 03 da marca com linha de luz |
 | Scrim | preto puro 60% | `#0A0A10` a 65% |
 | Símbolo sobre lilás | `#0b0b0c` | `#1A1830` |
@@ -523,10 +562,11 @@ O que o cliente nunca vê: responsável, cadeira, Pauta, comentários internos, 
 - Botão `brand` fora do formulário conversacional.
 - Grain, glass ou gradient animado na área logada.
 - Borda como hierarquia. Bold (700). Title Case.
-- Mono em caixa alta embaixo de alguma coisa (não é overline).
+- Plex Mono e overline no sistema (Calendar, MediaPreview, contador, etiqueta, cabeçalho de grupo). Caixa alta em rótulo.
 - Cor de status vinda do banco usada crua.
-- Segundo eixo em gráfico. Skeleton fora do dashboard e do pipeline.
-- Detalhe de entidade em página nova. Scrollbar visível no conteúdo.
+- Segundo eixo em gráfico. Tela sem skeleton na medida dela ("Carregando…" solto no lugar do esqueleto).
+- Ficha de pessoa ou de item leve em página nova (vão em drawer; só entidade grande, como cliente, tem página com abas). Scrollbar visível no conteúdo.
+- Degradê em "Aprovar" e "Ajustar" do portal. Gráfico em SVG esticado com `preserveAspectRatio="none"`.
 - Misturar os dois temas no mesmo material. Animação sem `prefers-reduced-motion`.
 
 ## O que o sistema faz sempre
@@ -538,7 +578,7 @@ O que o cliente nunca vê: responsável, cadeira, Pauta, comentários internos, 
 - Feedback de ação sai por toast no canto superior direito.
 - Popover que nasce da rail abre à direita dela, alinhado embaixo.
 - `select-none` em cabeçalho, kanban e filtro.
-- Um `accent` por tela. Um overline por bloco, três mono por tela no máximo.
+- Um `accent` por tela.
 - Hover do acento clareia no escuro e escurece no claro.
 
 ---
