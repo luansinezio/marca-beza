@@ -1,0 +1,7 @@
+# Mesmas rotas do vercel.json (rewrite, status 200). Destino sem .html: o Pages
+# redireciona qualquer *.html pra URL limpa, e com o .html no destino o rewrite
+# virava redirect.
+/          /manual-de-marca            200
+/luan      /manual-de-marca-luan       200
+/sistemas  /manual-de-marca-sistemas   200
+/v1        /manual-de-marca-v1-jul2026 200

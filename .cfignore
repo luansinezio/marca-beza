@@ -1,0 +1,5 @@
+# Só pro deploy no Cloudflare Pages (scripts/cloudflare/pages-deploy.sh): fica de fora do que sobe
+estudos/
+referencias/
+_deploy-manual/
+swatches/
