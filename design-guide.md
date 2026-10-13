@@ -1151,6 +1151,27 @@ Toda proposta comercial sai com a capa líquida (`marca/capa-proposta-liquid.htm
 
 Validar sempre em 312px e em 1440px antes de publicar.
 
+Duas mudanças de 30/set/2026 (proposta da Renata Inácio), já aplicadas no arquivo mestre:
+
+- **Sem as linhas mono no topo e no rodapé da capa.** O `.hudrow` fica `display: none`. A capa é só o logo, a pill e a tag do cliente.
+- **A pill encolhe com `min(12px, 2.75vw)` e letter-spacing `0.08em` abaixo de 700px**, com `--capa-gap` de 16px. Com `3.3vw` a pill vazava pela direita em celular de 375px quando a Archivo carregava de verdade.
+
+**Proposta comercial é deck, não página corrida.** Modelo em `propostas/_modelo/deck/` (README lá). Cromo: logo à esquerda, cliente no meio, "Proposta" à direita; rodapé com Beza Media e cliente; setas com contador no canto inferior direito; sem botão de tema. No celular as linhas do topo e do rodapé somem, as setas centralizam embaixo e os cards empilham. Padrão mobile (01/out/2026, regras completas no README do modelo): margem de 20px nos lados e 36px no teto; rodapé reserva 96px pras setas; a massa do slide fica centralizada automaticamente entre a margem do topo e as setas (margem `auto` no primeiro e no último filho do `.stage`, nunca posição fixa na mão); cada slide cabe sem rolar em 430x745; quando passa da tela, a página inteira rola e o aviso de rolagem aparece uma vez; card de número com coluna fixa de 44px; seta vazada na capa. Um eyebrow por slide no máximo e nenhum rótulo mono dentro de card: número grande em lilás ou ícone de linha.
+
+---
+
+## Capa de grupo de cliente (adicionado 05/out/2026)
+
+Foto do grupo de WhatsApp de cada cliente. Modelo em `marca/capa-grupo.html`, PNG gerado por `scripts/capa-grupo/gerar.sh "Nome|Sobrenome" [fundo] [cor] [fonte]` (sai na mesa). Fechado nas capas da Sylvia Contin e da Renata Inacio.
+
+- **Layout fixo:** 1080x1080. Nome do cliente em caixa alta, duas linhas alinhadas à esquerda dentro de um bloco centralizado, 150px, line-height 0.86 (nome comprido encolhe até caber em 900px). Abaixo, um "+" de linha fina (74px, traço 3) e o logo completo da Beza com 640px. Nome, "+" e logo na mesma cor.
+- **Fundo:** gradiente radial de três paradas (elipse 75% 65% centrada em 50% 42%, paradas em 0, 48% e 100%), claro no centro e escurecendo na borda.
+- **Cor:** sai da marca do cliente, com o fundo na cor de fundo dela e o texto na cor de destaque (Renata: creme `#FBF5EE → #E2CCB8` com vinho `#6B0B1F`). Sem paleta do cliente, usar o escuro da Beza (`#26252E → #060608` com `#ECEDF6`), que é o padrão do modelo.
+- **Fonte:** Cormorant Garamond 500 por padrão. Muda de um cliente pro outro só quando o Luan pedir.
+- **Nome:** escrito como o cliente escreve na marca dele (Renata Inacio sai sem acento porque é assim que ela assina).
+
+A capa de cada cliente fica em `propostas/<cliente>/capa-grupo/`.
+
 ---
 
 ## O que NUNCA fazer
