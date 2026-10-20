@@ -177,7 +177,7 @@ Dark-first só faz sentido com um segundo tema documentado. O claro não é vers
 | Lilás chapado `#9A9BE5` | `#0D0D0D` corpo | branco puro · texto lilás |
 | Lilás profundo `#7B79C9`–`#5D5BA8` | `#FFFFFF` corpo | gray-300 pra baixo |
 
-**Quando usar cada um.** Escuro é o padrão: site, landing, proposta, deck, carrossel, post, área logada, painel. Claro em: checkout (obrigatório), documento longo de leitura, material impresso, corpo de e-mail, relatório, e tela que vá ser vista sob sol forte ou projetada em sala clara. Nunca misturar os dois no mesmo material.
+**Quando usar cada um.** Escuro é o padrão: site, landing, proposta, deck, carrossel, post, área logada, painel. Claro em: checkout (obrigatório), guia de consulta do cliente (padrão, ver seção própria), documento longo de leitura, material impresso, corpo de e-mail, relatório, e tela que vá ser vista sob sol forte ou projetada em sala clara. Nunca misturar os dois no mesmo material.
 
 ---
 
@@ -984,6 +984,107 @@ numa caixa de entrada quase sempre clara, e card escuro dentro de inbox clara
 briga com a interface em volta. Vale a mesma regra de label do checkout (sem
 overline, sentence case 13px peso 500) e o logo escuro. Implementação em
 `scripts/convite-call/convite.py`.
+
+---
+
+## Guia de consulta do cliente (adicionado 20/out/2026)
+
+Página que o cliente abre mais de uma vez pra fazer alguma coisa sozinho: guia
+de captação, kit de equipamento, passo a passo de ferramenta. Fechado no guia de
+captação da Sylvia Contin, refeito a partir da versão do Lucas. Publica em
+`reunioes.beza.media/<cliente>-<assunto>/`, como o resto do material de
+reunião.
+
+**É página corrida, não deck.** Deck é pra apresentar uma vez, na ordem de quem
+fala. Guia é consulta: o cliente pula direto pra parte que precisa, no celular,
+no meio da tarefa. Por isso rola e tem menu fixo.
+
+**Tema claro por padrão** (decisão do Luan em 20/out/2026). Bate nas duas regras
+do tema claro: é documento longo de leitura e é lido sob sol forte (obra, rua,
+carro). O escuro continua disponível num botão redondo de sol e lua no canto da
+nav, e a escolha fica salva no aparelho (`localStorage`, chave `beza-tema`).
+Implementação: `data-tema="claro"` fixo no `<html>`, e o script do `<head>` só
+tira quando a pessoa escolheu o escuro, assim a página abre clara mesmo sem JS.
+`theme-color` acompanha o tema. O botão troca a página inteira, então não fere
+a regra de nunca misturar os dois temas.
+
+### Estrutura
+
+1. **Topo curto, nunca 100vh.** Eyebrow "Guia de [assunto] · [cliente]", título
+   de três linhas falando com o cliente pelo nome, com a última linha em lilás,
+   uma frase de apoio dizendo o que tem na página e "guarde este link". Embaixo,
+   o índice: um card por parte, com número em lilás, título e uma linha.
+2. **Partes numeradas na ordem de uso**, nunca na ordem de quem escreveu. No de
+   captação: o que comprar, o que fazer toda vez que gravar, o que gravar, onde
+   gravar. Quatro ou cinco partes no máximo.
+3. **Cada informação mora num lugar só.** Se a mesma dimensão aparece em várias
+   seções (o "Onde gravar" repetido em cenário, plano e referência), a página
+   está organizada errado. Junta tudo pela pergunta que o cliente faz na hora
+   ("estou na obra, o que eu gravo?") e liga as outras seções a ela por link.
+4. **Seções alternam `--bg` e `--bg-soft`**, com borda fina entre elas. Nada de
+   bloco de lilás chapado nem de alternar claro e escuro: esse sistema de três
+   fundos foi descontinuado.
+
+**Nav.** A pill de vidro fixa do site, com as partes como âncora e a parte atual
+acesa conforme a rolagem. No celular fica logo iso, links e botão de tema, sem
+drawer. Os links rolam pro lado só se não couberem, e o esmaecido na borda
+direita aparece só nesse caso. Barra de progresso de leitura no topo.
+
+### Componentes
+
+- **Card de produto.** Foto num palco claro (`#E8E7F0` no escuro, `#F1F0F7` no
+  claro) com `mix-blend-mode: multiply`, que some com o fundo branco da foto da
+  loja. Número de ordem num círculo escuro no canto, nome do produto e, embaixo,
+  **o que ele é em linguagem de cliente** (Microfone sem fio, Tripé que vira
+  bastão), em lilás. Marca de produto sozinha não diz nada pro cliente. Separar
+  "Compre agora" de "Depois, se quiser" (card horizontal menor). Só o item
+  obrigatório leva botão primary e selo mono "Obrigatório". Os outros vão em
+  ghost, e os botões alinham na mesma linha.
+- **Checklist interativo**, pro que se repete toda vez. Cada passo é um card
+  inteiro clicável com caixa redonda que mostra o número e vira check, título e
+  explicação. Ao lado, o placar "X de N feitos" com fio de progresso e o botão
+  Recomeçar, que só aparece depois do primeiro passo marcado. Fica salvo no
+  aparelho. Caminho de menu do celular (Ajustes › Câmera › Gravar Vídeo) vai num
+  chip próprio, com chevron em SVG, na linha de cima da explicação.
+- **Card de série** (quadro, formato, rotina). Número em lilás, título, texto e,
+  no rodapé, "Onde gravar" com chips que levam direto pra aba daquele lugar.
+- **Abas por contexto** (lugar, etapa, ferramenta). Pills, com a selecionada
+  invertida (fundo na cor do texto do tema). ARIA de tabs com seta, Home e End.
+  O link `#lugar-x` abre a aba certa, inclusive vindo de fora da página. Sem JS
+  as abas somem e os painéis aparecem empilhados. Cada painel tem título e
+  descrição, uma caixa de dica (ícone de lâmpada, tinta lilás de 7%), os planos
+  em cards com o "como" e o "Pra quê", o selo "Comece por este" no mais fácil e
+  as referências daquele contexto.
+- **Card de referência.** Thumb 9:16 com o ícone da plataforma num círculo de
+  vidro. O título é **o que copiar** (o enquadramento), não o assunto do vídeo.
+  Embaixo vêm o @ em lilás e o assunto em cinza. No celular vira faixa que rola
+  pro lado, com snap.
+- **Rodapé.** Logo, uma linha dizendo onde tirar dúvida ("Manda no grupo") e o
+  copyright em mono.
+
+### Texto
+
+- Fala com o cliente por "você" e com a Beza por "a gente". Nunca "eu", mesmo
+  quando quem montou foi uma pessoa só do time.
+- Jargão traduzido. "Do peito pra cima", não "primeiro plano". "Da cintura pra
+  cima", não "plano médio". O cliente não é da área.
+- Instrução de aparelho conferida no aparelho: caminho de menu exato, nome do
+  botão como aparece na tela. Instrução errada é o jeito mais rápido de perder a
+  confiança do cliente na página toda.
+- Todas as regras de `_contexto/preferencias.md`.
+
+### Antes de publicar
+
+- Conferir em 375 e 390px de largura, sem rolagem lateral. Faixa que rola pro
+  lado (referências, abas) dentro de grid precisa de coluna `minmax(0, 1fr)` e
+  `min-width: 0` nos filhos, senão empurra a página inteira pra fora da tela.
+- Alvo de toque com 44px no mínimo.
+- `noindex` e `og:title`/`og:description` preenchidos, pra prévia sair limpa no
+  grupo do WhatsApp.
+- Conferir os dois temas.
+
+Implementação de referência: `apresentacoes/captacao-sylvia/` (página única,
+CSS e JS no próprio `index.html`, imagens em `assets/`).
 
 ---
 
