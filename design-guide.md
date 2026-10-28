@@ -1275,6 +1275,18 @@ A capa de cada cliente fica em `propostas/<cliente>/capa-grupo/`.
 
 ---
 
+## Capa de link (adicionado 28/out/2026)
+
+Prévia que aparece quando um link da casa (reunioes.beza.media, propostas.beza.media) é colado no WhatsApp. Modelo em `marca/capa-link.html`, arquivo gerado por `scripts/capa-link/gerar.sh <saida>.jpg tipo=... data=... cliente="Nome|Linha 2" [linha=...] [para=...]`. Fechada no onboarding do Rei das Carretilhas. Sem ela o WhatsApp pega a primeira foto da página e mostra recortada e borrada.
+
+- **Layout fixo:** 1200x1200, quadrada. Fundo escuro da Beza (`#0A0A10`) com grade fina de 60px e brilho lilás no centro. Um board: moldura fina a 84px da borda, com um ponto lilás em cada canto.
+- **Miolo centralizado:** pílula mono em caixa alta com o tipo da peça em lilás cheio e a data vazada; nome do cliente em IBM Plex Sans 500, 176px, gradiente prata, quebra de linha com `|` (nome comprido encolhe até caber em 900px); frase curta opcional em `#8B8DA1`; pílula opcional "Para <nome>" com o nome em lilás. Logo completo da Beza com 210px embaixo, dentro da moldura.
+- **Arquivo:** JPG (fica perto de 175 KB; PNG passa de 600 KB e o WhatsApp pode ignorar). Vai na pasta publicada como `og.jpg`.
+- **Meta tags:** `og:title`, `og:description`, `og:url`, `og:image` com endereço absoluto, `og:image:width` e `og:image:height` 1200, `twitter:card` summary.
+- **Cache do WhatsApp:** a prévia é lida na hora do envio e fica guardada por endereço. Link que já foi mandado sem capa volta com `?v=2` no fim pra puxar a nova.
+
+---
+
 ## Logos de campanha (adicionado 27/out/2026)
 
 Título cromado próprio para as datas de venda da Beza. Bloco `24` do manual. Todo título sai em duas versões, sempre PNG com fundo transparente:
