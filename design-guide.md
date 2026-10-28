@@ -1275,6 +1275,24 @@ A capa de cada cliente fica em `propostas/<cliente>/capa-grupo/`.
 
 ---
 
+## Logos de campanha (adicionado 27/out/2026)
+
+Título cromado próprio para as datas de venda da Beza. Bloco `24` do manual. Todo título sai em duas versões, sempre PNG com fundo transparente:
+
+- **Prata:** tudo em cromo prata.
+- **Prata + cor da campanha:** o "DA BEZA" (e o brilho em volta dele) na cor da campanha, o resto em prata.
+
+| Campanha | Cor do DA BEZA | Arquivos |
+|---|---|---|
+| Black da Beza | lilás `#9A9BE5` | uma, duas e três linhas (com FRIDAY), prata e prata + lilás; finais na pasta "Logos da Black" do designer |
+| Cyber Monday da Beza | vermelho `#E01A22` | `marca/logos/campanhas/cyber-monday-da-beza-cromo.png` e `cyber-monday-da-beza-vermelho.png`; forma em `cyber-monday-da-beza-forma.svg` |
+
+**Receita:** o SVG das letras vira forma branca no preto (16:9) e vai pra skill `imagem`, receita upgrade, com a referência de cromo da Black e fundo preto chapado no prompt. O preto sai com `scripts/titulo-rastro/sem-fundo.py` (no beza-os) (máscara pela própria forma, então o reflexo escuro do cromo não fura a letra). Upscale só depois de aprovado.
+
+**Regra:** cromo é sempre prata; a cor entra só no "DA BEZA". Nada de halo de glitter nem fundo colorido no arquivo do logo: efeito de peça se aplica por cima, na arte.
+
+---
+
 ## O que NUNCA fazer
 
 - Branco puro `#FFFFFF` em texto (sempre `#ECEDF6`)

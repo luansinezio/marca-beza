@@ -945,6 +945,9 @@ code.inline{
 
       <span class="side-group">Regras</span>
       <a href="#nunca"><span class="n">23</span> O que nunca fazer</a>
+
+      <span class="side-group">Campanhas</span>
+      <a href="#campanhas"><span class="n">24</span> Logos de campanha</a>
     </nav>
 
     <div class="side-foot">
@@ -2084,6 +2087,41 @@ const FADE_INT = 25;                <span class="c">// dureza da queda</span>
       <div class="item"><span class="x">✕</span><span>O lilás #9A9BE5 em texto sobre fundo claro. No claro o accent é #6E6CBE.</span></div>
       <div class="item"><span class="x">✕</span><span>Title Case em heading. Sentence case, sempre.</span></div>
     </div>
+  </section>
+
+  <!-- ================= 24 CAMPANHAS ================= -->
+  <section class="sec" id="campanhas">
+    <div class="sec-head"><span class="sec-num">24</span>
+      <span class="eyebrow"><span class="dot"></span>Logos de campanha</span>
+      <h2>Cromo prata, e a cor <span class="em">só no DA BEZA</span>.</h2>
+      <p class="intro">As datas de venda da Beza ganham um título cromado próprio. A família começou na Black da Beza (lilás) e seguiu no Cyber Monday da Beza (vermelho). Todo título sai em duas versões: tudo em cromo prata, e cromo prata com o "DA BEZA" na cor da campanha. Sempre PNG com fundo transparente.</p>
+    </div>
+
+    <h3><span class="id">24.1</span> Cyber Monday da Beza (27/out/2026)</h3>
+    <div class="grid g2">
+      <div class="stage"><span class="tag">24.1a · cromo</span>
+        <img src="logos/campanhas/cyber-monday-da-beza-cromo.png" alt="Cyber Monday da Beza em cromo prata" style="width:100%;display:block;margin-top:14px">
+        <p class="note">Tudo em cromo prata. Arquivo: <code class="inline">marca/logos/campanhas/cyber-monday-da-beza-cromo.png</code></p>
+      </div>
+      <div class="stage"><span class="tag">24.1b · beza vermelho</span>
+        <img src="logos/campanhas/cyber-monday-da-beza-vermelho.png" alt="Cyber Monday da Beza com DA BEZA em cromo vermelho" style="width:100%;display:block;margin-top:14px">
+        <p class="note">"CYBER MONDAY" em prata, "DA BEZA" em cromo vermelho <code class="inline">#E01A22</code> com brilho vermelho em volta. Arquivo: <code class="inline">marca/logos/campanhas/cyber-monday-da-beza-vermelho.png</code></p>
+      </div>
+    </div>
+
+    <h3><span class="id">24.2</span> A família</h3>
+    <table class="spec">
+      <tr><th>Campanha</th><th>Cor do DA BEZA</th><th>Versões</th></tr>
+      <tr><td>Black da Beza</td><td class="mono">lilás #9A9BE5</td><td>uma linha, duas linhas, três linhas (com FRIDAY), cada uma em prata e em prata + lilás</td></tr>
+      <tr><td>Cyber Monday da Beza</td><td class="mono">vermelho #E01A22</td><td>três linhas (CYBER / MONDAY / DA BEZA), em prata e em prata + vermelho</td></tr>
+    </table>
+
+    <h3><span class="id">24.3</span> Como sai um título novo</h3>
+    <div class="rule" data-rot="Receita">1. O desenho das letras vem em SVG do designer (o do Cyber está em <code class="inline">marca/logos/campanhas/cyber-monday-da-beza-forma.svg</code>).<br>
+      2. O SVG vira a forma branca no fundo preto, em 16:9, e vai pra skill <code class="inline">imagem</code> (receita upgrade) junto com a referência de cromo da Black. O prompt pede fundo preto chapado.<br>
+      3. O preto sai com <code class="inline">scripts/titulo-rastro/sem-fundo.py</code> (no beza-os), que usa a própria forma como máscara: o reflexo escuro do cromo não fura a letra e o brilho vira transparência.<br>
+      4. Upscale só depois de aprovado.</div>
+    <div class="rule" data-rot="Regra">Cromo é sempre prata. A cor da campanha entra só no "DA BEZA" e no brilho em volta dele. Nada de halo de glitter nem fundo colorido no arquivo do logo: o efeito da peça se aplica por cima, na arte.</div>
   </section>
 
   <div class="fim">
